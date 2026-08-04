@@ -1,0 +1,5 @@
+gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -c boca_exprosiv3d.c -o boca_exprosiv3d.o
+ar rcs libboca_exprosiv3d.a boca_exprosiv3d.o
+gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 boca_exprosiv3d.c test_boca_exprosiv3d.c -o test_boca_exprosiv3d
+gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 boca_exprosiv3d.c demo_export.c -o demo_export
+gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 boca_exprosiv3d.c mesh_budget.c -o mesh_budget

@@ -1,0 +1,9 @@
+Determinism validation
+
+Two independent optimized renders matched byte-for-byte:
+- audio/06_rocket_launcher_launch_to_impact.wav
+- audio/21_rocket_one_plus_4_full_reload.wav
+- audio/22_all_one_shot_then_full_capacity_sequences.wav
+- audio/23_rocket_whistle_v12_event_showcase.wav
+
+Result: PASS

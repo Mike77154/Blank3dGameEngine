@@ -1,0 +1,9 @@
+Shotgun master i386 report v1.6.2
+
+- gshotguneq89.c: PASS (ELF 32-bit i386 object)
+- gshotgunsequence89.c: NOT REPEATED in this container
+
+Reason: the installed toolchain lacks 32-bit glibc headers required by
+shotpumpkin89.h -> <limits.h>. The exact sequence source passed strict native
+C89 compilation and the previous v1.6.1 sequence build already carried the
+same platform limitation note. No claim of a fresh complete i386 build is made.

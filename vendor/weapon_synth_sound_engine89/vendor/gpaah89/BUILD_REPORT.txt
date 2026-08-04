@@ -1,0 +1,63 @@
+gpaah89 BASE PRESETS v5.0 build report
+========================================
+
+Core build
+----------
+Compiler flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Result: PASS
+Stress checksum: 1446787576
+Sample rates tested: 8000, 22050, 44100, 48000 Hz
+Presets tested: all 7
+
+Sanitizers
+----------
+AddressSanitizer: PASS
+UndefinedBehaviorSanitizer: PASS
+Leak detection: PASS
+
+Core restrictions
+-----------------
+malloc/calloc/realloc/free calls: absent
+float/double types: absent
+Heap ownership: none; caller owns gpaah89_state
+Noise generators: exactly 3
+EQ bands: exactly 6, non-resonant first-order band passes
+Chorus feedback: none
+Reverb feedback: none; 6-tap FIR only
+
+Static footprint on this Linux x86-64 GCC build
+-----------------------------------------------
+gpaah89_state: 20,836 bytes
+gpaah89_preset: 116 bytes
+gpaah89.o .text: 5,679 bytes
+gpaah89.o .data: 0 bytes
+gpaah89.o .bss: 0 bytes
+
+WAV verification
+----------------
+Format: PCM signed 16-bit stereo, 44.1 kHz
+Clipped samples across all BASE PRESET WAVs: 0
+Gatling demo interval: unchanged at 20 ms per retrigger
+
+HEAVY HIT v4 -> BASE PRESETS v5 measurements
+--------------------------------------------
+Values are PCM measurements, not dB SPL.
+
+shotgun:
+  peak:             13,044 -> 14,303
+  first-200-ms RMS: 3,227.8 -> 3,839.9
+  sub-300 Hz share: 20.1% -> 26.0% (1.29x)
+  relative tail:    0.1007 -> 0.1877 (1.86x)
+
+rocket launcher:
+  peak:             13,253 -> 13,140
+  first-200-ms RMS: 4,133.2 -> 4,418.7
+  sub-300 Hz share: 30.6% -> 38.5% (1.26x)
+  relative tail:    0.3721 -> 0.5090 (1.37x)
+
+Notes
+-----
+- Only shotgun and rocket-launcher DSP parameters changed from v4.
+- Pistol, Magnum, metralla, Gatling and sniper remain bit-identical by preset parameters.
+- No new sound source, filter family, effect or feedback path was introduced.
+- Included previews are normalized game audio, not calibrated firearm pressure.

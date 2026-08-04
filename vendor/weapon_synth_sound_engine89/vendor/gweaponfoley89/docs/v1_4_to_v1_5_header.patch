@@ -1,0 +1,11 @@
+--- /mnt/data/gwf14orig/gweaponfoley89/include/gweaponfoley89.h	2026-07-18 06:57:03.000000000 +0000
++++ include/gweaponfoley89.h	2026-07-18 07:18:05.405680122 +0000
+@@ -26,7 +26,7 @@
+ #define GWF89_EQ_ONE            4096
+ 
+ #define GWF89_VERSION_MAJOR      1
+-#define GWF89_VERSION_MINOR      4
++#define GWF89_VERSION_MINOR      5
+ #define GWF89_VERSION_PATCH      0
+ 
+ typedef signed short gwf89_s16;

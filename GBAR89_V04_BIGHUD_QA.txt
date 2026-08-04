@@ -1,0 +1,64 @@
+Blank3D v3.23.0 - GBar89 v0.4 / BigVaderHudder QA
+==================================================
+
+Scope
+-----
+- Replaced the previous vendored GBar89 implementation with upstream v0.4.
+- Preserved and extended the engine-specific BVH adapter.
+- Exposed v0.3 compositor and v0.4 radial/vertical functionality.
+- Added node-owned vector-unit storage and dynamic BVH bindings.
+- Added sprite-provider forwarding and nested clip restoration.
+
+Dedicated test
+--------------
+make test-gbar-v04-bighud
+
+Verified by the dedicated test:
+- Compiled GBar version is 0.4.
+- Vertical bottom-to-top orientation survives BVH parsing.
+- Vertical frame/background/compositor/pixel/mid/vector controls.
+- Custom normalized vector points survive node Z sorting.
+- Boolean unit_closed/unit_filled values.
+- Full radial segmented arc style and round caps.
+- All 12 compositor/radial FX flags simultaneously.
+- Procedural bevel frame and grid background.
+- Built-in vector unit shape.
+- Dynamic value, range, overlay, mid, segment, unit and layer bindings.
+- Animated radial phase.
+- Layered/pip fields and per-layer colours.
+- Sprite/nine-slice IDs, source rects, margins and padding.
+- Radial draw command generation.
+- Fixed command buffer does not overflow at 1024/8192/32768.
+
+Observed maximal radial command-buffer sample:
+- commands: 617
+- vertices: 4524
+- indices: 11454
+- overflow: no
+
+Gameplay HUD regression
+-----------------------
+make test-bighud
+
+Verified:
+- Existing ECG configuration and dynamic vitals.
+- Health radial v0.4 frame/background/segmentation/FX.
+- Health vertical v0.4 pixel/mid/compositor controls.
+- Ammo segments and bullet vector units bound to weapon capacity.
+- Counters, anchors and telemetry bindings.
+
+Vendor tests
+------------
+make -C vendor/gbar89 clean test
+
+Expected upstream suites:
+- smoke_v02
+- smoke_v03
+- smoke_v04
+
+Platform boundary
+-----------------
+Portable tests validate parsing, configuration, fixed-point animation and
+command generation. The Win32/OpenGL boundary is validated by `make
+syntax-check`; the graphical window still requires execution in the user's
+MinGW32/MSYS2 environment for visual acceptance.

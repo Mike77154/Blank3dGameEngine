@@ -1,0 +1,7 @@
+Modified runtime/demo code scan:
+- C89 strict build: PASS
+- malloc/realloc/free introduced: NO
+- float/double introduced: NO
+- public ABI layout changed: NO
+- new event type required: NO
+- launch and impact remain independently dispatchable: YES

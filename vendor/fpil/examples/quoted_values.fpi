@@ -1,0 +1,2 @@
+; "ready" and "emit" are host-defined names from any application domain.
+:ready:emit="hello, world: ok"

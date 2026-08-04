@@ -1,0 +1,8 @@
+GFO vendor copied from gfo_lib(12): OK
+One gfo_ctx per entity: OK
+Player INI -> player.gfo -> DDSL2: OK
+Zombie INI -> zombie.gfo -> FPIL: OK
+GFO create/step/render/destroy lifecycle: OK
+Mesh selector parsing: cube/sphere/capsule/composed/customcalled/external: OK
+C89 -Wall -Wextra -pedantic standalone object test: OK
+No malloc/realloc/free introduced by Blank3D object layer: OK

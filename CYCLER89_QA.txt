@@ -1,0 +1,43 @@
+Blank3D v3.13.0 CYCLER89 QA
+===========================
+
+Vendor
+------
+- cycler89 standalone C89 build: OK
+- provider-backed count/read/active traversal: OK
+- next/previous wrap-around: OK
+- inactive entries skipped: OK
+- missing-current deterministic recovery: OK
+- cursor helpers: OK
+- no dynamic allocation: OK
+
+Engine integration
+------------------
+- fixed-capacity named list registry: OK
+- normalized list names: OK
+- active_weapon registered from live weapon manager order: OK
+- GKInventory ownership used as active predicate: OK
+- player cycle no longer contains fixed weapon ID table: OK
+- NPC cycle migrated to cycler89: OK
+- mouse wheel routes through active_weapon list: OK
+- direct Win32 M/N weapon-cycle checks removed: OK
+
+DDSL2
+-----
+- `If key_press M then list_cyclenext=active_weapon`: OK
+- `If key_press N then list_cycleprev=active_weapon`: OK
+- symbolic RHS reaches host as `active_weapon`: OK
+- existing movement, jump, fly and shooting actions unchanged: OK
+
+Regression
+----------
+- complete `make test`: OK
+- full active C89 syntax check: OK
+- allocation audit: OK
+- systems, NPC inventory, languages, input, vertical stack, weapons, audio,
+  collision, camera and projectile tests: OK
+
+Build note
+----------
+Portable tests and full source syntax validation passed. Final Win32 graphical
+link/run still requires local MSYS2 MinGW32.

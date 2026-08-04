@@ -1,0 +1,64 @@
+FMUZZLE89 v6 validation report
+===============================
+
+Geometry defaults verified
+--------------------------
+- Cylinder length: 2.0 cm
+- Cone length: 18.0 cm
+- Combined axial length: 20.0 cm
+- Cylinder diameter: 2.5 cm
+- Cone base diameter: 2.5 cm
+- Shared fixed-point radius: 1.25 cm
+- Primary and repeated fin banks remain anchored at z=0 on the cylinder base ring.
+- Square sheets remain disabled.
+
+Strict C89 build
+----------------
+Command:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 \
+      fmuzzle89.c demo_render.c -o demo_render
+
+Result:
+  PASS
+
+Automated geometry tests
+------------------------
+Command:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 \
+      fmuzzle89.c test_fmuzzle89.c -o test_fmuzzle89
+  ./test_fmuzzle89
+
+Result:
+  FMUZZLE89 v6: all fixed-point geometry tests passed.
+
+32-bit library object check
+---------------------------
+Command:
+  gcc -m32 -std=c89 -pedantic -Wall -Wextra -Werror -O2 \
+      -c fmuzzle89.c -o fmuzzle89_32.o
+
+Result:
+  PASS: ELF 32-bit Intel i386 relocatable object.
+
+The container does not provide the 32-bit libc development headers required to
+link the stdio-based demo and test executables under -m32. The library source
+itself was compiled successfully as a 32-bit object. The included MinGW32 batch
+file builds the demo and tests using the user's 32-bit MSYS2/MinGW environment.
+
+Storage and arithmetic scan
+---------------------------
+The .c and .h sources contain no token references to:
+  malloc, realloc, free, float, double
+
+The implementation uses Q10 fixed point and bounded arrays only.
+
+Preview provenance
+------------------
+The executable generated 48 animation frames and two deterministic side-profile
+frames as binary PPM images. The included PNG/GIF previews were converted and
+assembled directly from those C-rendered PPM frames; their muzzle geometry was
+not generated or redrawn by an image model.
+
+Additional v8 preview check passed: front and animated renders show the open-root triangle outline and cylinder-base anchoring.
+
+Additional v9 geometry check passed: 5 + 5 + 5 + 5 deterministic generation validated with cone-base anchors at z = 2 cm and 1.25 cm tertiary repeats.

@@ -1,0 +1,4 @@
+CC0 1.0 Universal
+
+This generated source package is released as CC0/public-domain-style material.
+You may copy, modify, integrate, and redistribute it without attribution.

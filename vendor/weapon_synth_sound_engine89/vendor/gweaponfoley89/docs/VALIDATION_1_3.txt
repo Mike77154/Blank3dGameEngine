@@ -1,0 +1,26 @@
+gweaponfoley89 1.3 validation
+
+Build command:
+  cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude
+
+Core constraints:
+  C89: yes
+  fixed-point signal path: yes
+  malloc/calloc/realloc/free calls: none
+  float/double declarations or operations in core: none
+  math.h/stdio.h/stdlib.h in core: none
+  unresolved external symbols in core object: none
+
+Runtime/storage on this build:
+  gwf89_context: 6832 bytes
+  src/gweaponfoley89.o: 11904 bytes
+  libgweaponfoley89.a: 12318 bytes
+
+Rendered preview checks:
+  sample rate: 44100 Hz
+  format: mono signed PCM16
+  maximum measured absolute peak: below 0.948 full scale
+  hard digital clipping detected: no
+
+The preview renderer uses stdio only as an offline tool. The synthesizer core
+does not include stdio.

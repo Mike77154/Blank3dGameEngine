@@ -1,0 +1,48 @@
+hud oxygen_capsule_blue -=)
+enabled true
+canvas_width 34
+canvas_height 150
+node oxygen_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+pos top_left + 0,0
+size 34,150
+kind segmented
+direction bottom_to_top
+segments 20
+segment_gap 2
+frame rail
+frame_depth 3
+frame_gap 2
+background scanlines
+bg_step 5
+bg_size 1
+draw_bg true
+draw_border true
+damage_lag true
+lag_speed 24
+outer_outline true
+drop_shadow true
+extrude true
+inner_shadow true
+gloss true
+fill_scanlines true
+pixel_cells false
+outline_size 2
+shadow_offset 3,4
+extrude_depth 3
+gloss_percent 30
+color_bg #031019E8
+color_fill #31C9F3FF
+color_lag #92EFFFFF
+color_border #BDF7FFFF
+color_empty #102733E8
+color_outline #000609FF
+color_shadow #000000A0
+color_extrude #0D3344E0
+color_gloss #FFFFFF55
+color_bg_detail #2E9FC36A
+border_size 1
+(=-

@@ -1,0 +1,58 @@
+Blank3D v3.25.3 Universal Aim Frame — QA
+========================================
+
+Entorno de validación
+---------------------
+- Host portable: Linux + GCC
+- Lenguaje: C89 estricto
+- Flags del test nuevo: -std=c89 -Wall -Wextra -pedantic -Werror
+- Sin i686-w64-mingw32-gcc disponible en este entorno; no se generó EXE Win32.
+
+Prueba específica
+-----------------
+Comando:
+  make test-universal-weapon-aim
+
+Resultado:
+  PASS: universal aim frame keeps carrier and all weapons on HUD ray
+
+Cobertura:
+- carrier en cinco posiciones de movimiento;
+- catálogo weapon_id 1..9;
+- preservación de dirección HUD para backends lineales;
+- lanzamiento con gravedad/Bolt3D;
+- reparación de evento Gatling invertido;
+- preservación del spread izquierdo/derecho de escopeta.
+
+Validación de integración
+-------------------------
+Se ejecutaron secuencialmente, en grupos, todos los targets contenidos por
+`make test`. No aparecieron marcadores FAIL/ERROR y todos los grupos terminaron
+con estado 0, incluidos:
+
+- GAttach, attachment stack, NationalMecanicanimal89 y actor equipment;
+- Cameranaku provider y aim convergence;
+- weapon modules, weapon INI, shotgun runtime, Bolt3D y Aoi Trail;
+- movimiento, input, NPC inventory, facciones, percepción y GEDER;
+- HUD/ECG/GBar/NumBar;
+- audio host y colisiones;
+- syntax-check y audit.
+
+Comandos finales de control:
+  make syntax-check
+  make audit
+
+Resultados:
+- sintaxis del árbol activo aceptada con stubs Win32/OpenGL;
+- no allocator calls en integración activa de gameplay/systems;
+- sin errores de compilación C89 en los archivos modificados.
+
+Límite de esta QA
+-----------------
+La validación portable confirma la matemática y la ruta de integración, pero
+la comprobación visual final debe hacerse en el runner Win32 real con:
+
+  W/A/D + giro de cámara + ráfaga sostenida
+
+La línea de muzzle/tracer debe converger hacia la cruz y nunca salir detrás del
+forward de Cameranaku.

@@ -1,0 +1,47 @@
+{
+  "00_dry_click.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 13230,
+    "seconds": 0.3,
+    "peak": 21076,
+    "rms": 400.856,
+    "clips": 0
+  },
+  "01_steel_klek.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 13230,
+    "seconds": 0.3,
+    "peak": 19551,
+    "rms": 697.022,
+    "clips": 0
+  },
+  "02_carrier_klek.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 13230,
+    "seconds": 0.3,
+    "peak": 19710,
+    "rms": 758.839,
+    "clips": 0
+  },
+  "03_rear_stop.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 13230,
+    "seconds": 0.3,
+    "peak": 23973,
+    "rms": 883.452,
+    "clips": 0
+  },
+  "04_all_presets.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 61740,
+    "seconds": 1.4,
+    "peak": 24351,
+    "rms": 636.757,
+    "clips": 0
+  }
+}

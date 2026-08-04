@@ -1,0 +1,4 @@
+x = 66
+if x = 66 then hit = "éA"
+else hit = no
+after = 1

@@ -1,0 +1,5 @@
+weapon_synth_sound_engine89 v1.4.0 protocol scan
+Files scanned: 227
+Scope: include/, src/, tests/, examples/, vendor/ (*.c, *.h)
+Tokens after stripping comments and string/character literals: malloc realloc free float double
+RESULT: PASS — no forbidden language/runtime tokens in active C syntax

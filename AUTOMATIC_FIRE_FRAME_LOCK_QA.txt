@@ -1,0 +1,30 @@
+Blank3D v3.25.4 — Automatic Fire Frame Lock QA
+================================================
+
+Reproducción automatizada
+-------------------------
+PASS: 900 frames continuos
+PASS: jugador avanzando en X/Z
+PASS: cámara girando más de dos revoluciones completas
+PASS: recoil alternado tipo ametralladora/Gatling cada frame
+PASS: recoil no muta la cámara dentro del frame de fuego
+PASS: HUD mantiene exactamente eye/forward/right/up capturados
+PASS: proyectil permanece en el hemisferio frontal
+PASS: recoil pendiente se aplica una sola vez al frame siguiente
+
+Regresiones relacionadas
+------------------------
+PASS: Cameranaku receive-provider
+PASS: convergencia cruz/ballística
+PASS: universal aim frame para nueve armas
+PASS: siete perdigones de escopeta
+PASS: ensamblaje mecánico y equipamiento de actor
+PASS: audio host de mecanismos sincronizados
+PASS: colisión CCS/SICOL
+PASS: sintaxis del runner completo en C89
+PASS: auditoría sin malloc/realloc/free en integración activa
+
+Nota de plataforma
+------------------
+La comprobación del runner se realizó con stubs Win32/OpenGL y -fsyntax-only.
+El enlace/ejecución final del EXE Win32 requiere MinGW32 en la máquina destino.

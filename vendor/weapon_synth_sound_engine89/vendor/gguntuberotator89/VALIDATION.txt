@@ -1,0 +1,19 @@
+GGunTuberotator89 1.0.0 validation
+Date: 2026-07-19
+
+Compiler command:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude
+
+Results:
+  - library source compiled cleanly
+  - smoke test passed
+  - WAV demo generator compiled cleanly
+  - tested sample rates: 8000, 11025, 22050, 32000, 44100, 48000 Hz
+  - forbidden C/H tokens: malloc, calloc, realloc, free, float, double,
+    long long -> none found
+  - caller context size on the validation host: 8424 bytes
+  - medium preview peak: below full scale; no clipped samples
+  - heavy preview peak: below full scale; no clipped samples
+
+The validation host used a 32-bit int and 16-bit short, matching the compile-time
+requirements in the public header.

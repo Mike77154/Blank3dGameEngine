@@ -1,0 +1,12 @@
+weapon_synth_sound_engine89 v1.4.0 final validation
+Compiler:
+cc (Debian 14.2.0-19) 14.2.0
+
+$ make clean && make -s all
+BUILD: PASS
+Unified runtime archive objects: 54
+
+$ make -s test
+gsynthordnance89 PASS: bullet=4904 grenade=33352 rocket=48552 context=56 starts=3
+gsynthsoundexpansion89 PASS bytes=824
+weapon_synth_sound_engine89 PASS starts=5 rejects=0 action_events=6 context=3712 report_voice=70460

@@ -1,0 +1,14 @@
+weapon_synth_sound_engine89 v1.6.0 sanitizer report
+
+Flags:
+  -fsanitize=address,undefined -fno-omit-frame-pointer
+
+Executables:
+  build/test_phase3_dna_metrics: PASS
+  build/test_weapon_synth_sound_engine89: PASS
+
+Environment:
+  ASAN_OPTIONS=detect_leaks=0
+  UBSAN_OPTIONS=halt_on_error=1
+
+No AddressSanitizer or UndefinedBehaviorSanitizer diagnostics were emitted.

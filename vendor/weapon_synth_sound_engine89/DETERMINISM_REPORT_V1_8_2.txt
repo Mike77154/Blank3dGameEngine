@@ -1,0 +1,5 @@
+weapon_synth_sound_engine89 v1.8.2 determinism report
+
+The selected sequence WAV files were rendered twice with the optimized C89 build.
+SHA-256 outputs matched byte-for-byte for all selected files.
+See SHA256SUMS_V1_8_2.txt and PHYSICAL_MECHANICS_WAV_VALIDATION_V1_8_2.json.

@@ -1,0 +1,12 @@
+weapon_synth_sound_engine89 v1.6.0 determinism report
+
+Renderer: build/render_phase3_showcase
+Runs compared: 2
+Result: byte-identical PASS
+
+SHA-256 WAV:
+  12e0be334ec514a982b20d402d01108c394f126a46369b9d91551d51cd97f1a8  audio/16_phase3_realistic_hybrid_cinematic.wav
+SHA-256 metrics:
+  cbd0b670256de0339822faed3fb7081df396f29099ea3de7369710f4e27612cb  PHASE3_METRICS_V1_6.json
+
+The preview uses the same rifle profile and seed for Realistic, Hybrid and Cinematic.

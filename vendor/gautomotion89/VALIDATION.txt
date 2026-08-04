@@ -1,0 +1,17 @@
+Validation performed on 2026-07-21
+
+Compiler command family:
+  gcc -std=c89 -pedantic -Wall -Wextra -O2 -Iinclude
+
+Results:
+- Core and all modules compiled without warnings.
+- Unit tests: all tests passed.
+- demo_basic: completed automove and zigzag routes.
+- demo_sequence: completed MOVE_TO, WAIT, HELIX_TO and MOVE_AWAY.
+- demo_provider: reached an entity socket through callbacks.
+- Separate archive link test passed.
+- C/H scan found no malloc, calloc, realloc, free, float or double tokens.
+- C/H scan found no C++ // comments or declarations in for initializers.
+
+The included .bat file is intended for MSYS2/MinGW32. Windows binaries are
+not bundled because this package was validated on a Linux compiler host.

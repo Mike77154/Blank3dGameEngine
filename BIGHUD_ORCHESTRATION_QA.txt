@@ -1,0 +1,27 @@
+Blank3D v3.17.0 BigVaderHudder orchestration QA
+================================================
+
+PASS  BigVaderHudder parses config/hud/gameplay.bighud.
+PASS  Six fixed-storage nodes load and sort by z.
+PASS  player.health and player.health_max drive multiple meters.
+PASS  weapon.loaded/capacity/reserve bindings resolve at runtime.
+PASS  segments_bind follows the current weapon capacity.
+PASS  ecg.bpm binding resolves from the live ECG runtime.
+PASS  ECG classic 32-column preset is applied through .bighud.
+PASS  ECG runtime dynamics and render parameters are bridge-controlled.
+PASS  GBar89 linear, segmented and radial-ring parameters are bridge-controlled.
+PASS  OpenGL backend provides rect, line, triangle and scissor callbacks.
+PASS  Counter backend supports pair values and 5x7 punctuation.
+PASS  Invalid/missing HUD document installs a safe fallback HUD.
+PASS  make test-bighud.
+PASS  make test-ecg-vitals.
+PASS  make test-motion-attacks (Air Lunger + Ground Lancer bridge).
+PASS  make test-motion-q16-win32.
+PASS  make syntax-check (complete engine source set).
+PASS  make audit: no malloc/realloc/free in active integration.
+
+Host limitation
+---------------
+The package was syntax-checked with the project's Win32/OpenGL stubs. This
+Linux container does not include an i686 MinGW32 linker, so blank3d.exe must be
+linked in the user's MSYS2 MINGW32 environment.

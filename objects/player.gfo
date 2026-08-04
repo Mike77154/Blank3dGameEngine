@@ -1,0 +1,15 @@
+[player]
+role = player
+
+*create
+@initialize_from_ini
+
+*step
+run_logic()
+
+*render
+draw_mesh()
+draw_numbar("config/hud/gameplay.ini")
+
+*destroy
+@release_entity

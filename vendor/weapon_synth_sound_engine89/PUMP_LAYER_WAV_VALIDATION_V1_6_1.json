@@ -1,0 +1,38 @@
+{
+  "wsse89_v1_6_1_pump_layers_ab.wav": {
+    "channels": 2,
+    "sample_rate": 44100,
+    "sample_width_bytes": 2,
+    "frames": 352800,
+    "seconds": 8.0,
+    "peak": 22424,
+    "peak_dbfs": -3.2947,
+    "rms_dbfs": -28.6047,
+    "clipped_samples": 0,
+    "sha256": "ea19a47a6c0579026928c2901e03b8e21308f2128d530d54884ba530c6054d6d"
+  },
+  "wsse89_v1_6_1_triple_pump_complete.wav": {
+    "channels": 2,
+    "sample_rate": 44100,
+    "sample_width_bytes": 2,
+    "frames": 176400,
+    "seconds": 4.0,
+    "peak": 24667,
+    "peak_dbfs": -2.4667,
+    "rms_dbfs": -27.7519,
+    "clipped_samples": 0,
+    "sha256": "e1f0cd8f449be2fd58c3af45ee566059b9d0d5a1c83af964008e2360a6ced493"
+  },
+  "01_shotgun_sequence_plus_gtinkle.wav": {
+    "channels": 2,
+    "sample_rate": 44100,
+    "sample_width_bytes": 2,
+    "frames": 361620,
+    "seconds": 8.2,
+    "peak": 25215,
+    "peak_dbfs": -2.2758,
+    "rms_dbfs": -26.1411,
+    "clipped_samples": 0,
+    "sha256": "e335e9f69ce5a9aac51cb2361d3fc29f1f755f86f7216a314c85bc6d744bc7e6"
+  }
+}

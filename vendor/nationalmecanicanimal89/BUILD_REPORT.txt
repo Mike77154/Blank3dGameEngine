@@ -1,0 +1,92 @@
+NationalMecanicanimal89 v0.1.0 - Build and validation report
+================================================================
+
+Validation date: 2026-07-28
+
+1. Strict GCC build
+-------------------
+Compiler: GCC 14.2.0
+Flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Result:
+  PASS
+
+Targets built:
+  build/libnationalmecanicanimal89.a
+  build/test_nm89
+  build/pistol_provider_demo
+
+2. Strict Clang build
+---------------------
+Flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Result:
+  PASS
+
+3. Sanitizers
+-------------
+Flags:
+  -fsanitize=address,undefined -fno-omit-frame-pointer
+Result:
+  PASS
+
+4. Protocol scans
+-----------------
+Dynamic allocation calls in include/src/examples/tests:
+  none
+
+float/double type tokens in include/src/examples/tests:
+  none
+
+5. Test suite
+-------------
+Result:
+  All NationalMecanicanimal89 tests passed.
+
+Coverage includes:
+  Q16.16 math
+  wrapped and stepped constraints
+  transform provider
+  socket provider
+  pivot provider
+  world provider
+  visibility provider
+  dynamic constraint provider
+  geometry resolver
+  geometry output
+  event provider
+  clock provider
+  custom easing provider
+  math provider
+  clip/action evaluation
+  hierarchy composition
+  binding alignment
+  provider-aware point transform
+
+6. Memory measurements on the validation ABI
+---------------------------------------------
+Default capacities:
+  sizeof(nm89_part) = 296 bytes
+  sizeof(nm89_rig)  = 37016 bytes
+
+Reduced test profile:
+  NM89_MAX_PARTS=4
+  NM89_MAX_CONSTRAINTS=4
+  NM89_MAX_PIVOTS=4
+  NM89_MAX_ALIGNMENTS=4
+  NM89_MAX_BINDINGS=4
+  NM89_MAX_CLIPS=4
+  NM89_MAX_TRACKS=8
+  NM89_MAX_KEYS=16
+  NM89_MAX_EVENTS=8
+  NM89_MAX_ACTIONS=4
+  NM89_MAX_PROVIDERS=2
+
+  sizeof(nm89_rig) = 2744 bytes
+  Result: all tests passed.
+
+7. MinGW32 note
+---------------
+A MinGW32 cross compiler was not installed in the validation container, so a
+Windows executable/DLL was not produced here. build_mingw32.bat is included
+for an MSYS2 MinGW32 shell and uses the same strict C89 flags.

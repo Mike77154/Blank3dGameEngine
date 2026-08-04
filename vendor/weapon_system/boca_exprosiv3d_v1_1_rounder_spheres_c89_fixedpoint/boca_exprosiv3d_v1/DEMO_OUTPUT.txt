@@ -1,0 +1,8 @@
+pistol             primitives= 5 vertices= 111 triangles= 176
+machine_gun        primitives=13 vertices= 456 triangles= 751
+shotgun            primitives=10 vertices= 455 triangles= 752
+magnum_auto        primitives=13 vertices= 465 triangles= 760
+magnum_revolver    primitives=15 vertices= 539 triangles= 866
+precision_rifle    primitives=14 vertices= 282 triangles= 423
+precision_brake    primitives=17 vertices= 571 triangles= 898
+suppressed         primitives= 3 vertices=  72 triangles= 125

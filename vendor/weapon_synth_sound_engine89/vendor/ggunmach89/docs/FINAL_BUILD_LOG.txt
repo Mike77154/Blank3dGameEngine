@@ -1,0 +1,20 @@
+mkdir -p build
+cc -Iinclude -std=c89 -pedantic -Wall -Wextra -Werror -O2 -c src/ggunmach89.c -o build/ggunmach89.o
+ar rcs build/libggunmach89.a build/ggunmach89.o
+cc -Iinclude -std=c89 -pedantic -Wall -Wextra -Werror -O2 src/ggunmach89.c tests/test_ggunmach89.c -o build/test_ggunmach89
+build/test_ggunmach89
+ok: Generic rotary mechanism     peak=20494 state=8512 bytes
+ok: M134D electric six-barrel    peak=21050 state=8512 bytes
+ok: M197 three-barrel            peak=19449 state=8512 bytes
+ok: M61 Vulcan six-barrel        peak=22008 state=8512 bytes
+ok: GAU-8 heavy seven-barrel     peak=21560 state=8512 bytes
+ok: GAU-22 four-barrel           peak=20323 state=8512 bytes
+all ggunmach89 tests passed
+cc -Iinclude -std=c89 -pedantic -Wall -Wextra -Werror -O2 src/ggunmach89.c examples/render_showcase.c -o build/render_showcase
+build/render_showcase ggunmach89_showcase.wav
+Rendering M134D electric six-barrel
+Rendering M197 three-barrel
+Rendering M61 Vulcan six-barrel
+Rendering GAU-8 heavy seven-barrel
+Rendering GAU-22 four-barrel
+Wrote ggunmach89_showcase.wav

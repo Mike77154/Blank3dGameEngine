@@ -1,0 +1,3 @@
+sizeof(ch89_context) = 15696 bytes
+sizeof(ch89_gesture) = 2176 bytes
+max strokes          = 24

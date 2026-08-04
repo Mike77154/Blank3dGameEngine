@@ -1,0 +1,38 @@
+gcrosshair_params89 ABI 3 outline source package
+
+Core files:
+- include/gcrosshair89_types.h
+- include/gcrosshair_params89.h
+- src/gcrosshair_params89.c
+
+ABI 2 shape additions:
+- circle/ellipse
+- square/rectangle
+- diamond
+- directional chevrons
+- hexagon
+- directional brackets
+- open/incomplete triangle
+- segment masks
+- centered trace breaks
+- shape rotation
+- shape-size spread policy
+
+Documentation:
+- README.md
+- SHAPE_RENDER_CONTRACT.md
+- INTEGRACION_BLANK3D.md
+- CHANGELOG.md
+- VALIDATION.txt
+
+Tests/examples:
+- tests/test_params.c
+- tests/test_shapes.c
+- examples/example_style.c
+- examples/example_shapes.c
+
+ABI 3 outline additions:
+- per-variant enable flag
+- fixed-point outline width
+- independent RGBA outline color
+- public setter and resolver propagation

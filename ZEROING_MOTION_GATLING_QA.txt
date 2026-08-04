@@ -1,0 +1,46 @@
+Blank3D v3.25.2 Motion/Gatling Zeroing QA
+=========================================
+
+RESULTADO GENERAL: PASS
+
+Validaciones específicas
+-------------------------
+PASS  make test-aim-convergence
+      - convergencia muzzle -> HUD
+      - plano TPS estable de 32 unidades
+      - reparación de hemisferio trasero
+      - compensación de gravedad
+      - snapshot de origin/forward/right/up del frame de fuego
+
+PASS  make test-cameranaku-provider
+      - proveedor TRS y ABI de cámara/arma conservados
+
+PASS  make test-shotgun-runtime
+      - siete perdigones físicos independientes conservados
+
+PASS  make test-actor-equipment
+      - ensamblaje universal y muzzle visual conservados
+
+PASS  make syntax-check
+      - integración activa completa acepta C89 -Wall -Wextra -pedantic
+
+PASS  make audit
+      - sin malloc/realloc/free en integración activa
+      - simulación sin float/double fuera de fronteras permitidas
+
+PASS  make test
+      - batería portátil completa del proyecto
+
+Limitación del host de QA
+-------------------------
+No se produjo blank3d.exe porque este host no contiene el compilador cruzado
+i686-w64-mingw32-gcc. El árbol completo pasó parsing/compilación portátil; el
+link Win32 debe ejecutarse con el Makefile incluido en MSYS2 MinGW32.
+
+Prueba manual recomendada en Windows
+------------------------------------
+1. Entrar en TPS y mantener W/A/D mientras se dispara semiautomática.
+2. Mantener Gatling durante una ráfaga larga y girar cámara suavemente.
+3. Alternar caminar/parar/caminar sin soltar el gatillo.
+4. Confirmar que tracer y proyectil nacen del arma y convergen al HUD.
+5. Confirmar que ningún proyectil sale hacia atrás ni se eleva sin apuntar.

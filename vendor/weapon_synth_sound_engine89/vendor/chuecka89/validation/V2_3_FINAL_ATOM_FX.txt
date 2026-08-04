@@ -1,0 +1,32 @@
+chuecka89 v2.3 final atom FX
+================================
+
+Approved atom timing
+- SH attack: 30 ms
+- SH decay: 62 ms
+- SH sustain: 7 ms
+- SH release: 12 ms
+- ECKT delay: 82 ms
+- ECKT attack: 0 ms
+- ECKT decay: 15 ms
+- ECKT release: 2 ms
+
+Signal chain
+- per-voice distortion
+- independent moving six-band EQ for SH and ECKT
+- subtle global chorus
+- tiny global reverb
+
+Preset rebuild
+- shotgun pump
+- shotshell insert
+- repeated shotshell insert
+- pistol slide
+- magnum/heavy action
+- revolver cylinder
+- grenade-launcher breech
+- rocket-launcher handling
+- SMG feed burst
+- machine-gun feed burst
+
+All WAV previews in wav/ were regenerated from the current C code.

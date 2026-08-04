@@ -1,0 +1,17 @@
+Build/test performed with:
+
+make clean
+make check
+make all
+./demo_gattach89
+
+Observed output:
+
+gattach89 tests ok
+part entity=1 name=helmet visible=0
+part entity=1 name=backpack visible=1
+attachment 0 child=2 pos=(103,5,31)
+render packets=1 dropped=0
+pistol final=(103,5,31)
+
+Source grep check over include/src/demo/tests found no malloc, calloc, realloc, free, float, double, or long long tokens.

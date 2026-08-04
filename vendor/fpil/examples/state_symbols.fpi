@@ -1,0 +1,2 @@
+; The host maps idle=0 and running=1, then selects "mode" as the protocol word.
+:mode=idle:mode=running

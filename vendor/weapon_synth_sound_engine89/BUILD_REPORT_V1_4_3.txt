@@ -1,0 +1,10 @@
+weapon_synth_sound_engine89 v1.4.3
+
+Strict build: PASS
+Flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Libraries: PASS
+Demos: PASS
+Tests: PASS
+Realtime showcase render: PASS
+Rocket launch/impact scheduled events: 2 total (1 report, 1 impact)
+Long-bank cursor overflow regression: PASS

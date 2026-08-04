@@ -1,0 +1,13 @@
+== build/test_gsynthsoundengine89 ==
+== build/test_gsynthordnance89 ==
+gsynthordnance89 PASS: bullet=4904 grenade=33352 rocket=48776 context=56 starts=3
+== build/test_gsynthsoundexpansion89 ==
+gsynthsoundexpansion89 PASS bytes=824
+== build/test_weapon_synth_sound_engine89 ==
+weapon_synth_sound_engine89 PASS starts=5 rejects=0 action_events=6 context=4368 report_voice=70468
+== build/test_phase12_acoustics ==
+== build/test_phase3_dna_metrics ==
+== build/test_pump_layers ==
+== build/test_shotgun_master ==
+== build/test_weapon_mix_hierarchy ==
+weapon mix hierarchy PASS: mech=17500/20800/22000 report=32767 explosion=32767

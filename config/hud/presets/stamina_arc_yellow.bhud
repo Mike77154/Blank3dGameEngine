@@ -1,0 +1,41 @@
+hud stamina_arc_yellow -=)
+enabled true
+canvas_width 140
+canvas_height 86
+node stamina_arc -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+radial_phase_bind numbar.phase
+pos top_left + 0,0
+size 140,140
+kind radial_ring
+radial_start 205
+radial_sweep 130
+radial_inner 78
+radial_steps 72
+radial_segments 18
+radial_gap_deg 2
+radial_cap round
+frame none
+background solid
+draw_bg true
+draw_border false
+damage_lag true
+lag_speed 48
+outer_outline true
+gloss true
+radial_ticks true
+radial_sweep_highlight true
+outline_size 1
+gloss_percent 32
+radial_detail_rings 2
+color_bg #191605C0
+color_fill #F1D84BFF
+color_lag #FFF2A0FF
+color_empty #3A3517D0
+color_outline #090800E0
+color_highlight #FFFFFFFF
+color_gloss #FFFFFF58
+(=-

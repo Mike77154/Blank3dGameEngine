@@ -1,0 +1,28 @@
+weapon_synth_sound_engine89 v1.6.0 release manifest
+
+Phase 3 additions:
+  - physical Weapon DNA descriptor and ten default classes
+  - deterministic correlated shot variation
+  - whole-report DNA mapping across report/body/gas/crack/tail/thump
+  - Realistic, Hybrid and Cinematic source/world synchronization
+  - caller-owned fixed-point regression metrics
+  - editable target envelopes, validation flags and Q15 score
+  - five new facade events and engine bridge helpers
+  - Phase 3 test, renderer, preview and metrics JSON
+
+Aggregate library:
+  build/libweapon_synth_sound_engine89.a
+  bytes: 363716
+  objects: 56
+
+Primary previews:
+  audio/00_v1_6_0_unified_event_showcase.wav
+  audio/16_phase3_realistic_hybrid_cinematic.wav
+
+Primary documentation:
+  README.md
+  EVENT_ABI_GUIDE_V1_6.md
+  PHASE1_PHASE2_ACOUSTICS_V1_5.md
+  PHASE3_DNA_METRICS_V1_6.md
+
+License: CC0

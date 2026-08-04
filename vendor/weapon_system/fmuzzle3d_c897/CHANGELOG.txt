@@ -1,0 +1,20 @@
+FMUZZLE89 v6
+- Shortened the cylinder from 4 cm to 2 cm.
+- Lengthened the cone from 16 cm to 18 cm.
+- Preserved the combined axial length at exactly 20 cm.
+- Set the shared cylinder/cone-base diameter to exactly 2.5 cm.
+- Set the corresponding fixed-point radius to exactly 1.25 cm.
+- Preserved the base-ring anchor for both primary and repeated fins.
+- Kept square-sheet generation disabled.
+- Added regression checks for the new lengths, diameter and seamless join.
+
+2026-07-14 v8
+- Triangle fins now use an open-root outline in the software preview: the lower yellow edge is hidden so tips read as / \ instead of /_\.
+- Fin anchoring remains on the base ring of the 2 cm cylinder.
+- Box sheets remain disabled; triangle and leaf shapes only.
+
+2026-07-15 v9
+- Added a second star bank at the cone base (z = 2 cm).
+- Cone-base star copies the original point count and shape, uses half-length / half-width, and alternates triangle roll so the petals lean like \ / around the cone base.
+- Added a cone-base repeater at the angular midpoints with quarter-length / quarter-width relative to the original cylinder-base star.
+- Triangle outline remains open at the root; square sheets remain disabled.

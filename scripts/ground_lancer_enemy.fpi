@@ -1,0 +1,5 @@
+; Ground knight charge: zero-hop horizontal dash that stops beside the player.
+:state=0,plrflatdistfurther=5,grounded:lookatplayer,groundlancestyle=lance,groundlancehopheight=0,groundlancecontact=stop,groundlancetrack=1,groundlanceplayer=12,setstate=1
+:state=1,attackhit:hurtplayer=10,clearimpact,setstate=2
+:state=1,attackdone:setstate=2
+:state=2,attackdone:attackreset,setstate=0

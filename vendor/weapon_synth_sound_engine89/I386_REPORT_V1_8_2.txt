@@ -1,0 +1,4 @@
+weapon_synth_sound_engine89 v1.8.2 i386 note
+
+The changed file is the host-side showcase renderer. A -m32 compile attempt was made, but this container lacks the 32-bit glibc development headers (bits/libc-header-start.h).
+The C89 optimized native build and all ten test suites pass. No runtime public ABI or fixed-width state structure was changed by this release.

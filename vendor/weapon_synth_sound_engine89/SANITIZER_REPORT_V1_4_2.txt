@@ -1,0 +1,6 @@
+AddressSanitizer + UndefinedBehaviorSanitizer
+CFLAGS: -std=c89 -pedantic -Wall -Wextra -Werror -O1 -g -fsanitize=address,undefined
+
+Modified render_realtime_showcase: PASS
+Modified render_unified_event_showcase: PASS
+No ASan or UBSan diagnostics were emitted.

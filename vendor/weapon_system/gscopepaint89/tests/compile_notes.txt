@@ -1,0 +1,2 @@
+Validated with: gcc -std=c89 -pedantic -Wall -Wextra -Werror
+No malloc, calloc, realloc, free, float, double or long long is used.

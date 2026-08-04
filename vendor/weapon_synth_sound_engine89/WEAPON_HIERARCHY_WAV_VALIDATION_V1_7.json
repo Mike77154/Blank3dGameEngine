@@ -1,0 +1,184 @@
+{
+  "version": "1.7.0",
+  "files": {
+    "07_complete_weapon_sequences_balanced.wav": {
+      "duration_s": 39.9,
+      "peak": 28831,
+      "peak_dbfs": -1.112,
+      "rms_dbfs": -26.077,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "08_pistol_complete.wav": {
+      "duration_s": 3.4,
+      "peak": 8717,
+      "peak_dbfs": -11.502,
+      "rms_dbfs": -36.319,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "09_magnum_complete.wav": {
+      "duration_s": 3.5,
+      "peak": 11177,
+      "peak_dbfs": -9.342,
+      "rms_dbfs": -34.41,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "10_shotgun_complete_balanced.wav": {
+      "duration_s": 4.2,
+      "peak": 9902,
+      "peak_dbfs": -10.395,
+      "rms_dbfs": -33.299,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "11_machinegun_complete.wav": {
+      "duration_s": 3.4,
+      "peak": 8376,
+      "peak_dbfs": -11.848,
+      "rms_dbfs": -30.48,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "12_sniper_complete.wav": {
+      "duration_s": 4.4,
+      "peak": 14206,
+      "peak_dbfs": -7.26,
+      "rms_dbfs": -33.694,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "13_grenade_complete.wav": {
+      "duration_s": 8.2,
+      "peak": 23473,
+      "peak_dbfs": -2.898,
+      "rms_dbfs": -31.347,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "14_rocket_launcher_complete.wav": {
+      "duration_s": 8.5,
+      "peak": 28831,
+      "peak_dbfs": -1.112,
+      "rms_dbfs": -20.482,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    "15_grenade_launcher_complete.wav": {
+      "duration_s": 7.6,
+      "peak": 23541,
+      "peak_dbfs": -2.873,
+      "rms_dbfs": -30.222,
+      "clipped_samples": 0,
+      "sample_rate": 44100,
+      "channels": 2
+    }
+  },
+  "hierarchy": {
+    "pistol": {
+      "mechanism_window": {
+        "peak_dbfs": -15.788,
+        "rms_dbfs": -35.353
+      },
+      "primary_window": {
+        "peak_dbfs": -11.502,
+        "rms_dbfs": -27.891
+      },
+      "primary_over_mechanism_peak_db": 4.286,
+      "primary_over_mechanism_rms_db": 7.462
+    },
+    "magnum": {
+      "mechanism_window": {
+        "peak_dbfs": -16.321,
+        "rms_dbfs": -39.364
+      },
+      "primary_window": {
+        "peak_dbfs": -9.342,
+        "rms_dbfs": -25.671
+      },
+      "primary_over_mechanism_peak_db": 6.979,
+      "primary_over_mechanism_rms_db": 13.693
+    },
+    "shotgun": {
+      "mechanism_window": {
+        "peak_dbfs": -13.301,
+        "rms_dbfs": -32.614
+      },
+      "primary_window": {
+        "peak_dbfs": -10.395,
+        "rms_dbfs": -25.491
+      },
+      "primary_over_mechanism_peak_db": 2.906,
+      "primary_over_mechanism_rms_db": 7.123
+    },
+    "machinegun": {
+      "mechanism_window": {
+        "peak_dbfs": -18.168,
+        "rms_dbfs": -41.933
+      },
+      "primary_window": {
+        "peak_dbfs": -11.848,
+        "rms_dbfs": -25.929
+      },
+      "primary_over_mechanism_peak_db": 6.32,
+      "primary_over_mechanism_rms_db": 16.004
+    },
+    "sniper": {
+      "mechanism_window": {
+        "peak_dbfs": -14.237,
+        "rms_dbfs": -34.09
+      },
+      "primary_window": {
+        "peak_dbfs": -7.26,
+        "rms_dbfs": -25.92
+      },
+      "primary_over_mechanism_peak_db": 6.977,
+      "primary_over_mechanism_rms_db": 8.17
+    },
+    "grenade": {
+      "mechanism_window": {
+        "peak_dbfs": -18.106,
+        "rms_dbfs": -37.119
+      },
+      "primary_window": {
+        "peak_dbfs": -2.898,
+        "rms_dbfs": -23.361
+      },
+      "primary_over_mechanism_peak_db": 15.208,
+      "primary_over_mechanism_rms_db": 13.758
+    },
+    "rocket": {
+      "mechanism_window": {
+        "peak_dbfs": -16.553,
+        "rms_dbfs": -36.414
+      },
+      "primary_window": {
+        "peak_dbfs": -1.112,
+        "rms_dbfs": -13.946
+      },
+      "primary_over_mechanism_peak_db": 15.441,
+      "primary_over_mechanism_rms_db": 22.468
+    },
+    "grenade_launcher": {
+      "mechanism_window": {
+        "peak_dbfs": -16.217,
+        "rms_dbfs": -34.244
+      },
+      "primary_window": {
+        "peak_dbfs": -2.873,
+        "rms_dbfs": -24.407
+      },
+      "primary_over_mechanism_peak_db": 13.344,
+      "primary_over_mechanism_rms_db": 9.837
+    }
+  }
+}

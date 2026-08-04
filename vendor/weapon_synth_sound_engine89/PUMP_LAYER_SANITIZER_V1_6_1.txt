@@ -1,0 +1,13 @@
+ASan + UBSan targeted validation
+
+Command profile:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O1 -g
+  -fsanitize=address,undefined
+
+Target:
+  tests/test_pump_layers.c plus gshotgunsequence89 and all of its runtime
+  dependencies, including shotpumpkin89.
+
+Result: PASS
+Leak detection was disabled because the runtime performs no dynamic allocation.
+No AddressSanitizer or UndefinedBehaviorSanitizer diagnostic was emitted.

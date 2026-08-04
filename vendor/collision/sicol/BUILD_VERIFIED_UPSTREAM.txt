@@ -1,0 +1,27 @@
+SICOL build verification
+
+Date: 2026-03-08
+
+Verified commands:
+
+1) CMake
+   cmake -S . -B build
+   cmake --build build
+   ctest --test-dir build --output-on-failure
+
+2) Manual strict compile
+   cc -std=c89 -Wall -Wextra -Wpedantic -I.      sicol_math_fx.c sicol_shape.c sicol_mesh.c sicol_convex.c sicol_gjk.c sicol_cast.c      sicol_broadphase.c sicol_narrowphase.c sicol_raycast.c sicol_world.c sicol_solver.c      sicol-de_compat.c tests/test_sicol.c -o /tmp/test_sicol_mordisco
+   /tmp/test_sicol_mordisco
+
+Observed result:
+- CMake build: OK
+- CTest: OK
+- Manual strict compile: OK
+- Tests passed: 19/19
+
+Next mordisco verified in this revision:
+- Explicit triangle-vs-convex/support-mapped narrowphase route
+- Refined per-triangle mesh shapecast path with validation/fallback
+- Capsule-vs-mesh cast regression coverage at precise TOI ranges
+- BVH refit support for light dynamic/deformable mesh updates
+- Mesh triangle update API (`sicol_mesh_set_triangle`) plus manual `sicol_mesh_refit()`

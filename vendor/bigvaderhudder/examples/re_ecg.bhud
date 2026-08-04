@@ -1,0 +1,27 @@
+
+hud re_ecg -=)
+layer overlay
+alpha 0.95
+
+node hud_frame -=)
+type image
+image assets/re/frame.png
+pos bottom_left
+alpha 0.7
+
+node health_wave -=)
+type shape
+mode waveform
+bind player.health_signal
+size 220,60
+color #00FF66
+thickness 2
+pos bottom_left + 40,30
+
+node ammo -=)
+type text
+bind weapon.loaded "/" weapon.reserve
+font re_sans
+color white
+pos bottom_right - 80,35
+(=-

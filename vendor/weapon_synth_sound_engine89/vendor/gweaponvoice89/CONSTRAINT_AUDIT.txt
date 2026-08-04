@@ -1,0 +1,10 @@
+PASS: strict C89 compile with -pedantic -Werror
+PASS: no malloc/realloc/free tokens in library source
+PASS: no float/double tokens in library source
+PASS: no stdio/stdlib/math dependency in library source
+PASS: fixed/integer signal path
+PASS: caller-owned voice and provider storage
+PASS: 256 logical / 64 physical / 192 virtual smoke test
+PASS: class physical-reserve assertions
+PASS: voice-steal assertions
+PASS: legacy shotgun adapter source compatibility

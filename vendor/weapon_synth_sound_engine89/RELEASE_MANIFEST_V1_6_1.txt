@@ -1,0 +1,20 @@
+weapon_synth_sound_engine89 v1.6.1
+
+Primary change:
+- shotpumpkin89 vendored and synchronized as the third complete pump layer.
+
+Runtime pump stack:
+- gpump89: structural mechanism mass/stages
+- chuecka89: bright metal articulation
+- shotpumpkin89: continuous rail friction/chatter
+- gklek89 + gweaponfoley89: midpoint/trailing details
+
+Key controls:
+- gss89_mix.pump_shotpumpkin_q15
+- gss89_mix.pump_shotpumpkin_delay_ms
+- gss89_set_shotpumpkin_preset()
+
+Included previews:
+- audio/wsse89_v1_6_1_pump_layers_ab.wav
+- audio/wsse89_v1_6_1_triple_pump_complete.wav
+- audio/wsse89_v1_6_1_full_shotgun_sequence_triple_pump.wav

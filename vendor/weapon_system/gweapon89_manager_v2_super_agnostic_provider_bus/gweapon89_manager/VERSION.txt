@@ -1,0 +1,5 @@
+gweapon89_manager_v2_provider_bus
+Date: 2026-07-17
+Purpose: actor-agnostic weapon orchestrator with mutable, prioritized providers for every host-facing subsystem and zero-provider legacy fallback.
+Core IO: provider-owned; no stdio/stdlib/ctype/math dependency in src/.
+Actor update: mutable provider stage before timers, trigger policy, and fire pipeline.

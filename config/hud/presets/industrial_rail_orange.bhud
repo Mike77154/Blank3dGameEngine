@@ -1,0 +1,54 @@
+hud industrial_rail_orange -=)
+enabled true
+canvas_width 320
+canvas_height 32
+node industrial_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+mid_bind numbar.mid
+pos top_left + 0,0
+size 320,32
+kind segmented
+direction left_to_right
+segments 24
+segment_gap 2
+frame rail
+frame_depth 4
+frame_gap 2
+background diagonal
+bg_step 7
+bg_size 2
+use_mask true
+mask_kind slant_right
+mask_amount 10
+mask_steps 12
+draw_bg true
+draw_border true
+draw_pattern true
+draw_mid_value true
+mid_direction left_to_right
+outer_outline true
+drop_shadow true
+extrude true
+inner_shadow true
+fill_scanlines true
+outline_size 2
+shadow_offset 4,4
+extrude_depth 3
+pattern_kind ticks
+pattern_step 8
+pattern_size 2
+color_bg #171008E8
+color_fill #F18A2DFF
+color_mid #FFD15CFF
+color_border #FFD6A1FF
+color_empty #392317E8
+color_pattern #FFCA6B90
+color_outline #090501FF
+color_shadow #000000A0
+color_extrude #4B2811E0
+color_bg_detail #A45D2E60
+border_size 2
+(=-

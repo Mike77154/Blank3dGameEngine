@@ -1,0 +1,5 @@
+weapon_synth_sound_engine89 v1.5.0 protocol scan
+C/H files scanned: 232
+Exact active-syntax tokens checked: malloc, realloc, free, float, double
+RESULT: PASS — no forbidden allocation or floating-point tokens in active C/H syntax.
+Compiler validation separately used -std=c89 -pedantic -Wall -Wextra -Werror.

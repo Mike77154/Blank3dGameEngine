@@ -1,0 +1,13 @@
+weapon_synth_sound_engine89 v1.9.0 protocol scan
+Files scanned: 273 C/C headers/sources (excluding build output).
+Comments and string literals were removed before token scanning.
+
+malloc: 0
+calloc: 0
+realloc: 0
+free: 0
+float: 0
+double: 0
+long long: 0
+
+Result: PASS

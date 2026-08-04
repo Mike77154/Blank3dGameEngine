@@ -1,0 +1,3 @@
+/tmp/wmagazine89_v181_i386.o:      ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+/tmp/grocketwhistle89_v181_i386.o: ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+Unified facade i386: NOT RETESTED in this container; shotpumpkin89.h includes <limits.h> and 32-bit glibc headers are unavailable (bits/libc-header-start.h).

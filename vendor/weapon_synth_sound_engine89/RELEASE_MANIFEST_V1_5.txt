@@ -1,0 +1,41 @@
+weapon_synth_sound_engine89 v1.5.0 release manifest
+
+Core additions:
+  vendor/wsound_acoustic_phase12_89/include/wsoundacoustic89.h
+  vendor/wsound_acoustic_phase12_89/src/wsoundacoustic89.c
+  vendor/wsound_acoustic_phase12_89/tests/smoke.c
+  tests/test_phase12_acoustics.c
+  src/render_phase12_showcase.c
+  PHASE1_PHASE2_ACOUSTICS_V1_5.md
+  EVENT_ABI_GUIDE_V1_5.md
+
+Integrated surfaces:
+  include/gsynthworld89.h
+  src/gsynthworld89.c
+  include/weapon_synth_sound_engine89.h
+  src/weapon_synth_sound_engine89.c
+  examples/game_engine_event_bridge.c
+  Makefile
+
+Runtime features:
+  bipolar pressure pulse
+  low/mid/high propagation
+  source-class directivity
+  atmospheric absorption inputs
+  material absorption/transmission/scattering presets
+  portal delay/transmission/apparent direction
+  translation harmonic
+  8 early-reflection taps
+  4 late-reverb lines
+  outdoor ground bounce
+  multiband master dynamics
+  world ducking and safety limiter
+  REALISTIC/HYBRID/CINEMATIC profiles
+
+Preview files:
+  audio/00_v1_5_0_unified_event_showcase.wav
+  audio/14_phase12_ab_legacy_vs_hybrid.wav
+  audio/15_phase12_environment_triptych.wav
+
+Complete library:
+  build/libweapon_synth_sound_engine89.a (348162 bytes, 55 objects)

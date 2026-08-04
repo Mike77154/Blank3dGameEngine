@@ -1,0 +1,363 @@
+--- src/gweaponfoley89_v13.c	2026-07-18 06:54:52.699788421 +0000
++++ src/gweaponfoley89.c	2026-07-18 06:57:03.328805468 +0000
+@@ -86,6 +86,98 @@
+     return 0;
+ }
+ 
++
++static gwf89_s16 gwf89_tone_envelope(const gwf89_tone_shape *t,
++                                      gwf89_u32 local)
++{
++    gwf89_u32 a;
++    gwf89_u32 d;
++    gwf89_u32 hold;
++    gwf89_u32 r;
++    gwf89_s32 v;
++    gwf89_s32 span;
++
++    a = (gwf89_u32)t->attack_samples;
++    d = (gwf89_u32)t->decay_samples;
++    hold = (gwf89_u32)t->hold_samples;
++    r = (gwf89_u32)t->release_samples;
++
++    if (a != 0UL && local < a) {
++        v = (32767L * (gwf89_s32)(local + 1UL)) / (gwf89_s32)a;
++        return gwf89_sat16(v);
++    }
++    if (local >= a) local -= a;
++
++    if (d != 0UL && local < d) {
++        span = 32767L - (gwf89_s32)t->sustain_q15;
++        v = 32767L - (span * (gwf89_s32)local) / (gwf89_s32)d;
++        return gwf89_sat16(v);
++    }
++    if (local >= d) local -= d;
++
++    if (local < hold) return t->sustain_q15;
++    local -= hold;
++
++    if (r != 0UL && local < r) {
++        v = ((gwf89_s32)t->sustain_q15 * (gwf89_s32)(r - local)) /
++            (gwf89_s32)r;
++        return gwf89_sat16(v);
++    }
++    return 0;
++}
++
++static gwf89_s16 gwf89_particle_filter(gwf89_context *ctx,
++                                        unsigned int hit_index,
++                                        gwf89_s16 input,
++                                        gwf89_s16 tone_env,
++                                        const gwf89_tone_shape *t)
++{
++    gwf89_s32 alpha;
++    gwf89_s16 delta;
++    gwf89_s16 low;
++    gwf89_s16 band;
++    gwf89_s16 high;
++    gwf89_s32 out;
++
++    /*
++       SimSynth-inspired particle stage:
++       - amplitude and tone envelopes are independent;
++       - the tone envelope opens a two-pole multimode filter for the tick;
++       - as it closes, a darker low/band body remains under the transient.
++       This turns the source into a short metal particle instead of merely
++       chopping broadband noise.
++    */
++    alpha = (gwf89_s32)t->cutoff_base_q15 +
++            (gwf89_s32)gwf89_mul_q15(t->cutoff_env_q15, tone_env);
++    if (alpha < 384L) alpha = 384L;
++    if (alpha > 29200L) alpha = 29200L;
++
++    delta = gwf89_sat16((gwf89_s32)input -
++                        (gwf89_s32)ctx->hit_tone_lp1[hit_index]);
++    ctx->hit_tone_lp1[hit_index] = gwf89_sat16(
++        (gwf89_s32)ctx->hit_tone_lp1[hit_index] +
++        (gwf89_s32)gwf89_mul_q15((gwf89_s16)alpha, delta));
++
++    delta = gwf89_sat16((gwf89_s32)ctx->hit_tone_lp1[hit_index] -
++                        (gwf89_s32)ctx->hit_tone_lp2[hit_index]);
++    ctx->hit_tone_lp2[hit_index] = gwf89_sat16(
++        (gwf89_s32)ctx->hit_tone_lp2[hit_index] +
++        (gwf89_s32)gwf89_mul_q15((gwf89_s16)alpha, delta));
++
++    low = ctx->hit_tone_lp2[hit_index];
++    band = gwf89_sat16((gwf89_s32)ctx->hit_tone_lp1[hit_index] -
++                       (gwf89_s32)ctx->hit_tone_lp2[hit_index]);
++    high = gwf89_sat16((gwf89_s32)input -
++                       (gwf89_s32)ctx->hit_tone_lp1[hit_index]);
++
++    out = (gwf89_s32)gwf89_mul_q15(low, 24576);
++    out += (gwf89_s32)gwf89_mul_q15(
++        band, gwf89_sat16((gwf89_s32)t->band_mix_q15 +
++                          (gwf89_s32)t->emphasis_q15));
++    out += (gwf89_s32)gwf89_mul_q15(high, t->high_mix_q15);
++    return gwf89_sat16(out);
++}
++
+ static gwf89_s16 gwf89_filterbank(gwf89_s16 state[5], gwf89_s16 input,
+                                      const signed short gain_q12[6])
+ {
+@@ -336,21 +428,38 @@
+ #define EQ_SHOT_HAMMER    { 5600, 8200, 7600, 5000, 2300, 800 }
+ #define EQ_SAFETY_CLICK   { 1800, 3900, 6300, 7900, 5900, 1700 }
+ 
+-#define HIT(off,a,d,h,r,p,s,l,w,hi,eq,drv) \
+-    { off,a,d,h,r,p,s,l,w,hi,eq,drv }
+-#define ZHIT HIT(0,0,0,0,0,0,0,0,0,0,EQ_PISTOL_RELEASE,0)
++#define TONE_EDGE    { 1, 105, 14, 170, 1100, 4300, 17600, 2600, 9600, 15000 }
++#define TONE_STRIKER { 1, 145, 22, 230, 1500, 3600, 16500, 3600, 7600, 17800 }
++#define TONE_SPRING  { 1, 82, 8, 140, 800, 5200, 18400, 1800, 12400, 13200 }
++#define TONE_FRAME   { 1, 225, 48, 370, 2300, 2600, 12600, 3000, 4800, 19000 }
++#define TONE_DETENT  { 1, 118, 16, 185, 1200, 3900, 17100, 3900, 9800, 16900 }
++#define TONE_RATCHET { 1, 170, 24, 255, 1500, 3200, 15000, 4300, 7200, 19000 }
++#define TONE_HEAVY   { 1, 285, 72, 520, 2600, 2100, 11200, 4200, 3900, 20600 }
++#define TONE_RAIL    { 2, 380, 105, 650, 3300, 1650, 9200, 1800, 3000, 18400 }
++#define TONE_STOP    { 1, 245, 58, 470, 2400, 2350, 12600, 3900, 4300, 20700 }
++#define TONE_LOCK    { 1, 210, 44, 360, 1900, 2850, 14300, 4500, 6100, 20100 }
++#define TONE_MID     { 1, 210, 42, 355, 1900, 3000, 14500, 3700, 6100, 19500 }
++#define TONE_TUBE    { 2, 430, 118, 820, 4000, 1250, 7800, 2500, 2300, 18600 }
++#define TONE_SAFETY  { 1, 138, 18, 215, 1300, 3700, 16600, 4300, 8300, 18100 }
++#define TONE_NONE    { 0, 0, 0, 0, 0, 32767, 0, 0, 0, 0 }
++
++#define HIT(off,a,d,h,r,p,s,l,w,hi,eq,drv,tone) \
++    { off,a,d,h,r,p,s,l,w,hi,eq,drv,tone }
++#define ZHIT HIT(0,0,0,0,0,0,0,0,0,0,EQ_PISTOL_RELEASE,0,TONE_NONE)
+ 
+ /*
+-   v1.3 metallic-body pass: v1.2 micro-contacts excite four short,
+-   inharmonic damped-delay modes. White noise remains the only source.
++   v1.4 SimSynth-particle pass: each micro-contact keeps an independent
++   amplitude envelope and a separate fast tone/SVF-style envelope. The
++   transient opens bright; a darker low/band body remains underneath.
++   White noise remains the only source.
+ */
+ static const gwf89_preset gwf89_presets[GWF89_PRESET_COUNT] = {
+     {
+         "pistol_empty", 3,
+         {
+-            HIT(0,1,18,0,90,15500,2400,2500,21500,28500,EQ_PISTOL_RELEASE,12500),
+-            HIT(176,1,38,0,145,30500,4300,9500,25000,18000,EQ_PISTOL_STOP,27200),
+-            HIT(397,1,22,0,95,9000,1200,2500,18500,28500,EQ_SPRING_EDGE,9000),
++            HIT(0,1,28,12,140,15500,2790,2500,21500,28500,EQ_PISTOL_RELEASE,12500,TONE_EDGE),
++            HIT(176,1,65,22,239,30500,7320,9500,25000,18000,EQ_PISTOL_STOP,27200,TONE_STRIKER),
++            HIT(397,1,32,8,138,9000,1260,2500,18500,28500,EQ_SPRING_EDGE,9000,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 2600, 4500, 6400, 6800, 4700, 1800 }, 11800,
+@@ -360,10 +469,10 @@
+     {
+         "pistol_handling", 4,
+         {
+-            HIT(0,2,45,0,180,20500,3400,12000,23000,12500,EQ_FRAME_TAP,19000),
+-            HIT(574,1,26,0,110,12500,1800,3500,23000,25000,EQ_DETENT,13500),
+-            HIT(1190,2,54,0,210,23000,3900,14500,22000,9500,EQ_FRAME_TAP,21200),
+-            HIT(2058,1,31,0,130,10500,1500,4500,21500,24000,EQ_SAFETY_CLICK,12000),
++            HIT(0,2,74,48,315,20500,6150,12000,23000,12500,EQ_FRAME_TAP,19000,TONE_FRAME),
++            HIT(574,1,40,16,170,12500,2375,3500,23000,25000,EQ_DETENT,13500,TONE_DETENT),
++            HIT(1190,2,89,48,368,23000,6900,14500,22000,9500,EQ_FRAME_TAP,21200,TONE_FRAME),
++            HIT(2058,1,50,18,208,10500,2205,4500,21500,24000,EQ_SAFETY_CLICK,12000,TONE_SAFETY),
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3200, 5200, 6500, 5700, 3500, 1400 }, 10500,
+@@ -373,11 +482,11 @@
+     {
+         "magnum_empty", 5,
+         {
+-            HIT(0,1,18,0,80,10500,1600,3000,22000,24000,EQ_DETENT,9000),
+-            HIT(154,1,22,0,90,13000,1900,6000,24500,19000,EQ_MAGNUM_RATCHET,12000),
+-            HIT(331,1,19,0,85,11500,1500,5000,23500,22000,EQ_DETENT,11000),
+-            HIT(507,1,27,0,110,17500,2500,9000,24000,15500,EQ_MAGNUM_RATCHET,17000),
+-            HIT(706,2,62,0,260,31800,6500,22000,24500,7500,EQ_MAGNUM_HAMMER,30000),
++            HIT(0,1,28,16,124,10500,1995,3000,22000,24000,EQ_DETENT,9000,TONE_DETENT),
++            HIT(154,1,36,24,144,13000,2990,6000,24500,19000,EQ_MAGNUM_RATCHET,12000,TONE_RATCHET),
++            HIT(331,1,29,16,132,11500,2185,5000,23500,22000,EQ_DETENT,11000,TONE_DETENT),
++            HIT(507,1,45,24,176,17500,4025,9000,24000,15500,EQ_MAGNUM_RATCHET,17000,TONE_RATCHET),
++            HIT(706,2,112,72,481,31800,10494,22000,24500,7500,EQ_MAGNUM_HAMMER,30000,TONE_HEAVY),
+             ZHIT, ZHIT, ZHIT
+         },
+         { 5200, 7300, 7200, 5000, 2500, 900 }, 14500,
+@@ -387,10 +496,10 @@
+     {
+         "magnum_latch", 4,
+         {
+-            HIT(0,1,28,0,120,15500,2300,6500,24500,16500,EQ_DETENT,13500),
+-            HIT(397,2,48,0,190,22500,3600,15000,23000,8500,EQ_FRAME_TAP,21500),
+-            HIT(1058,2,63,0,240,27000,5200,20000,22000,6500,EQ_MAGNUM_HAMMER,27000),
+-            HIT(1411,1,24,0,105,12000,1800,5000,23000,21000,EQ_DETENT,11000),
++            HIT(0,1,43,16,186,15500,2945,6500,24500,16500,EQ_DETENT,13500,TONE_DETENT),
++            HIT(397,2,79,48,332,22500,6750,15000,23000,8500,EQ_FRAME_TAP,21500,TONE_FRAME),
++            HIT(1058,2,113,72,444,27000,8910,20000,22000,6500,EQ_MAGNUM_HAMMER,27000,TONE_HEAVY),
++            HIT(1411,1,37,16,163,12000,2280,5000,23000,21000,EQ_DETENT,11000,TONE_DETENT),
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 5600, 7600, 6900, 4300, 2100, 800 }, 13800,
+@@ -400,9 +509,9 @@
+     {
+         "sniper_empty", 3,
+         {
+-            HIT(0,1,20,0,85,12500,1700,3000,22000,25500,EQ_PISTOL_RELEASE,10000),
+-            HIT(198,1,43,0,170,30000,5000,12500,24500,14500,EQ_BOLT_LOCK,27500),
+-            HIT(485,1,25,0,105,8500,1200,2500,18500,28500,EQ_SPRING_EDGE,8500),
++            HIT(0,1,31,12,132,12500,2250,3000,22000,25500,EQ_PISTOL_RELEASE,10000,TONE_EDGE),
++            HIT(198,1,73,44,298,30000,8100,12500,24500,14500,EQ_BOLT_LOCK,27500,TONE_LOCK),
++            HIT(485,1,36,8,152,8500,1200,2500,18500,28500,EQ_SPRING_EDGE,8500,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3600, 5900, 7200, 6200, 3500, 1200 }, 12500,
+@@ -412,14 +521,14 @@
+     {
+         "sniper_bolt_dry", 8,
+         {
+-            HIT(0,1,34,0,130,19000,2800,8000,24500,15000,EQ_BOLT_LOCK,17000),
+-            HIT(529,2,120,0,330,16500,3600,22500,20000,5500,EQ_BOLT_RAIL,11500),
+-            HIT(1764,2,145,0,390,13500,3200,24000,18500,4500,EQ_BOLT_RAIL,10000),
+-            HIT(3087,2,70,0,260,28500,5900,25500,20500,4000,EQ_BOLT_STOP,29200),
+-            HIT(4410,2,125,0,350,15000,3400,23000,19500,5000,EQ_BOLT_RAIL,10800),
+-            HIT(6174,2,78,0,280,23000,4700,21500,22500,7000,EQ_BOLT_STOP,24500),
+-            HIT(7056,1,44,0,165,25000,4200,13500,25000,12500,EQ_BOLT_LOCK,25800),
+-            HIT(7350,1,30,0,120,16500,2400,7500,23500,19000,EQ_DETENT,14500)
++            HIT(0,1,58,44,228,19000,5130,8000,24500,15000,EQ_BOLT_LOCK,17000,TONE_LOCK),
++            HIT(529,2,186,105,578,16500,5115,22500,20000,5500,EQ_BOLT_RAIL,11500,TONE_RAIL),
++            HIT(1764,2,225,105,682,13500,4185,24000,18500,4500,EQ_BOLT_RAIL,10000,TONE_RAIL),
++            HIT(3087,2,122,58,481,28500,8835,25500,20500,4000,EQ_BOLT_STOP,29200,TONE_STOP),
++            HIT(4410,2,194,105,612,15000,4650,23000,19500,5000,EQ_BOLT_RAIL,10800,TONE_RAIL),
++            HIT(6174,2,136,58,518,23000,7130,21500,22500,7000,EQ_BOLT_STOP,24500,TONE_STOP),
++            HIT(7056,1,75,44,289,25000,6750,13500,25000,12500,EQ_BOLT_LOCK,25800,TONE_LOCK),
++            HIT(7350,1,46,16,186,16500,3135,7500,23500,19000,EQ_DETENT,14500,TONE_DETENT)
+         },
+         { 5600, 7700, 7200, 4800, 2400, 850 }, 14500,
+         11200, 17200, 18700, { 13, 19, 31, 47 },
+@@ -428,10 +537,10 @@
+     {
+         "smg_empty", 4,
+         {
+-            HIT(0,1,17,0,75,10000,1500,2500,22500,25000,EQ_DETENT,9000),
+-            HIT(132,1,25,0,100,15500,2200,6500,24500,18000,EQ_SMG_HAMMER,14500),
+-            HIT(309,1,48,0,185,28500,5200,17000,24500,9500,EQ_SMG_HAMMER,27500),
+-            HIT(617,1,24,0,100,9500,1400,3500,20500,26000,EQ_SPRING_EDGE,9500),
++            HIT(0,1,26,16,116,10000,1900,2500,22500,25000,EQ_DETENT,9000,TONE_DETENT),
++            HIT(132,1,42,42,175,15500,4185,6500,24500,18000,EQ_SMG_HAMMER,14500,TONE_MID),
++            HIT(309,1,82,42,324,28500,7695,17000,24500,9500,EQ_SMG_HAMMER,27500,TONE_MID),
++            HIT(617,1,35,8,145,9500,1400,3500,20500,26000,EQ_SPRING_EDGE,9500,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3600, 6100, 7300, 6200, 3400, 1200 }, 13200,
+@@ -441,9 +550,9 @@
+     {
+         "smg_selector", 3,
+         {
+-            HIT(0,1,17,0,75,10500,1500,2500,22000,26000,EQ_DETENT,8500),
+-            HIT(132,1,31,0,115,21000,2900,6500,25500,16500,EQ_SAFETY_CLICK,18500),
+-            HIT(353,1,19,0,80,8500,1200,2500,20500,28000,EQ_SPRING_EDGE,7500),
++            HIT(0,1,26,16,116,10500,1995,2500,22000,26000,EQ_DETENT,8500,TONE_DETENT),
++            HIT(132,1,50,18,184,21000,4410,6500,25500,16500,EQ_SAFETY_CLICK,18500,TONE_SAFETY),
++            HIT(353,1,28,8,116,8500,1200,2500,20500,28000,EQ_SPRING_EDGE,7500,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 2300, 4500, 6500, 7000, 4600, 1600 }, 10200,
+@@ -453,9 +562,9 @@
+     {
+         "launcher_empty", 3,
+         {
+-            HIT(0,2,30,0,120,12500,2200,9000,23000,15000,EQ_DETENT,11500),
+-            HIT(243,2,55,0,210,21000,4200,19000,22500,7000,EQ_TUBE_CONTACT,22500),
+-            HIT(617,3,95,0,350,31500,7600,28500,18500,3500,EQ_TUBE_CONTACT,31200),
++            HIT(0,2,46,16,186,12500,2375,9000,23000,15000,EQ_DETENT,11500,TONE_DETENT),
++            HIT(243,2,102,118,410,21000,7560,19000,22500,7000,EQ_TUBE_CONTACT,22500,TONE_TUBE),
++            HIT(617,3,176,118,682,31500,11340,28500,18500,3500,EQ_TUBE_CONTACT,31200,TONE_TUBE),
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 7600, 8600, 6200, 3300, 1500, 550 }, 15800,
+@@ -465,10 +574,10 @@
+     {
+         "launcher_latch", 4,
+         {
+-            HIT(0,2,38,0,150,16000,2700,10500,23500,12500,EQ_DETENT,14500),
+-            HIT(353,2,58,0,220,22000,4300,19000,22500,7000,EQ_TUBE_CONTACT,22000),
+-            HIT(882,3,115,0,390,30000,8000,29000,17500,3000,EQ_TUBE_CONTACT,30500),
+-            HIT(1279,1,26,0,105,10500,1500,4000,22000,23500,EQ_SPRING_EDGE,9000),
++            HIT(0,2,59,16,232,16000,3040,10500,23500,12500,EQ_DETENT,14500,TONE_DETENT),
++            HIT(353,2,107,118,429,22000,7920,19000,22500,7000,EQ_TUBE_CONTACT,22000,TONE_TUBE),
++            HIT(882,3,213,118,760,30000,10800,29000,17500,3000,EQ_TUBE_CONTACT,30500,TONE_TUBE),
++            HIT(1279,1,38,8,152,10500,1500,4000,22000,23500,EQ_SPRING_EDGE,9000,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 8000, 9000, 6000, 2900, 1200, 450 }, 16500,
+@@ -478,10 +587,10 @@
+     {
+         "shotgun_empty", 4,
+         {
+-            HIT(0,1,18,0,80,10000,1400,2500,22000,25000,EQ_DETENT,8500),
+-            HIT(154,1,25,0,100,14500,2100,6500,24000,19000,EQ_MAGNUM_RATCHET,13000),
+-            HIT(331,2,65,0,255,31500,6500,23000,23500,6500,EQ_SHOT_HAMMER,30000),
+-            HIT(706,1,28,0,110,9500,1400,3500,19500,27000,EQ_SPRING_EDGE,9000),
++            HIT(0,1,28,16,124,10000,1900,2500,22000,25000,EQ_DETENT,8500,TONE_DETENT),
++            HIT(154,1,41,24,160,14500,3335,6500,24000,19000,EQ_MAGNUM_RATCHET,13000,TONE_RATCHET),
++            HIT(331,2,117,72,472,31500,10395,23000,23500,6500,EQ_SHOT_HAMMER,30000,TONE_HEAVY),
++            HIT(706,1,41,8,160,9500,1400,3500,19500,27000,EQ_SPRING_EDGE,9000,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 6000, 8100, 7000, 4300, 2000, 700 }, 15000,
+@@ -491,9 +600,9 @@
+     {
+         "shotgun_safety", 3,
+         {
+-            HIT(0,1,19,0,80,10000,1500,2500,22000,25500,EQ_DETENT,8500),
+-            HIT(154,1,38,0,140,23000,3200,8500,25500,14000,EQ_SAFETY_CLICK,20500),
+-            HIT(397,1,21,0,90,8500,1200,2500,20000,28500,EQ_SPRING_EDGE,7500),
++            HIT(0,1,29,16,124,10000,1900,2500,22000,25500,EQ_DETENT,8500,TONE_DETENT),
++            HIT(154,1,61,18,224,23000,4830,8500,25500,14000,EQ_SAFETY_CLICK,20500,TONE_SAFETY),
++            HIT(397,1,30,8,130,8500,1200,2500,20000,28500,EQ_SPRING_EDGE,7500,TONE_SPRING),
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3000, 5200, 6800, 6900, 3900, 1300 }, 10500,
+@@ -518,6 +627,20 @@
+ #undef EQ_TUBE_CONTACT
+ #undef EQ_SHOT_HAMMER
+ #undef EQ_SAFETY_CLICK
++#undef TONE_EDGE
++#undef TONE_STRIKER
++#undef TONE_SPRING
++#undef TONE_FRAME
++#undef TONE_DETENT
++#undef TONE_RATCHET
++#undef TONE_HEAVY
++#undef TONE_RAIL
++#undef TONE_STOP
++#undef TONE_LOCK
++#undef TONE_MID
++#undef TONE_TUBE
++#undef TONE_SAFETY
++#undef TONE_NONE
+ 
+ static gwf89_u32 gwf89_compute_end(const gwf89_preset *p)
+ {
+@@ -552,6 +675,8 @@
+     ctx->high_noise_prev = 0;
+     for (j = 0; j < GWF89_MAX_HITS; ++j) {
+         for (i = 0; i < 5; ++i) ctx->hit_eq_lp[j][i] = 0;
++        ctx->hit_tone_lp1[j] = 0;
++        ctx->hit_tone_lp2[j] = 0;
+     }
+     for (i = 0; i < 5; ++i) ctx->master_eq_lp[i] = 0;
+     gwf89_zero16(&ctx->metal_buffer[0][0],
+@@ -602,6 +727,7 @@
+     gwf89_s16 high_raw;
+     gwf89_s16 high_diff;
+     gwf89_s16 env;
++    gwf89_s16 tone_env;
+     gwf89_s16 mixed_hit;
+     gwf89_s16 shaped;
+     gwf89_s32 sum;
+@@ -633,6 +759,9 @@
+         sum += (gwf89_s32)gwf89_mul_q15(high_diff, ctx->preset->hit[i].high_mix_q15);
+         mixed_hit = gwf89_sat16(sum);
+         mixed_hit = gwf89_mul_q15(mixed_hit, env);
++        tone_env = gwf89_tone_envelope(&ctx->preset->hit[i].tone, local);
++        mixed_hit = gwf89_particle_filter(ctx, i, mixed_hit, tone_env,
++                                         &ctx->preset->hit[i].tone);
+         mixed_hit = gwf89_filterbank(ctx->hit_eq_lp[i], mixed_hit,
+                                      ctx->preset->hit[i].eq_gain_q12);
+         mixed_hit = gwf89_distortion(mixed_hit,

@@ -1,0 +1,51 @@
+hud megaman_vertical_yellow -=)
+enabled true
+canvas_width 18
+canvas_height 108
+
+node vertical_energy -=)
+type bar
+z 0
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+pos top_left + 0,0
+size 18,108
+kind segmented
+direction bottom_to_top
+segments 28
+segment_gap 1
+frame pixel
+frame_depth 2
+frame_gap 1
+frame_corner 0
+background solid
+draw_bg true
+draw_border true
+damage_lag false
+smooth_value false
+use_visual true
+auto_state false
+outer_outline true
+drop_shadow true
+extrude true
+inner_shadow true
+gloss false
+outline_size 1
+shadow_offset_x 2
+shadow_offset_y 3
+extrude_depth 2
+pixel_cells false
+pixel_quantize false
+fill_grid false
+fill_scanlines false
+draw_pattern false
+color_bg #050807F0
+color_fill #F4D34CFF
+color_border #FFF3A0FF
+color_empty #1B231FE8
+color_outline #000000FF
+color_shadow #000000A0
+color_extrude #3A3210E0
+border_size 1
+(=-

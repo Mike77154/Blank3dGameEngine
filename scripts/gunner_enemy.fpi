@@ -1,0 +1,8 @@
+; Armed hostile NPC using the generic GFaction target selected by the engine.
+; Player/ally/other actor are not hard-coded here.
+
+:state=0,targetalive,canattacktarget:equipweapon=machine_gun,rotatetotarget,firetarget,setstate=1
+:state=1,targetalive,canattacktarget,targetdistwithin=8:equipweapon=shotgun,setstate=2
+:state=2,targetalive,canattacktarget,targetdistfurther=11:equipweapon=machine_gun,setstate=1
+:state=1,targetalive,canattacktarget:rotatetotarget,pingpong=1,firetarget
+:state=2,targetalive,canattacktarget:rotatetotarget,pingpong=1,firetarget

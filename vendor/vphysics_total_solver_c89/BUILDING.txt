@@ -1,0 +1,36 @@
+STRICT C89 BUILD
+================
+
+Core only:
+
+  gcc -std=c89 -O2 -Wall -Wextra -Werror -pedantic-errors -Iinclude \
+    -c src/vp_world.c src/vp_body.c src/vp_contact.c src/vp_joint.c \
+       src/vp_solver.c src/vp_ragdoll.c src/vp_debugdraw.c \
+       src/vp_state.c src/vp_total_solver.c
+
+Examples:
+
+  make examples
+
+Tests:
+
+  make test
+
+Feature-toggle checks:
+
+  gcc ... -DVP_ENABLE_ISLANDS=0
+  gcc ... -DVP_ENABLE_SPLIT_IMPULSE=0
+  gcc ... -DVP_ENABLE_ISLANDS=0 -DVP_ENABLE_SPLIT_IMPULSE=0
+
+The strict core and examples use no malloc/realloc/free, no float/double and no
+external libraries. Caller-owned static arrays or arenas provide all memory.
+
+MSYS2 / MinGW32
+===============
+
+Use the 32-bit shell/toolchain and run:
+
+  mingw32-make CC=gcc strict
+  mingw32-make CC=gcc test
+
+If your environment exposes make as `make`, use the normal commands instead.

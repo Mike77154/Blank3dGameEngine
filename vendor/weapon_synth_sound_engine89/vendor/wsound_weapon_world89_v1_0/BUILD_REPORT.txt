@@ -1,0 +1,45 @@
+wsound weapon-world suite 89 v1.0
+Build date: 2026-07-18
+Compiler: GCC 14.2.0
+Flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+CORE PROTOCOL
+- malloc/calloc/realloc/free: none
+- float/double: none
+- math.h: none
+- dynamic heap: none
+- fixed-point/integer signal path: yes
+- C89 strict compile: pass
+- 32-bit i386 object compile: pass for all 9 cores
+- smoke tests: pass for all 9 cores
+
+CONTEXT SIZE, 32-BIT ABI
+- wsounddna89:         4 bytes
+- wsoundreceiver89:  440 bytes
+- wsoundprojectile89: 28 bytes
+- wsoundprop89:       32 bytes + caller delay memory
+- wsoundroom89:       72 bytes + caller delay memory
+- wsoundaction89:     20 bytes
+- wsoundimpact89:    240 bytes
+- wsoundricochet89:   92 bytes
+- wsoundcombatbus89:  32 bytes
+
+STATIC LIBRARIES, HOST BUILD
+- libwsounddna89.a:         2318 bytes
+- libwsoundreceiver89.a:    2850 bytes
+- libwsoundprojectile89.a:  2712 bytes
+- libwsoundprop89.a:        2670 bytes
+- libwsoundroom89.a:        3380 bytes
+- libwsoundaction89.a:      3398 bytes
+- libwsoundimpact89.a:      3228 bytes
+- libwsoundricochet89.a:    2382 bytes
+- libwsoundcombatbus89.a:   2878 bytes
+
+DEMO
+- 12.0 seconds, stereo PCM16, 44100 Hz
+- 227 scheduled events
+- peak: 25026 / 32767
+- clipped samples: 0
+- deterministic render: validated by repeated SHA-256 comparison
+
+Only the demo WAV writer uses stdio. Library cores do not.

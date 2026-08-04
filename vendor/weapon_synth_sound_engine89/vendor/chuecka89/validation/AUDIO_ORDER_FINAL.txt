@@ -1,0 +1,29 @@
+chuecka89 v2.3 final atom + FX audio order
+============================================
+
+96_atom_dry_then_full_fx.wav
+1. dry atom
+2. final atom with distortion + moving 6-band EQ + chorus + tiny reverb
+
+97_shotgun_presets_full_fx_montage.wav
+1. shotgun pump chik-chok
+2. shotshell insert shuk
+3. repeated shotshell loading sheke-sheke
+
+98_final_atom_then_shotguns.wav
+1. final SHEKT atom (SH attack 30 ms, release 12 ms)
+2. shotgun pump chik-chok
+3. shotshell insert shuk
+4. repeated shotshell loading sheke-sheke
+
+99_all_weapon_presets_full_fx_montage.wav
+1. shotgun pump
+2. shotshell insert
+3. repeated shotshell loading
+4. pistol slide
+5. magnum/heavy action
+6. revolver cylinder
+7. grenade-launcher breech
+8. rocket-launcher handling
+9. SMG feed burst
+10. machine-gun feed burst

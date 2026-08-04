@@ -1,0 +1,131 @@
+{
+  "release": "1.9.0",
+  "sample_format": "PCM16 stereo",
+  "renderer": "src/render_rocket_spin_gatling_showcase.c",
+  "context_bytes": 185840,
+  "aggregate_library": {
+    "object_count": 64,
+    "bytes": 473240
+  },
+  "tests": {
+    "executables_passed": 12,
+    "executables_total": 12
+  },
+  "sanitizers": {
+    "address_sanitizer": "PASS",
+    "undefined_behavior_sanitizer": "PASS"
+  },
+  "i386": {
+    "status": "NOT COMPLETED",
+    "reason": "container missing glibc multilib development header bits/libc-header-start.h"
+  },
+  "protocol": {
+    "malloc": 0,
+    "calloc": 0,
+    "realloc": 0,
+    "free": 0,
+    "float": 0,
+    "double": 0,
+    "long long": 0
+  },
+  "audio": {
+    "24_rocket_propulsion_spin_fire.wav": {
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 176400,
+      "duration_seconds": 4.0,
+      "peak_pcm16": 10938,
+      "peak_dbfs": -9.53,
+      "rms_pcm16": 1512.781,
+      "rms_dbfs": -26.713,
+      "clipped_samples": 0,
+      "left_right_correlation": 0.786942,
+      "sha256": "751754516065c15e60ff4e24e47f0f0e2eee5a8744a1b3466b950243e8e2a2ba",
+      "segments": {
+        "launch_booster": {
+          "start_seconds": 0.35,
+          "end_seconds": 0.58,
+          "peak_pcm16": 10110,
+          "peak_dbfs": -10.214,
+          "rms_pcm16": 1555.593,
+          "rms_dbfs": -26.471
+        },
+        "trajectory_whistle_spin_fire": {
+          "start_seconds": 0.58,
+          "end_seconds": 2.2,
+          "peak_pcm16": 3885,
+          "peak_dbfs": -18.521,
+          "rms_pcm16": 906.535,
+          "rms_dbfs": -31.161
+        },
+        "impact_and_tail": {
+          "start_seconds": 2.35,
+          "end_seconds": 4.0,
+          "peak_pcm16": 10938,
+          "peak_dbfs": -9.53,
+          "rms_pcm16": 2089.909,
+          "rms_dbfs": -23.906
+        }
+      }
+    },
+    "25_gatling_complete_motor_bed.wav": {
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 308700,
+      "duration_seconds": 7.0,
+      "peak_pcm16": 11863,
+      "peak_dbfs": -8.825,
+      "rms_pcm16": 4117.342,
+      "rms_dbfs": -18.016,
+      "clipped_samples": 0,
+      "left_right_correlation": 0.993554,
+      "sha256": "379c946769d6286a040bd8538f2f198134aa7f4c16a1d178a882715af62d9afc",
+      "gatling_shots": 80,
+      "nominal_rate_rpm": 3000,
+      "segments": {
+        "spinup_motor_bed": {
+          "start_seconds": 1.0,
+          "end_seconds": 1.75,
+          "peak_pcm16": 2243,
+          "peak_dbfs": -23.292,
+          "rms_pcm16": 706.358,
+          "rms_dbfs": -33.328
+        },
+        "80_shot_burst": {
+          "start_seconds": 1.75,
+          "end_seconds": 3.35,
+          "peak_pcm16": 11863,
+          "peak_dbfs": -8.825,
+          "rms_pcm16": 3379.837,
+          "rms_dbfs": -19.731
+        },
+        "spindown_and_world_tail": {
+          "start_seconds": 3.35,
+          "end_seconds": 7.0,
+          "peak_pcm16": 9083,
+          "peak_dbfs": -11.144,
+          "rms_pcm16": 5227.215,
+          "rms_dbfs": -15.943
+        }
+      }
+    },
+    "26_rocket_and_gatling_showcase.wav": {
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 573300,
+      "duration_seconds": 13.0,
+      "peak_pcm16": 11863,
+      "peak_dbfs": -8.825,
+      "rms_pcm16": 3735.703,
+      "rms_dbfs": -18.861,
+      "clipped_samples": 0,
+      "left_right_correlation": 0.974927,
+      "sha256": "7f63217bfe6e5803591ea429ee0fd960c7e82a101a4ff280ed87661dddbbf7b8"
+    }
+  },
+  "derived": {
+    "rocket_launch_to_impact_peak_difference_db": 0.684,
+    "rocket_flight_below_launch_peak_db": 8.307,
+    "gatling_burst_above_spinup_peak_db": 14.467
+  }
+}

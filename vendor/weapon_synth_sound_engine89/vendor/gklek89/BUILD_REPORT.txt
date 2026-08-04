@@ -1,0 +1,9 @@
+PACKAGE: gklek89 v1.0.0
+CORE: strict C89 fixed-point/integer, no heap
+SAMPLE RATE: 44100 Hz mono
+CONTEXT BYTES: 224
+STATIC LIBRARY BYTES (Linux GCC 14.2 -O2): 6252
+BUILD: PASS (-Werror)
+SMOKE TEST: PASS
+DETERMINISTIC RENDER: PASS
+CLIPPING: 0 samples in all previews

@@ -1,0 +1,68 @@
+grocketwhistle89 v1.2 - validation report
+Generated: 2026-07-19
+
+Build and API validation:
+- Compiler: GCC
+- Strict flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+- Core object compiled successfully
+- Static library compiled successfully
+- Both WAV demo generators compiled and ran successfully
+- API test compiled and passed
+- AddressSanitizer + UndefinedBehaviorSanitizer API test passed
+- Core object has no undefined external symbols (nm -u returned none)
+- Whole-word source/header scan found none of these prohibited tokens:
+  malloc, realloc, free, float, double
+
+DSP validation:
+- Primary six-band contour EQ is active before reverb
+- Secondary six-band finishing EQ is active after reverb
+- Preset output differs from both primary-flat and output-flat rendering
+- Weapon presets reduce final low bands and raise edge/air bands
+- Smoothed pitch/amplitude roughness remains bounded
+- Second and third harmonic phases are generated without floating point
+- Separate fixed plume-air delay taps produce non-identical left/right output
+- Optional three-comb damped reverb produces a non-zero post-release tail
+- Reverb can be disabled at runtime
+- No generated preview contains full-scale clipped PCM samples
+
+A/B normalized spectral-share check, second RPG-7 section versus the
+'electronic-ish' first section:
+- 120-300 Hz: approximately 0.49x
+- 300-900 Hz: approximately 0.64x
+- 2.4-6 kHz: approximately 3.01x
+- above 6 kHz: approximately 2.76x
+The below-120 Hz share is negligible in both sections; reverb makes that tiny
+residual unsuitable as a simple before/after ratio.
+
+Memory and object reference sizes:
+- Caller-owned state: 18,296 bytes per voice
+- Fixed plume-air delay memory: 512 bytes per voice
+- Linux GCC object: text 9,990 bytes, data 1,680 bytes, bss 0 bytes
+- Total object reference size: 11,670 bytes
+
+Generated WAV format:
+- 44.1 kHz
+- signed 16-bit PCM
+- stereo
+
+Generated preview durations and peaks:
+- grocketwhistle89_showcase.wav: 17.261 s, peak 25,020
+- preview_rpg7_sustained.wav: 1.945 s, peak 18,910
+- preview_smaw_short.wav: 1.219 s, peak 23,321
+- preview_javelin_two_stage.wav: 2.792 s, peak 15,626
+- preview_at4_fast.wav: 0.877 s, peak 24,650
+- preview_guided_flyby.wav: 3.721 s, peak 20,102
+- preview_heavy_rocket.wav: 2.705 s, peak 17,627
+- preview_chifladora_air_reference.wav: 2.502 s, peak 23,748
+- preview_rpg7_electronic_vs_airy.wav: 4.389 s, peak 19,123
+
+Research limitation:
+Public pyrotechnic and live-fire media pages were available for qualitative
+comparison, but their audio tracks were not reliably downloadable in the
+validation environment for automated spectral matching. No source recording is
+bundled and no claim of sample-accurate reconstruction is made.
+
+Portability note:
+A MinGW cross-compiler was not installed in the build container. The package
+includes build_mingw.bat and uses C89-compatible source, but the exact Win32
+MinGW build was not executed here.

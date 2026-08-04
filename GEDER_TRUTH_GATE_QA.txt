@@ -1,0 +1,33 @@
+Blank3D v3.17.2 GEDER Truth Gate QA
+===================================
+
+Vendor
+------
+PASS: paquete GEDER 1.0.0 copiado íntegro bajo vendor/geder_truth_gate_pipeline
+PASS: test original test_geder_truth_gate
+PASS: licencia CC0 y documentación conservadas
+
+Bridge
+------
+PASS: perfil retro acepta de inmediato y preserva el comportamiento anterior
+PASS: perfil proximity acumula 3 verdades y rechaza fuera de rango
+PASS: perfil proximity acumula 4 verdades y acepta dentro de rango
+PASS: perfil strict rechaza cuando line_of_sight=0
+PASS: perfil strict acepta cuando line_of_sight=1
+PASS: razones terminales y puntaje Q16.16 accesibles
+
+Engine
+------
+PASS: GEDER se evalúa antes de cada tick FPIL enemigo
+PASS: truthprofile/truthrange configurables desde startup.rpy
+PASS: strict usa el raycast WORLD del proveedor CCS/SICOL
+PASS: BigVaderHudder y ECG conservan sus pruebas
+PASS: Air Lunger y Ground Lancer conservan sus regresiones
+PASS: compilación sintáctica completa C89
+PASS: auditoría sin malloc/realloc/free
+
+Nota
+----
+No se enlazó ni ejecutó el PE Win32 gráfico en este host. El enlace final y la
+prueba visual deben realizarse con MSYS2 MinGW32, igual que en las revisiones
+anteriores.

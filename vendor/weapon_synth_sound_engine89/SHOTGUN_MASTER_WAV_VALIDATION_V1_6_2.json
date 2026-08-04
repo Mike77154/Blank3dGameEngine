@@ -1,0 +1,85 @@
+{
+  "version": "1.6.2",
+  "sample_rate": 44100,
+  "files": {
+    "wsse89_v1_6_2_full_shotgun_sequence_mastered.wav": {
+      "frames": 308700,
+      "duration_seconds": 7.0,
+      "channels": 2,
+      "sample_width_bits": 16,
+      "peak": 17882,
+      "peak_dbfs": -5.26,
+      "clipped_samples": 0,
+      "rms": 949.053,
+      "sha256": "170b426c6765f144c21d05fd5b37e8f6e0742054219db7c282eaacce532cda55"
+    },
+    "wsse89_v1_6_2_shotgun_master_ab.wav": {
+      "frames": 264600,
+      "duration_seconds": 6.0,
+      "channels": 2,
+      "sample_width_bits": 16,
+      "peak": 23165,
+      "peak_dbfs": -3.012,
+      "clipped_samples": 0,
+      "rms": 964.463,
+      "sha256": "668b9837786bd4693a1f2ab05d9bc5d00e49ec41e37146f2f75ac27336b75c8a"
+    },
+    "wsse89_v1_6_2_shotgun_model_pumps.wav": {
+      "frames": 441000,
+      "duration_seconds": 10.0,
+      "channels": 2,
+      "sample_width_bits": 16,
+      "peak": 18861,
+      "peak_dbfs": -4.797,
+      "clipped_samples": 0,
+      "rms": 1104.151,
+      "sha256": "088a928e5c832e1765194d32294acb73bd43131ce0bdd7d592db746a59b02f7f"
+    }
+  },
+  "model_segments": [
+    {
+      "model": "remington_870",
+      "peak": 18861,
+      "energy_percent": {
+        "0_250_hz": 15.64,
+        "250_1200_hz": 55.13,
+        "1200_4000_hz": 19.41,
+        "4000_12000_hz": 9.82
+      },
+      "active_tail_seconds": 0.5149
+    },
+    {
+      "model": "mossberg_500_590",
+      "peak": 18136,
+      "energy_percent": {
+        "0_250_hz": 6.61,
+        "250_1200_hz": 32.74,
+        "1200_4000_hz": 30.03,
+        "4000_12000_hz": 30.62
+      },
+      "active_tail_seconds": 0.4882
+    },
+    {
+      "model": "benelli_nova",
+      "peak": 16556,
+      "energy_percent": {
+        "0_250_hz": 14.6,
+        "250_1200_hz": 53.24,
+        "1200_4000_hz": 20.06,
+        "4000_12000_hz": 12.1
+      },
+      "active_tail_seconds": 0.5415
+    },
+    {
+      "model": "winchester_sxp",
+      "peak": 18534,
+      "energy_percent": {
+        "0_250_hz": 10.49,
+        "250_1200_hz": 46.55,
+        "1200_4000_hz": 23.11,
+        "4000_12000_hz": 19.85
+      },
+      "active_tail_seconds": 0.3934
+    }
+  ]
+}

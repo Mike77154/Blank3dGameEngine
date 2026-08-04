@@ -1,0 +1,33 @@
+gfaction89_v1 build report
+
+Compiler command:
+  make clean && make
+
+Status:
+  Compiled successfully with:
+    -std=c89 -Wall -Wextra -pedantic
+
+Smoke tests:
+  ./demo_zombie_rampage
+    - Loads INI from demo/rampage.ini.
+    - Evaluates zombie/player, civilian/zombie, cop/civilian relationships.
+    - Chooses zombie target from candidate list.
+    - Fires death trigger.
+    - Converts civilian to undead at runtime.
+
+  ./demo_faction_war
+    - Builds factions through API.
+    - Evaluates faction matrix and tag rule fallback.
+    - Chooses best targets for bandit and turret.
+
+Static protocol grep over include/src/demo:
+  No malloc
+  No realloc
+  No free
+  No float
+  No double
+  No C++ line comments
+
+Notes:
+  The library uses fixed-point integer scoring and static capacity tables.
+  The optional arena is caller-owned memory only.

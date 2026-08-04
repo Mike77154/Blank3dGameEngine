@@ -1,0 +1,97 @@
+{
+  "release": "weapon_synth_sound_engine89 v1.8.1",
+  "integration": {
+    "wmagazine89": "v1.0, fixed pool 4 voices, actions insert/remove/seat/tug/rattle",
+    "grocketwhistle89": "v1.1, fixed pool 4 voices, start/motion/release/stop, Doppler + EQ6 + chorus + optional reverb",
+    "event_surface": "45 dispatchable events plus NONE",
+    "aggregate_objects": 60,
+    "context_bytes": 114640
+  },
+  "sequence_updates": {
+    "pistol": "wmagazine pistol-polymer layered with legacy reload mechanics; 1 + 20 shots",
+    "sniper": "wmagazine sniper-box layered with bolt/reload mechanics; 1 + 4 shots",
+    "machinegun": "remains belt-fed by design; no box-magazine substitution",
+    "rocket": "ignition -> sustained whistle/motion -> release -> impact; 1 + 4 rockets"
+  },
+  "validation": {
+    "strict_c89_tests": "10/10 PASS",
+    "asan_ubsan_new_integration_test": "PASS",
+    "long_asan_renderer": "not completed before process timeout; optimized full renderer passed twice deterministically",
+    "deterministic_selected_wavs": true,
+    "rejected_events": 0,
+    "i386_new_provider_objects": "PASS",
+    "i386_unified_facade": "not retested; container lacks 32-bit glibc headers required through shotpumpkin89.h"
+  },
+  "wav_metrics": {
+    "pistol": {
+      "file": "wsse89_v1_8_1_pistol_wmag_one_plus_20_reload.wav",
+      "channels": 2,
+      "sample_width_bits": 16,
+      "sample_rate_hz": 44100,
+      "frames": 573300,
+      "duration_seconds": 13.0,
+      "peak_abs": 9809,
+      "peak_dbfs": -10.477,
+      "rms": 1024.056,
+      "rms_dbfs": -30.103,
+      "clipped_samples": 0,
+      "sha256": "e49e7c738b555508778a2ad4178bb4c877d62af9f57f9a572cbf54bafbb759ef"
+    },
+    "sniper": {
+      "file": "wsse89_v1_8_1_sniper_wmag_one_plus_4_reload.wav",
+      "channels": 2,
+      "sample_width_bits": 16,
+      "sample_rate_hz": 44100,
+      "frames": 705600,
+      "duration_seconds": 16.0,
+      "peak_abs": 15790,
+      "peak_dbfs": -6.341,
+      "rms": 846.472,
+      "rms_dbfs": -31.757,
+      "clipped_samples": 0,
+      "sha256": "5d84dc8e0b149fc48d50d1ddd17acf79b8ee36916b6223d90f321516cd80ae9a"
+    },
+    "rocket": {
+      "file": "wsse89_v1_8_1_rocket_whistle_one_plus_4.wav",
+      "channels": 2,
+      "sample_width_bits": 16,
+      "sample_rate_hz": 44100,
+      "frames": 1190700,
+      "duration_seconds": 27.0,
+      "peak_abs": 32136,
+      "peak_dbfs": -0.169,
+      "rms": 4902.44,
+      "rms_dbfs": -16.501,
+      "clipped_samples": 0,
+      "sha256": "db84ae1060f13e26cf689bcd0b2e5d4a7d7c7122fb3b0afbcc4b9a8c6f2ca311"
+    },
+    "all": {
+      "file": "wsse89_v1_8_1_all_sequences_magazine_whistle.wav",
+      "channels": 2,
+      "sample_width_bits": 16,
+      "sample_rate_hz": 44100,
+      "frames": 4674600,
+      "duration_seconds": 106.0,
+      "peak_abs": 30931,
+      "peak_dbfs": -0.501,
+      "rms": 2531.334,
+      "rms_dbfs": -22.242,
+      "clipped_samples": 0,
+      "sha256": "64f1a7cbce048b8de81e8e4b16939d1936eb75a571f17bc0b114445844329315"
+    },
+    "rocket_pair": {
+      "file": "wsse89_v1_8_1_rocket_launch_whistle_impact.wav",
+      "channels": 2,
+      "sample_width_bits": 16,
+      "sample_rate_hz": 44100,
+      "frames": 343980,
+      "duration_seconds": 7.8,
+      "peak_abs": 30500,
+      "peak_dbfs": -0.623,
+      "rms": 3741.99,
+      "rms_dbfs": -18.847,
+      "clipped_samples": 0,
+      "sha256": "76747e311902e70fd05816187c398a2678a96b7fc9746d03bbea20ea71912811"
+    }
+  }
+}

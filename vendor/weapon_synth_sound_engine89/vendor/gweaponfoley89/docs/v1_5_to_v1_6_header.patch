@@ -1,0 +1,110 @@
+--- /mnt/data/gwf16work/gweaponfoley89_v1_5.h	2026-07-18 07:29:22.637936552 +0000
++++ include/gweaponfoley89.h	2026-07-18 07:29:46.804026929 +0000
+@@ -19,15 +19,17 @@
+ #define GWF89_CHORUS_BUFFER     512
+ #define GWF89_REVERB_BUFFER     1024
+ #define GWF89_ALLPASS_BUFFER    512
+-#define GWF89_METAL_BUFFER       64
+-#define GWF89_METAL_MODES         4
++#define GWF89_METAL_BUFFER      64
++#define GWF89_METAL_MODES       4
++#define GWF89_VARIANT_COUNT     3
++#define GWF89_VARIANT_AUTO      255
+ 
+ #define GWF89_Q15_ONE           32767
+ #define GWF89_EQ_ONE            4096
+ 
+-#define GWF89_VERSION_MAJOR      1
+-#define GWF89_VERSION_MINOR      5
+-#define GWF89_VERSION_PATCH      0
++#define GWF89_VERSION_MAJOR     1
++#define GWF89_VERSION_MINOR     6
++#define GWF89_VERSION_PATCH     0
+ 
+ typedef signed short gwf89_s16;
+ typedef signed long  gwf89_s32;
+@@ -49,6 +51,12 @@
+     GWF89_PRESET_COUNT
+ } gwf89_preset_id;
+ 
++typedef enum gwf89_speed {
++    GWF89_SPEED_SLOW = 0,
++    GWF89_SPEED_NORMAL,
++    GWF89_SPEED_FAST
++} gwf89_speed;
++
+ typedef struct gwf89_tone_shape {
+     unsigned short attack_samples;
+     unsigned short decay_samples;
+@@ -76,6 +84,9 @@
+     signed short eq_gain_q12[6];
+     gwf89_s16 drive_q15;
+     gwf89_tone_shape tone;
++    gwf89_s16 body_wet_q15;
++    gwf89_s16 body_feedback_q15;
++    gwf89_s16 body_damping_q15;
+ } gwf89_hit;
+ 
+ typedef struct gwf89_preset {
+@@ -83,7 +94,7 @@
+     unsigned char hit_count;
+     gwf89_hit hit[GWF89_MAX_HITS];
+     signed short eq_gain_q12[6];
+-    gwf89_s16 drive_q15; /* true soft-distortion amount: 0..32767 */
++    gwf89_s16 drive_q15;
+     gwf89_s16 metal_wet_q15;
+     gwf89_s16 metal_feedback_q15;
+     gwf89_s16 metal_damping_q15;
+@@ -102,6 +113,7 @@
+ 
+ typedef struct gwf89_context {
+     const gwf89_preset *preset;
++    gwf89_hit runtime_hit[GWF89_MAX_HITS];
+     gwf89_u32 rng_low;
+     gwf89_u32 rng_white;
+     gwf89_u32 rng_high;
+@@ -111,9 +123,9 @@
+     gwf89_s16 hit_tone_lp1[GWF89_MAX_HITS];
+     gwf89_s16 hit_tone_lp2[GWF89_MAX_HITS];
+     gwf89_s16 master_eq_lp[5];
+-    gwf89_s16 metal_buffer[GWF89_METAL_MODES][GWF89_METAL_BUFFER];
+-    gwf89_s16 metal_lp[GWF89_METAL_MODES];
+-    unsigned short metal_write;
++    gwf89_s16 hit_metal_buffer[GWF89_MAX_HITS][GWF89_METAL_MODES][GWF89_METAL_BUFFER];
++    gwf89_s16 hit_metal_lp[GWF89_MAX_HITS][GWF89_METAL_MODES];
++    unsigned short hit_metal_write[GWF89_MAX_HITS];
+     gwf89_s16 chorus_buffer[GWF89_CHORUS_BUFFER];
+     unsigned short chorus_write;
+     unsigned short chorus_phase;
+@@ -123,8 +135,13 @@
+     unsigned short reverb_b_pos;
+     gwf89_s16 allpass[GWF89_ALLPASS_BUFFER];
+     unsigned short allpass_pos;
++    gwf89_s16 room_send_q15;
++    gwf89_s16 last_dry;
++    gwf89_s16 last_room;
+     gwf89_u32 sample_clock;
+     gwf89_u32 end_clock;
++    unsigned char variant;
++    unsigned char speed;
+     unsigned char active;
+ } gwf89_context;
+ 
+@@ -132,8 +149,16 @@
+ void gwf89_reset(gwf89_context *ctx, gwf89_u32 seed);
+ void gwf89_trigger(gwf89_context *ctx, gwf89_preset_id preset_id);
+ void gwf89_trigger_seeded(gwf89_context *ctx, gwf89_preset_id preset_id, gwf89_u32 seed);
++void gwf89_trigger_ex(gwf89_context *ctx, gwf89_preset_id preset_id,
++                      gwf89_u32 seed, unsigned char variant,
++                      gwf89_speed speed);
++void gwf89_set_room_send(gwf89_context *ctx, gwf89_s16 room_send_q15);
+ gwf89_s16 gwf89_process_sample(gwf89_context *ctx);
+-unsigned long gwf89_process(gwf89_context *ctx, gwf89_s16 *dst, unsigned long sample_count);
++gwf89_s16 gwf89_process_sample_stems(gwf89_context *ctx,
++                                      gwf89_s16 *dry_out,
++                                      gwf89_s16 *room_out);
++unsigned long gwf89_process(gwf89_context *ctx, gwf89_s16 *dst,
++                            unsigned long sample_count);
+ int gwf89_is_active(const gwf89_context *ctx);
+ const gwf89_preset *gwf89_get_preset(gwf89_preset_id preset_id);
+ const char *gwf89_preset_name(gwf89_preset_id preset_id);

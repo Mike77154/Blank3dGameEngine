@@ -1,0 +1,74 @@
+FPIL v18 STABILIZATION BUILD REPORT
+===================================
+
+Host used for verification
+--------------------------
+Compiler: GCC 14.2.0
+Host ABI: Linux x86_64
+Language mode: C89 with -pedantic and strict warning set
+
+Strict build
+------------
+PASS: libfpil_core.a
+PASS: libfpil_builtins.a
+PASS: libfpil_stdlib.a
+PASS: fpi_cli
+PASS: fpi_tests
+PASS: fpi_example_host
+Warnings observed under the configured strict flags: 0
+
+Automated tests
+---------------
+PASS: fixed-point arithmetic and signed-limit edges
+PASS: configurable state word plus polysym values
+PASS: permanent registry and transactional reload
+PASS: interpreter/VM two-phase capacity above 64 rules
+PASS: explicit maximum-rule error
+PASS: quoted and escaped RHS values
+PASS: sequential interpreter/VM parity
+PASS: stale bytecode generation guard
+PASS: explicit parser errors outside rules
+PASS: explicit unbound condition/action errors in interpreter and VM
+PASS: explicit file-overflow error without truncation
+
+Result: ALL TESTS PASSED
+Native x86_64 FPI_Context size with default capacities: 2,312,536 bytes
+
+No-heap / fixed audit
+---------------------
+PASS: source audit found no calls to malloc/calloc/realloc/free
+PASS: source audit found no float or double types
+PASS: source audit found no native real-number math calls covered by the audit
+
+Example integration
+-------------------
+PASS: examples/custom_state_host.c
+Output: fired=1 mode=1.0000
+
+32-bit probe
+------------
+PASS: API/layout probe compiled as ELF i386 with GCC -m32
+PASS: fixed-point source object compiled with GCC -m32
+Measured 32-bit layout with default capacities:
+  FPI_Context  = 1,340,672 bytes
+  FPI_AST      =   597,004 bytes
+  FPI_Registry =    53,260 bytes
+
+A complete 32-bit executable was not linked in this environment because the
+container does not include the full i386 libc development headers/libraries;
+sources that include stdio stop at the missing multilib header. No MinGW i686
+cross-compiler was installed. Therefore Windows/MinGW32 execution is not
+claimed here, although the core and public layout passed 32-bit compilation
+probes.
+
+Stabilized patch 1 verification
+-------------------------------
+PASS: fpi_fixed_cos_deg normalizes modulo 360 before the +90 degree phase shift
+PASS: regression covers INT32_MAX/INT32_MIN-equivalent Q16.16 inputs
+PASS: fpi_cli --tokens consumes and prints unquoted, quoted, escaped and empty RHS values
+PASS: examples/test.fpi token dump completes with 13 RHS_VALUE entries
+PASS: examples/quoted_values.fpi token dump completes without lexer errors
+PASS: GCC strict C89 build with zero warnings
+PASS: Clang strict C89 build with zero warnings
+PASS: AddressSanitizer and UndefinedBehaviorSanitizer test runs
+

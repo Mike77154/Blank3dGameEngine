@@ -1,0 +1,19 @@
+[zombie]
+role = enemy
+
+*create
+@initialize_from_ini
+
+*step
+run_logic()
+
+*render
+draw_mesh()
+script: python
+# Optional custom drawing extension. The engine owns execution policy.
+draw_capsule(self)
+draw_cube_head(self)
+:
+
+*destroy
+@release_entity

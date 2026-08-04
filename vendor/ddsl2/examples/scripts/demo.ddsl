@@ -1,0 +1,15 @@
+# demo.ddsl
+
+# variables
+ready = 1
+
+# ejemplo: accion-reaccion sin llaves/indentación
+
+time-tick = 3
+
+if time-tick = 3 then playsound = wav, volume = 0.8
+elif time-tick > 3 then playsound = "later"
+else playsound = "nope"
+
+# condición simple (se evalúa, pero no hace nada por sí sola)
+ready and time-tick >= 3

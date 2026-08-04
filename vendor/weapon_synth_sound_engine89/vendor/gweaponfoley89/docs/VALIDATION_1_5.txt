@@ -1,0 +1,32 @@
+gweaponfoley89 1.5 validation
+
+Build:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude
+  warnings/errors: 0
+
+Core restrictions:
+  malloc/calloc/realloc/free: not used
+  float/double: not used
+  math.h/stdio.h/stdlib.h in core: not used
+  undefined symbols in core object: 0
+
+Sizes on this Linux GCC build:
+  gwf89_context: 6864 bytes
+  gwf89_preset: 488 bytes
+  gwf89_hit: 54 bytes
+  core object: 15280 bytes
+  static library: 15694 bytes
+
+Audio checks (same seeds, no normalization):
+  maximum peak: 0.945801 FS
+  clipped samples: 0
+  spectral centroid increase across presets: 683.2 to 1664.8 Hz
+  audible -50 dBFS tail extension: 3.2 to 15.1 ms
+
+Design delta from 1.4:
+  per-contact and master EQ shifted toward upper mids/highs
+  amplitude release about 2x longer
+  release level about 25 percent higher
+  tone release about 65 percent longer
+  tonal sustain about 15 percent higher
+  no new oscillator, sample, effect, allocator, or floating-point path

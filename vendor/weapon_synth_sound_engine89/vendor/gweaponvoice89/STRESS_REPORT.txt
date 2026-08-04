@@ -1,0 +1,14 @@
+gweaponvoice89 v2.0 stress demo
+logical capacity: 256
+physical budget: 64
+starts: 512
+steals: 124
+group steals: 92
+peak logical: 256
+peak physical: 64
+promotions: 270
+demotions: 46
+virtual kills: 0
+virtual timeouts: 22
+limiter hits: 0
+rebalance passes: 2125

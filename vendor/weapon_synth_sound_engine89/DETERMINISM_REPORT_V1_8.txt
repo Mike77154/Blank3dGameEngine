@@ -1,0 +1,3 @@
+The seven v1.8.0 WAV outputs were rendered twice with the optimized C89 target.
+SHA-256 files were compared byte-for-byte.
+Result: DETERMINISTIC PASS

@@ -1,0 +1,25 @@
+grecoil89 external provider test log
+====================================
+
+Version: 1.1.0
+Language mode: C89 (-std=c89 -Wall -Wextra -pedantic)
+Memory model: caller-owned, no allocation
+Numeric model: fixed-point Q8.8 only
+
+Builds passed:
+- demo_grecoil89
+- demo_bridge
+- demo_provider
+- grecoil89_curve_dump
+
+Provider behavior passed:
+- PUSH mode calls external rotate and move adapters.
+- PULL mode caches output without invoking adapters.
+- Pull accessors return aim/camera/weapon rotation and weapon move.
+- Channel mask prevents disabled channels from being returned or pushed.
+- clear() publishes a zero additive transform layer.
+- OFF mode rejects updates.
+
+Integration rule:
+External systems must SET/replace the recoil additive layer each tick. They
+must not accumulate the returned transform onto the previous recoil result.

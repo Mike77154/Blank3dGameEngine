@@ -1,0 +1,15 @@
+weapon_synth_sound_engine89 v1.6.0 protocol scan
+
+Files scanned: 237 C/H files
+C89 strict build: PASS
+
+Active-code forbidden token results:
+- malloc_call: PASS (0)
+- calloc_call: PASS (0)
+- realloc_call: PASS (0)
+- free_call: PASS (0)
+- float_keyword: PASS (0)
+- double_keyword: PASS (0)
+- long_long: PASS (0)
+
+Caller-owned fixed/static storage remains the runtime policy.

@@ -1,0 +1,38 @@
+hud custom_vector_diamond -=)
+enabled true
+canvas_width 300
+canvas_height 30
+node custom_units -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+unit_count_bind numbar.units
+pos top_left + 0,0
+size 300,30
+kind segmented
+direction left_to_right
+segments 12
+segment_gap 2
+frame brackets
+frame_depth 2
+frame_gap 2
+background solid
+draw_bg true
+draw_border true
+draw_vector_units true
+unit_points "500,0|1000,500|500,1000|0,500"
+unit_count 12
+unit_padding 2
+unit_scale_percent 75
+unit_closed true
+unit_filled true
+color_bg #080C18D8
+color_fill #789CFFFF
+color_border #DCE6FFFF
+color_empty #1A2746D0
+color_unit_fill #A9BDFFFF
+color_unit_empty #2A3557C0
+color_unit_outline #E7EDFFFF
+border_size 1
+(=-

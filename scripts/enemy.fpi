@@ -1,0 +1,8 @@
+; Generic hostile: GFaction chooses the legal target.
+; Socketer supplies its position; Eyes/Enlightener only confirm/enrich it.
+
+:state=0,targetalive,canattacktarget,targetdistwithin=28:setstate=1
+:state=1,targetdistfurther=32:setstate=0
+:state=1,targetdistwithin=2:rotatetotarget,hurttarget=5
+:state=1,targetdistfurther=2:rotatetotarget,sineplayerflat=2.6
+:always,targetalive:rotatetotarget

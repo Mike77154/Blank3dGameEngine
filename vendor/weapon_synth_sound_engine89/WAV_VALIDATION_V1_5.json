@@ -1,0 +1,44 @@
+{
+  "release": "1.5.0",
+  "files": [
+    {
+      "file": "00_v1_5_0_unified_event_showcase.wav",
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "sample_rate_hz": 44100,
+      "frames": 529200,
+      "duration_seconds": 12.0,
+      "peak_sample": 11726,
+      "peak_dbfs": -8.9257,
+      "rms_dbfs": -32.1664,
+      "clipped_samples": 0,
+      "sha256": "7643046482795c54c6c9449ce1bc050dc7acb588e6b22dc9c65260e01f08d156"
+    },
+    {
+      "file": "14_phase12_ab_legacy_vs_hybrid.wav",
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "sample_rate_hz": 44100,
+      "frames": 485100,
+      "duration_seconds": 11.0,
+      "peak_sample": 5737,
+      "peak_dbfs": -15.135,
+      "rms_dbfs": -34.2354,
+      "clipped_samples": 0,
+      "sha256": "85452c9cc0c4b7c5a01ab922a8a2ecf88bf6309d0a1418556157b5d513a2a12b"
+    },
+    {
+      "file": "15_phase12_environment_triptych.wav",
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "sample_rate_hz": 44100,
+      "frames": 661500,
+      "duration_seconds": 15.0,
+      "peak_sample": 4463,
+      "peak_dbfs": -17.3162,
+      "rms_dbfs": -44.7135,
+      "clipped_samples": 0,
+      "sha256": "0b06f090342e7868f4acbb3ec4504652275a47055816b85029f5a9f10f153781"
+    }
+  ]
+}

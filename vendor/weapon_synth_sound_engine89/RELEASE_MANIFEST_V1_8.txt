@@ -1,0 +1,25 @@
+weapon_synth_sound_engine89 v1.8.0
+
+New source behavior:
+- safe long timeline milliseconds-to-frames conversion
+- receiver resonance in procedural report banks
+- synthesized magazine, loose-shell, belt-feed and launcher reload banks
+- six isolated-shot + full-capacity sequences
+- one 106-second combined sequence
+
+New audio:
+- audio/16_pistol_one_plus_20_full_reload.wav
+- audio/17_magnum_one_plus_6_full_reload.wav
+- audio/18_shotgun_one_plus_10_full_reload.wav
+- audio/19_machinegun_one_plus_40_full_reload.wav
+- audio/20_sniper_one_plus_4_full_reload.wav
+- audio/21_rocket_one_plus_4_full_reload.wav
+- audio/22_all_one_shot_then_full_capacity_sequences.wav
+
+Validation:
+- FULL_CAPACITY_SEQUENCES_V1_8.md
+- FULL_CAPACITY_WAV_VALIDATION_V1_8.json
+- BUILD_REPORT_V1_8.txt
+- SANITIZER_REPORT_V1_8.txt
+- DETERMINISM_REPORT_V1_8.txt
+- PROTOCOL_SCAN_V1_8.txt

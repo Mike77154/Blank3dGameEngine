@@ -1,0 +1,7 @@
+Build/test: PASS
+Compiler flags: -O2 -Wall -Wextra -pedantic -std=c89
+Atom SH release: 18 ms -> 12 ms
+ECKT unchanged; delay remains 82 ms
+ABI: unchanged
+Forbidden token scan:
+PASS: no malloc/realloc/free/float/double tokens in src/include

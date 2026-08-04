@@ -1,0 +1,20 @@
+mkdir -p build
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c src/gkinv.c -o build/gkinv.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c src/gkinv_fixed.c -o build/gkinv_fixed.o
+ar -rv build/libgkinv.a build/gkinv.o build/gkinv_fixed.o
+ar: creating build/libgkinv.a
+a - build/gkinv.o
+a - build/gkinv_fixed.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude tests/test_gkinv.c build/libgkinv.a -o build/test_gkinv
+./build/test_gkinv
+GKINV tests passed.
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude examples/example_basic.c build/libgkinv.a -o build/example_basic
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude examples/example_grid.c build/libgkinv.a -o build/example_grid
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude examples/example_hooks.c build/libgkinv.a -o build/example_hooks
+slot 0: Potion x5
+slot 1: Sword x1
+slot 2: Key x1
+Pistol at 0,0 qty 1
+Ammo at 2,0 qty 30
+Shotgun at 2,1 qty 1
+player hp: 80

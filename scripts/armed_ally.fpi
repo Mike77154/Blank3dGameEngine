@@ -1,0 +1,8 @@
+; Universal allied gunner. Socketer knows every actor, GFaction chooses only
+; legal hostile targets, Eyes confirms the current target and FPIL acts on it.
+
+:state=0,targetalive,canattacktarget:equipweapon=machine_gun,rotatetotarget,setstate=1
+:state=1,targetalive,canattacktarget,targetdistwithin=8:equipweapon=shotgun,setstate=2
+:state=2,targetalive,canattacktarget,targetdistfurther=11:equipweapon=machine_gun,setstate=1
+:state=1,targetalive,canattacktarget:rotatetotarget,pingpong=1,firetarget
+:state=2,targetalive,canattacktarget:rotatetotarget,pingpong=1,firetarget

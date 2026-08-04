@@ -1,0 +1,6 @@
+weapon_synth_sound_engine89 v1.4.1 protocol scan
+C/H files scanned: 227
+Forbidden active tokens: malloc, calloc, realloc, free, float, double
+Active-token hits: 0
+math.h includes: 0
+RESULT: PASS

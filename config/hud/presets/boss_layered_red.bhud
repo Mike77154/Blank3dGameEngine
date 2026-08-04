@@ -1,0 +1,71 @@
+hud boss_layered_red -=)
+enabled true
+canvas_width 520
+canvas_height 44
+node boss_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+layer_count_bind numbar.layer_count
+layer_size_bind numbar.layer_size
+pos top_left + 0,0
+size 520,28
+kind linear
+direction left_to_right
+frame double
+frame_depth 3
+frame_gap 2
+background scanlines
+bg_step 5
+bg_size 1
+draw_bg true
+draw_border true
+damage_lag true
+lag_speed 20
+layered true
+draw_layer_pips true
+layer_count 4
+layer_size 100
+outer_outline true
+drop_shadow true
+extrude true
+inner_shadow true
+gloss true
+fill_scanlines true
+outline_size 2
+shadow_offset 4,4
+extrude_depth 3
+gloss_percent 24
+color_bg #180305E8
+color_fill #E43A42FF
+color_lag #FFAA55FF
+color_border #FFD0C8FF
+color_empty #32070CE8
+color_outline #050000FF
+color_shadow #000000A0
+color_extrude #421017E0
+color_gloss #FFFFFF48
+color_bg_detail #70151C70
+color_layer_fill0 #E43A42FF
+color_layer_fill1 #DF7B31FF
+color_layer_fill2 #B54BD9FF
+color_layer_fill3 #45A6E8FF
+color_layer_lag0 #FFAA55FF
+color_layer_lag1 #FFD25EFF
+color_layer_lag2 #E89AFFFF
+color_layer_lag3 #8AD8FFFF
+border_size 2
+node boss_number -=)
+type counter
+bind numbar.value
+mode value
+pos top_left + 218,29
+pad 4
+scale 1
+color #FFD7D0FF
+shadow true
+shadow_color #000000D0
+background false
+border false
+(=-

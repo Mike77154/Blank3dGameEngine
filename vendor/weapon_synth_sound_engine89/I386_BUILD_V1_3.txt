@@ -1,0 +1,14 @@
+total 74K
+-rw-r--r-- 1 root root 5.4K Jul 19 01:22 gbulletair89.o
+-rw-r--r-- 1 root root 7.8K Jul 19 01:22 gfire89.o
+-rw-r--r-- 1 root root  12K Jul 19 01:22 gsynthordnance89.o
+-rw-r--r-- 1 root root  10K Jul 19 01:22 gsynthsoundengine89.o
+-rw-r--r-- 1 root root 2.2K Jul 19 01:22 wsound_gchorus89.o
+-rw-r--r-- 1 root root 1.6K Jul 19 01:22 wsound_gdist89.o
+-rw-r--r-- 1 root root 2.3K Jul 19 01:22 wsound_geq6_89.o
+-rw-r--r-- 1 root root  11K Jul 19 01:22 wsound_ggrenadeblast89.o
+-rw-r--r-- 1 root root 2.8K Jul 19 01:22 wsound_greverb89.o
+-rw-r--r-- 1 root root 1.1K Jul 19 01:22 wsound_gtypes89.o
+-rw-r--r-- 1 root root  11K Jul 19 01:22 wsound_rocketblast89.o
+-rw-r--r-- 1 root root 3.0K Jul 19 01:22 wsrb89_dsp.o
+-rw-r--r-- 1 root root 2.5K Jul 19 01:22 wsrb89_presets.o

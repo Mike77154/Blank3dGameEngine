@@ -1,0 +1,23 @@
+hud minimal_flat_white -=)
+enabled true
+canvas_width 240
+canvas_height 14
+node flat_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+pos top_left + 0,0
+size 240,14
+kind linear
+direction left_to_right
+frame none
+background solid
+draw_bg true
+draw_border false
+smooth_value true
+smooth_speed 240
+color_bg #FFFFFF28
+color_fill #F6F6F6E8
+color_empty #FFFFFF18
+(=-

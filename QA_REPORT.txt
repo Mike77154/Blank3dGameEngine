@@ -1,0 +1,155 @@
+Blank3D v3.25.4 QA REPORT
+=========================
+
+Scope
+-----
+- Formalized all active actor world-Y policy behind Blank3DVerticalAxis
+- Added config-controlled constant-speed engine gravity
+- Added per-body floor, flying-entity, and gravity-immunity policy
+- Extracted fly89, jump89, and airdiver89 as standalone provider libraries
+- Added shared opaque math/transform/optional-physics provider ABI
+- Migrated player flight, hopper jumping, and dive-enemy behavior
+- Preserved arbitrary per-NPC INI weapon inventories from v3.10.0
+
+Vertical validation
+-------------------
+- Ordinary actor falls toward floor with gravity enabled: OK
+- Gravity-disabled actor preserves current Y: OK
+- Flying and gravity-immune actors bypass automatic fall: OK
+- fly89 ascend, descend, move-to-Y, floor clamp and grounded query: OK
+- jump89 grounded gate, impulse, apex, fall, landing and state reset: OK
+- hopper uses jump89 gravity arc and stops advancing near player: OK
+- airdiver89 save, descend, ram, exact return and overshoot clamp: OK
+- external physics provider receives floor/grounded/move callbacks: OK
+- player and NPC bodies retain independent vertical state: OK
+- legacy blank3d_vertical_motion module removed: OK
+- `make test-vertical-motion`: OK
+
+Vendor validation
+-----------------
+- fly89 standalone C89 static library: OK
+- jump89 standalone C89 static library: OK
+- airdiver89 standalone C89 static library: OK
+- no Gamlib3D/Blank3D headers in vendor implementations: OK
+- no malloc/realloc/free in active vertical stack: OK
+- `make test-vertical-vendors`: OK
+
+Regression validation
+---------------------
+- systems integration: OK
+- actor-local player/NPC fire gate isolation: OK
+- arbitrary INI weapon catalog and NPC inventories: OK
+- DDSL2, FPIL, RPYL and GFO paths: OK
+- projectile/casing meshes and weapon modules: OK
+- Bolt3D, sniper, trails, camera and ballistic zeroing: OK
+- shotgun, synchronized audio host and collision providers: OK
+- complete active C89 syntax check: OK
+- active integration allocation audit: OK
+- complete `make test`: OK
+
+Build note
+----------
+The portable suite and full source syntax check passed on the host compiler. A
+final graphical Win32 PE link/run was not possible because MinGW32 and a Win32
+OpenGL window are unavailable in this environment. Build and visually test
+locally under MSYS2 MinGW32.
+
+Blank3D v3.15.1 motion attacks
+- PASS: full make test
+- PASS: standalone gairlunge89/ggroundlance89 builds
+- PASS: simulated 32-bit Q16.16 overflow regression
+- PASS: integer-aligned X/Z normalization remains non-zero
+- PASS: bridge, FPIL, RPYL, C89 syntax and allocator audit
+
+Blank3D v3.15.2 Ground Lancer horizontal dash
+- PASS: Ground Lancer archetype uses lance style and zero hop
+- PASS: Y remains floor-locked for lance/RAM styles
+- PASS: STOP contact ends on the configured contact-radius shell
+- PASS: Pegasus remains an explicit hopping style
+- PASS: Air Lunger regression test remains green
+- PASS: FPIL combined setup/request rule
+- PASS: complete make test
+
+
+Blank3D v3.17.2 GEDER Truth Gate Pipeline
+- PASS: GEDER 1.0.0 vendor original
+- PASS: bridge retro/active/proximity/strict
+- PASS: filtro previo al tick FPIL sin alterar el preset retro
+- PASS: truthprofile/truthrange desde startup.rpy
+- PASS: línea de visión strict mediante CCS/SICOL WORLD raycast
+- PASS: tests GEDER, bridge, BigHUD, ECG y Motion89
+- PASS: complete C89 syntax check and allocator audit
+
+Blank3D v3.18.0 Sensory Truth Stack
+- PASS: 3D_NPC_Eyes upstream suite
+- PASS: EnlightenerAI upstream suite with -Werror
+- PASS: Socketer absolute target truth is preserved as T0
+- PASS: cone visibility contributes T1 Eyes truth
+- PASS: memory/hearing contributes T2 Enlightener truth
+- PASS: loss of optional layers falls back to Socketer instead of rejecting FPIL
+- PASS: target-first FPIL conditions and actions compile in the full engine
+- PASS: rotatetoplr/lookatplayer/shootplayer remain compatibility aliases
+- PASS: full `make test`
+- PASS: complete C89 syntax check
+- PASS: malloc/realloc/free audit
+
+Blank3D v3.18.1 Perception INI Profiles
+- PASS: [perception] parser for six enemy archetype INIs
+- PASS: strict/range/eye shape/FOV/hearing/LOS values loaded correctly
+- PASS: compact range synchronizes GEDER truth range and NPC Eyes view range
+- PASS: automatic config/entities/<archetype>.ini resolution
+- PASS: legacy inline RPYL fields remain last-write overrides
+- PASS: targeted perception stack and GEDER bridge regression
+- PASS: complete C89 syntax check
+- PASS: malloc/realloc/free audit
+- NOTE: a fresh full `make test` run exceeded the host time limit after the
+  new tests had passed; the unchanged remainder belongs to the prior v3.18.0
+  regression baseline.
+
+Blank3D v3.19.0 NationalMecanicanimal89 Mechanical Rig
+-------------------------------------------------------
+  Candidate review: NRPA3D / Mechanimer89 / NationalMecanicanimal89 PASS
+  Selected upstream strict C89 test suite                         PASS
+  Soquete3D world-provider anchor                                 PASS
+  Five multipart geometry bindings                               PASS
+  Fire recoil, slide and muzzle event                             PASS
+  Real gweapon89 reload-driven magazine provider                  PASS
+  Mechanical clamp constraints                                   PASS
+  Sensory truth stack regression                                  PASS
+  Perception INI regression                                       PASS
+  Motion attack regression                                        PASS
+  Weapon INI regression                                           PASS
+  BigVaderHudder regression                                       PASS
+  Core systems regression                                         PASS
+  Complete Win32/OpenGL syntax check                              PASS
+  Active integration allocator audit                              PASS
+
+  The graphical Win32 window was not executed on the Linux QA host.
+
+Blank3D v3.25.3 Universal Aim Frame
+- PASS: one Cameranaku frame drives player carrier, muzzle event and velocity
+- PASS: moving carrier positions preserve weapon local -Z on the HUD ray
+- PASS: weapon IDs 1..9 remain in the visible camera hemisphere
+- PASS: linear weapons preserve their already converged HUD direction
+- PASS: gravity and Bolt3D backends keep negative gravity
+- PASS: deliberately reversed Gatling event is repaired forward
+- PASS: shotgun left/right spread survives the universal gate
+- PASS: complete portable test matrix executed sequentially in groups
+- PASS: complete C89 syntax check and active allocator audit
+- NOTE: final graphical Win32 run remains required; MinGW32 is unavailable here
+
+
+Blank3D v3.25.4 Automatic Fire Frame Lock
+------------------------------------------
+- PASS: 900 frames walking, rotating and firing continuously
+- PASS: more than two complete yaw revolutions without basis discontinuity
+- PASS: machine-gun/Gatling recoil requests are deferred exactly one frame
+- PASS: current-frame eye/forward/right/up remain bit-identical after FIRE_ACCEPTED
+- PASS: moving muzzle remains in the frozen camera forward hemisphere
+- PASS: Cameranaku, crosshair convergence and universal nine-weapon aim
+- PASS: shotgun runtime, mechanical equipment and synchronized audio host
+- PASS: collision providers, full C89 syntax check and allocator audit
+- NOTE: the aggregate make test was executed as constituent groups because the
+  monolithic invocation exceeded the host command timeout while rebuilding the
+  large weapon-synth archive. Every constituent target completed successfully.
+- NOTE: final graphical Win32 run remains required; MinGW32 is unavailable here.

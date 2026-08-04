@@ -1,0 +1,64 @@
+# Reactiveloader declarative profile notes
+# Estos son ejemplos para convertir a tu DSL/weapon bank.
+# Internamente la lib usa RLD_Profile en C89 con Q16 fixed-point.
+
+weapon pistol_9mm
+active_reload enabled true
+reload_ticks 72
+good_window_percent 45 70
+perfect_window_percent 56 61
+good_finish_ticks 38
+perfect_finish_ticks 26
+fail_penalty_ticks 12
+jam_ticks 0
+bonus accuracy 8
+bonus stability 6
+
+weapon shotgun_shells
+active_reload enabled true
+shell_by_shell true
+interrupt true
+reload_ticks 64
+shell_ticks 16
+good_window_percent 40 75
+perfect_window_percent 55 63
+good_finish_ticks 14
+perfect_finish_ticks 10
+fail_penalty_ticks 8
+bonus spread_tightness 10
+bonus stability 8
+
+weapon magnum_risk
+active_reload enabled true
+hardcore_jam true
+reload_ticks 110
+good_window_percent 50 68
+perfect_window_percent 59 62
+good_finish_ticks 60
+perfect_finish_ticks 36
+fail_penalty_ticks 40
+jam_ticks 24
+bonus damage 15
+bonus stability 5
+
+weapon sniper_precision
+active_reload enabled true
+reload_ticks 96
+good_window_percent 48 72
+perfect_window_percent 61 65
+good_finish_ticks 50
+perfect_finish_ticks 30
+fail_penalty_ticks 24
+bonus accuracy 15
+bonus stability 12
+
+weapon launcher_heavy
+active_reload enabled true
+reload_ticks 150
+good_window_percent 35 58
+perfect_window_percent 47 51
+good_finish_ticks 90
+perfect_finish_ticks 60
+fail_penalty_ticks 35
+bonus stability 10
+bonus custom0 1

@@ -1,0 +1,44 @@
+{
+  "version": "1.4.2",
+  "files": {
+    "audio/04_full_firefight_plus_gtinkle_gfire_rocket.wav": {
+      "duration_seconds": 19.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "launch_time_seconds": 11.75,
+      "impact_time_seconds": 13.35,
+      "launch_to_impact_seconds": 1.5999999999999996,
+      "peak_sample": 31063,
+      "headroom_db": 0.4641307656585698,
+      "rms_dbfs": -17.591185620976226,
+      "clipped_samples": 0,
+      "sha256": "ff6de79452f227a037b4f5918b5c649872d2c0fd8728ad70e883b66bdcfd04a8"
+    },
+    "audio/06_rocket_launcher_launch_to_impact.wav": {
+      "duration_seconds": 7.8,
+      "sample_rate": 44100,
+      "channels": 2,
+      "launch_time_seconds": 0.65,
+      "impact_time_seconds": 2.25,
+      "launch_to_impact_seconds": 1.6,
+      "peak_sample": 29080,
+      "headroom_db": 1.037110655454354,
+      "rms_dbfs": -14.866335550741125,
+      "clipped_samples": 0,
+      "sha256": "8d0367223e2084783a4b889d86f8309ea55bc80850dd6d59e6f257d29651f053"
+    },
+    "audio/00_v1_4_2_unified_event_showcase.wav": {
+      "duration_seconds": 12.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "launch_time_seconds": 6.0,
+      "impact_time_seconds": 7.25,
+      "launch_to_impact_seconds": 1.25,
+      "peak_sample": 7116,
+      "headroom_db": 13.26427991095661,
+      "rms_dbfs": -32.24224434191362,
+      "clipped_samples": 0,
+      "sha256": "56d77c7705bc07887fc4e5e6b684bb71bb05443b0e9e4a5f24df318a4b2f3093"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+weapon_synth_sound_engine89 v1.4.0 release manifest
+Canonical vendored runtime implementations: 48
+Unified archive members including bridges/facade: 54
+
+[Static libraries]
+-rw-r--r-- 1 root root  91478 Jul 19 04:20 build/libgsynthordnance89.a
+-rw-r--r-- 1 root root 168130 Jul 19 04:20 build/libgsynthreport89.a
+-rw-r--r-- 1 root root  61770 Jul 19 04:20 build/libgsynthsoundengine89.a
+-rw-r--r-- 1 root root  38104 Jul 19 04:20 build/libgsynthsoundexpansion89.a
+-rw-r--r-- 1 root root  67712 Jul 19 04:20 build/libgsynthworld89.a
+-rw-r--r-- 1 root root  11286 Jul 19 04:20 build/libweapon_synth_event89.a
+-rw-r--r-- 1 root root 330284 Jul 19 04:20 build/libweapon_synth_sound_engine89.a
+
+[Unified library object members]
+gpaah89.o
+chuecka89.o
+gpump89.o
+gweaponfoley89.o
+gklek89.o
+gweaponbody89.o
+gmuzzlegas89.o
+gballisticcrack89.o
+glatetail89.o
+gcinemathump89.o
+gshotgunsequence89.o
+gtinkle89.o
+gfire89.o
+gfire89_fx.o
+gvoice89.o
+gweaponvoice89.o
+gsynthreport89.o
+gsynthsoundengine89.o
+gbulletair89.o
+wsound_gtypes89.o
+wsound_geq6_89.o
+wsound_gdist89.o
+wsound_gchorus89.o
+wsound_greverb89.o
+wsound_ggrenadeblast89.o
+wsrb89_dsp.o
+wsrb89_presets.o
+wsound_rocketblast89.o
+gsynthordnance89.o
+wsoundaero89.o
+wsoundammo89.o
+wsoundbeltfeed89.o
+wsounddoppler89.o
+wsoundfriction89.o
+wsoundlistener89.o
+wsoundmask89.o
+wsoundmuzzledevice89.o
+wsoundoutdoor89.o
+wsoundparticles89.o
+wsoundportal89.o
+wsoundspatial89.o
+wsoundthermal89.o
+gsynthsoundexpansion89.o
+wsoundaction89.o
+wsoundcombatbus89.o
+wsounddna89.o
+wsoundimpact89.o
+wsoundprojectile89.o
+wsoundprop89.o
+wsoundreceiver89.o
+wsoundricochet89.o
+wsoundroom89.o
+gsynthworld89.o
+weapon_synth_sound_engine89.o
+
+[Public facade]
+include/weapon_synth_sound_engine89.h
+src/weapon_synth_sound_engine89.c
+examples/game_engine_event_bridge.c
+
+[Preview]
+audio/00_v1_4_unified_event_showcase.wav

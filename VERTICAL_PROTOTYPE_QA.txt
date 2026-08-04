@@ -1,0 +1,23 @@
+Blank3D v3.10.2 advancing hopper leap QA
+========================================
+
+Validated on the portable test host:
+- shared fixed-point player/NPC vertical displacement: OK
+- DDSL2 move_up / move_down bindings: OK
+- FPIL planar distance condition dispatch: OK
+- FPIL moveforeflat action dispatch: OK
+- hopper takeoff advances horizontally and vertically: OK
+- hopper ascent remains in state 1 until the configured apex: OK
+- hopper apex switches to advancing descent: OK
+- entering the close radius disables horizontal advance and lands vertically: OK
+- grounded close-range hopper remains idle: OK
+- ordinary movefore full-3D pursuit remains unchanged: OK
+- RPYL hopper_enemy command dispatch: OK
+- complete portable regression suite: OK
+- complete source syntax check with Win32/OpenGL stubs: OK
+- GFO one-context-per-entity test: OK
+- allocator audit (malloc/realloc/free): OK
+
+The sample Windows/OpenGL executable was not visually run on this Linux host.
+Final rendering, collision feel and leap tuning should be checked locally under
+the intended MSYS2 MinGW32 build.

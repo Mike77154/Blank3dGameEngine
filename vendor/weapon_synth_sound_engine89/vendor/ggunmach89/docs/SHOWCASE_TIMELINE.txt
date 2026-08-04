@@ -1,0 +1,15 @@
+ggunmach89_showcase.wav
+
+Format: 44.1 kHz, mono, signed 16-bit PCM
+Duration: 20 seconds
+
+00:00-00:04  M134D electric six-barrel
+00:04-00:08  M197 three-barrel
+00:08-00:12  M61 Vulcan six-barrel
+00:12-00:16  GAU-8 heavy seven-barrel
+00:16-00:20  GAU-22 four-barrel
+
+Per segment:
+00.0 s  motor start
+01.0 s  mechanical firing load enabled
+02.5 s  load disabled and spin-down begins

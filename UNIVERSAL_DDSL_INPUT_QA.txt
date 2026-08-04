@@ -1,0 +1,17 @@
+Blank3D v3.12.0 universal DDSL2 input QA
+========================================
+
+PASS  input name normalization: W, Up, PageUp, LeftShift, F24
+PASS  keyboard hold / pressed / released transitions
+PASS  scanemu89 fixed-point capture path
+PASS  DDSL2 preprocessing for natural key syntax
+PASS  bare action shorthand: `then action` becomes `then action = 1`
+PASS  legacy key-w syntax compatibility
+PASS  alternate bindings are accumulated as one gameplay action per frame
+PASS  full Blank3D regression suite
+PASS  complete active-source C89 syntax check
+PASS  no malloc/realloc/free in active gameplay/input integration
+
+Runtime note:
+The graphical Win32 executable and physical keyboard feel must still be linked
+and exercised locally with the project's MSYS2/MinGW32 toolchain.

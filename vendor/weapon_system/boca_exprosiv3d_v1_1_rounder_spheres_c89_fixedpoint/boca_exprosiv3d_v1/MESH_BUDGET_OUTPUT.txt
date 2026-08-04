@@ -1,0 +1,8 @@
+pistol             max_vertices= 149 max_triangles= 236 at=1200 us
+machine_gun        max_vertices= 494 max_triangles= 811 at=1200 us
+shotgun            max_vertices= 532 max_triangles= 924 at=1800 us
+magnum_auto        max_vertices= 503 max_triangles= 820 at=1200 us
+magnum_revolver    max_vertices= 577 max_triangles= 926 at=1200 us
+precision_rifle    max_vertices= 320 max_triangles= 483 at=1200 us
+precision_brake    max_vertices= 609 max_triangles= 958 at=1200 us
+suppressed         max_vertices= 132 max_triangles= 225 at=1200 us

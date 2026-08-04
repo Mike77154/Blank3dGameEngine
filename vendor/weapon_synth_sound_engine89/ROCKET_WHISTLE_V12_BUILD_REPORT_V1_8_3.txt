@@ -1,0 +1,27 @@
+weapon_synth_sound_engine89 v1.8.3 build report
+
+- grocketwhistle89 vendor v1.1 removed and replaced by v1.2: PASS
+- strict C89 vendor API test: PASS
+- top-level strict C89 tests: 11/11 PASS
+- unified static library: PASS
+- event bridge example: PASS
+- complete sequence renderer: PASS
+- v1.2 event-facade stereo renderer: PASS
+- rejected events in updated timelines: 0
+- clipped samples in delivered WAV files: 0
+./build/test_gsynthsoundengine89
+./build/test_gsynthordnance89
+gsynthordnance89 PASS: bullet=4904 grenade=33352 rocket=48776 context=56 starts=3
+./build/test_gsynthsoundexpansion89
+gsynthsoundexpansion89 PASS bytes=824
+./build/test_weapon_synth_sound_engine89
+weapon_synth_sound_engine89 PASS starts=5 rejects=0 action_events=6 context=117104 report_voice=70468
+./build/test_phase12_acoustics
+./build/test_phase3_dna_metrics
+./build/test_pump_layers
+./build/test_shotgun_master
+./build/test_weapon_mix_hierarchy
+weapon mix hierarchy PASS: mech=17500/20800/22000 report=32767 explosion=32767
+./build/test_magazine_whistle_integration
+magazine_whistle_integration PASS context=117104 magazine=1866569 whistle=14382881 airy=10058611
+./build/test_grocketwhistle89_v12

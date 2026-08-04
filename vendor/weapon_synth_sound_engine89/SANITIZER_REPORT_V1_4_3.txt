@@ -1,0 +1,6 @@
+v1.4.3 modified realtime showcase
+Compiler: cc -std=c89 -pedantic -Wall -Wextra -Werror -O1 -g
+Sanitizers: address,undefined
+Result: PASS
+ASAN_OPTIONS=detect_leaks=0
+No sanitizer diagnostics while rendering all realtime showcase scenes.

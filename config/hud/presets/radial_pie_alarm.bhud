@@ -1,0 +1,54 @@
+hud radial_pie_alarm -=)
+enabled true
+canvas_width 120
+canvas_height 120
+node alarm_pie -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+state_bind numbar.state
+pos top_left + 0,0
+size 120,120
+kind radial_pie
+radial_start -90
+radial_sweep 360
+radial_steps 72
+frame double
+frame_depth 3
+frame_gap 2
+background dither
+bg_step 5
+bg_size 2
+draw_bg true
+draw_border true
+draw_markers true
+markers 25,50,75
+marker_size 2
+auto_state true
+state_blink true
+blink_period 0.45
+low_ratio 0.35
+critical_ratio 0.15
+outer_outline true
+drop_shadow true
+gloss true
+radial_spokes true
+radial_rings true
+outline_size 2
+shadow_offset 3,4
+gloss_percent 30
+radial_detail_rings 4
+color_bg #180407E0
+color_fill #E9483FFF
+color_border #FFD7C8FF
+color_empty #3A1014D8
+color_marker #FFF2A0FF
+color_outline #050000FF
+color_shadow #000000A0
+color_gloss #FFFFFF55
+color_bg_detail #8C252B60
+color_state_fill1 #F1843DFF
+color_state_fill2 #FF2929FF
+border_size 2
+(=-

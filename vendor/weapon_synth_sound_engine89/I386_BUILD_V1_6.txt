@@ -1,0 +1,16 @@
+weapon_synth_sound_engine89 v1.6.0 i386 report
+
+Flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O2 -m32
+
+Target:
+  make libs
+
+Result: PASS
+Aggregate object count: 56
+Verified objects:
+  weapon_synth_sound_engine89.o: ELF 32-bit LSB relocatable, Intel i386
+  wsoundmetrics89.o: ELF 32-bit LSB relocatable, Intel i386
+  wsounddna89.o: ELF 32-bit LSB relocatable, Intel i386
+
+The release directory was rebuilt afterward with the normal optimized host flags.

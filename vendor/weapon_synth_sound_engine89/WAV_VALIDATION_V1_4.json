@@ -1,0 +1,18 @@
+{
+  "file": "audio/00_v1_4_unified_event_showcase.wav",
+  "format": "PCM16 little-endian",
+  "channels": 2,
+  "sample_rate_hz": 44100,
+  "frames": 529200,
+  "duration_seconds": 12.0,
+  "size_bytes": 2116844,
+  "peak_sample": 7672,
+  "peak_dbfs": -12.610561739581836,
+  "rms_sample": 631.1315138412956,
+  "rms_dbfs": -34.306336302156446,
+  "clipped_samples": 0,
+  "zero_sample_ratio": 0.0010062358276643991,
+  "sha256": "e6de7a397b10e0efaaab92e7bcbebacd552ee1d70e9aa24e0e8e3fd248605aa8",
+  "deterministic_reference_sha256": "e6de7a397b10e0efaaab92e7bcbebacd552ee1d70e9aa24e0e8e3fd248605aa8",
+  "deterministic_match": true
+}

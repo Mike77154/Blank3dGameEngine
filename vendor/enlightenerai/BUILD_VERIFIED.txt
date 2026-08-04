@@ -1,0 +1,23 @@
+EnlightenerAI hardening build verified.
+
+Protocol audit:
+- Runtime include/src contains no float, double, malloc, calloc, realloc, free.
+- Runtime include/src contains no math.h dependency.
+- C89 build passes with -std=c89 -Wall -Wextra -Werror -pedantic -ffreestanding -fno-builtin.
+- Compiler built with fno-builtin to avoid generated libc helpers such as memset.
+
+Tests passed:
+- tests/test_astar.c
+- tests/test_perception.c
+- tests/test_targeting.c
+- tests/test_tactical.c
+- tests/test_hardening.c
+
+Hardening applied:
+- EAI_Fixed now selects a real 32-bit signed integer type at compile time.
+- EAI_U32 now selects a real 32-bit unsigned integer type at compile time.
+- Added eai_fx_add_sat, eai_fx_sub_sat, eai_fx_madd_sat.
+- Vector add/sub/dot now use saturating math.
+- A* g/f cost accumulation now uses saturating math.
+- Targeting, perception, memory, tactical scores/timers now use saturating math.
+- Bidirectional nav edge insertion now prechecks two free edge slots before writing.

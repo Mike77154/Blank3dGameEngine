@@ -1,0 +1,29 @@
+boca_exprosiv3d v1 - TEST REPORT
+================================
+
+Compilador probado:
+
+    gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Resultado:
+
+    115 pruebas aprobadas.
+    0 fallas.
+
+Cobertura funcional:
+
+- Cardinales de la tabla trigonométrica.
+- Multiplicación y división Q10.
+- Determinismo por semilla.
+- Activación y expiración por microsegundos.
+- Los ocho perfiles generan primitivas.
+- Respeto al primitive_budget.
+- bex3d_fire() no muta el perfil físico configurado.
+- Construcción de malla en edad cero y fase pico.
+- Todos los índices quedan dentro del vertex_count.
+- Buffer pequeño reporta BEX3D_BUILD_TRUNCATED sin escribir fuera.
+- Revólver genera exactamente dos jets BEX3D_ROLE_CYLINDER_GAP.
+- Freno de boca genera jets laterales BEX3D_ROLE_DEVICE_JET.
+- Perfil suprimido permanece dentro de diez primitivas.
+
+El log completo se incluye en TEST_OUTPUT.txt.

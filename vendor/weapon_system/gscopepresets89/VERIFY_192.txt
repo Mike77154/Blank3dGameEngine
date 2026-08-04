@@ -1,0 +1,14 @@
+gscopepresets89 pack192 verification
+====================================
+original_registry_entries=59
+expanded_registry_entries=133
+total_registry_entries=192
+enum_entries=192
+generated_png_previews=192
+original_ids_0_58_unchanged=yes
+compile_mode=-std=c89 -pedantic -Wall -Wextra -Werror
+runtime_heap_allocation=none
+runtime_float_double=none
+source_catalog_0_58_byte_identical=yes
+registry_lookup_test=passed_192_of_192
+preview_generator_rendered=192_of_192

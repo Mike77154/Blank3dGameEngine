@@ -1,0 +1,6 @@
+Target: render_complete_weapon_sequences
+Flags: -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer
+ASan: PASS
+UBSan: PASS
+Leak detection: PASS
+Exit status: 0

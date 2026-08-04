@@ -1,0 +1,12 @@
+gvoice89 v2.0 build report
+Compiler: GCC 14.2.0
+Flags: -O2 -std=c89 -pedantic -Wall -Wextra -Werror
+Smoke test: PASS
+Logical voices tested: 256
+Physical voices tested: 64
+Virtual voices tested: 192
+sizeof(gv89_voice): 168 bytes (64-bit build host)
+sizeof(gv89_context): 1760 bytes (64-bit build host)
+256-slot manager storage: 44768 bytes
+Static library: 19526 bytes
+Core object undefined external symbols: none

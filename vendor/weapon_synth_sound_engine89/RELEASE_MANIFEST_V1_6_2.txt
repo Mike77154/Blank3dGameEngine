@@ -1,0 +1,31 @@
+weapon_synth_sound_engine89 v1.6.2
+Shotgun Pump Master release
+
+Unified archive:
+- build/libweapon_synth_sound_engine89.a
+- 58 objects
+- 386354 bytes
+
+New runtime:
+- vendor/gshotguneq89/include/gshotguneq89.h
+- vendor/gshotguneq89/src/gshotguneq89.c
+- vendor/gshotgunsequence89 v1.4.0 model/master/tek integration
+
+New public behavior:
+- six-band pump master
+- five physical/perceptual model profiles
+- model-retimed gklek articulation
+- optional external tek provider
+- built-in Foley tik fallback
+
+Previews:
+- audio/wsse89_v1_6_2_shotgun_master_ab.wav
+- audio/wsse89_v1_6_2_shotgun_model_pumps.wav
+- audio/wsse89_v1_6_2_full_shotgun_sequence_mastered.wav
+
+Validation:
+- strict C89
+- 8/8 suites
+- ASan/UBSan new path
+- deterministic WAVs
+- zero clipping

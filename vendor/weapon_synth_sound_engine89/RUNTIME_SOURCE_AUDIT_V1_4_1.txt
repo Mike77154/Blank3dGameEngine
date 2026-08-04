@@ -1,0 +1,15 @@
+weapon_synth_sound_engine89 v1.4.1 runtime source audit
+
+Aggregate archive objects: 54
+Rocket noise oscillators: 7
+Rocket workspace bytes: 48004
+Rocket context bytes (tested 64-bit ABI): 632
+Integrated rocket provider bytes: 48776
+
+Rumble source: independent RNG + pre-smoothing + low-pass SVF
+Crackle source: independent RNG + sparse gate + band-pass SVF
+Motion LFO: independent sine-table amplitude modulator
+Existing chorus LFO: retained on room send only
+Unified rocket payload: preset or complete wsrb89_params
+
+RESULT: PASS

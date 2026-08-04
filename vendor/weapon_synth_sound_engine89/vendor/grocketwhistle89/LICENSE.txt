@@ -1,0 +1,10 @@
+CC0 1.0 Universal
+
+To the extent possible under law, the author has waived all copyright and
+related or neighboring rights to grocketwhistle89.
+
+You may copy, modify, distribute and perform the work, even for commercial
+purposes, all without asking permission.
+
+This text is a compact notice. The legal code is available at:
+https://creativecommons.org/publicdomain/zero/1.0/legalcode

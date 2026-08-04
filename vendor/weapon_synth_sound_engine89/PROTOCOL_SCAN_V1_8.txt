@@ -1,0 +1,6 @@
+Modified runtime/demo path:
+- strict C89 compilation PASS
+- no malloc/calloc/realloc/free added
+- no float/double added
+- caller-owned static buffers retained
+- no heap allocation added

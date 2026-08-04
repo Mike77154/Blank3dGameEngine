@@ -1,0 +1,34 @@
+; Enemigo volador de picada / estrellado repetitivo.
+; Estado 0: sigue al jugador en X/Z y conserva una banda de vuelo sobre el.
+; Estado 1: baja rapidamente hasta estrellarse contra el jugador.
+; Estado 2: vuelve a la posicion aerea guardada antes de la picada.
+;
+; Valores de prueba:
+;   banda vertical: 7..9 unidades sobre el jugador
+;   alineacion para atacar: 1.5 unidades en X/Z
+;   velocidad de seguimiento: 5
+;   velocidad de ajuste vertical: 4
+;   velocidad de picada: 14
+;   velocidad de regreso: 12
+
+; Mantenerse aproximadamente ocho unidades por encima del jugador.
+:state=0,belowplayerheight=7:moveup=4
+:state=0,aboveplayerheight=9:movedown=4
+
+; Buscar colocarse sobre el eje vertical del jugador.
+:state=0,plrflatdistfurther=1.5:lookatplayer,sineplayerflat=5
+
+; Ya alineado y con altura suficiente: memoriza la percha e inicia la picada.
+:state=0,plrflatdistwithin=1.5,heightaboveplayeratleast=5:saveposition,setstate=1,diveplayer=14
+
+; Picada guiada hacia el centro del jugador.
+:state=1,plrdistfurther=1:diveplayer=14
+
+; Impacto: causa dano y comienza inmediatamente el regreso.
+:state=1,plrdistwithin=1:setstate=2,hurtplayer=8,lookatreturnposition,returntoposition=12
+
+; Regreso a la coordenada guardada antes del descenso.
+:state=2,returnpositionfurther=0.25:lookatreturnposition,returntoposition=12
+
+; Ya en su percha anterior, vuelve a buscar altura y alineacion.
+:state=2,returnpositionwithin=0.25:setstate=0,lookatplayer

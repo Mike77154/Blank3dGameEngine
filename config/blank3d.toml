@@ -1,0 +1,47 @@
+[audio]
+enabled = true
+
+[camera]
+first_person = false
+lock_mouse = true
+mouse_sensitivity = 0.18
+pitch_min = -85.0
+pitch_max = 85.0
+distance = 8.0
+height = 4.0
+shoulder = 1.0
+eye_height = 1.7
+zoom_fov = 45.0
+sniper_zoom_fov = 18.0
+zoom_speed = 120.0
+
+[weapon]
+initial = 1
+gatling_spinup_ms = 360
+slingshot_charge_ms = 900
+
+[inventory]
+ammo_9mm = 180
+ammo_shells = 40
+ammo_magnum = 24
+ammo_sniper = 30
+ammo_grenades = 18
+ammo_rockets = 8
+ammo_gatling = 900
+ammo_stones = 60
+
+[numeric]
+damage_multiplier = 1.0
+speed_multiplier = 1.0
+recoil_multiplier = 1.0
+
+[gravity]
+enabled = true
+fall_speed = 9.0
+jump_acceleration = 22.0
+
+[flags]
+weapon_enabled = true
+can_fire = true
+can_reload = true
+active_reload = true

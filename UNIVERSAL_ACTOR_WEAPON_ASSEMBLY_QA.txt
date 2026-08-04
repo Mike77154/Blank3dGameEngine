@@ -1,0 +1,45 @@
+Blank3D v3.21.0 — Universal Actor Weapon Assembly QA
+=====================================================
+
+ARCHITECTURE
+[PASS] GWeapon selects weapon per actor.
+[PASS] Presentation registry maps weapon_id to model and mechanism.
+[PASS] GAttach mounts a distinct object instance per actor.
+[PASS] NationalMecanicanimal89 owns one rig per equipped object.
+[PASS] Carrier type is metadata, not a separate code path.
+[PASS] Muzzle remains an invisible socket and not mechanical geometry.
+
+PORTABLE PROOF
+[PASS] Player receives pistol model through universal API.
+[PASS] Gunner enemy receives machine-gun model through same API.
+[PASS] Ally receives pistol model through same API.
+[PASS] Every carrier has a distinct GAttach object_id.
+[PASS] Geometry packet retains selected model resource_id.
+[PASS] Gunner FIRE_ACCEPTED advances only its mechanical instance.
+[PASS] Gunner can switch from machine gun to pistol without carrier code.
+[PASS] All 9 weapon presentation profiles load from weapons.ini.
+
+FIXED POINT
+[PASS] GWeapon89 presentation values remain Q20.12.
+[PASS] GAttach89 transforms remain Q20.12.
+[PASS] Single Q20.12 -> Q16.16 conversion at mechanimador boundary.
+[PASS] No float/double introduced in the integration.
+
+REGRESSION COMMANDS PASSED
+[PASS] make test-actor-equipment
+[PASS] make test-mechanical-weapon
+[PASS] make test-attachment-stack
+[PASS] make test-actor-weapon-isolation
+[PASS] make test-npc-weapon-inventory
+[PASS] make test-gattach-vendor
+[PASS] make test-nationalmecanicanimal-vendor
+[PASS] make test-weapon-ini
+[PASS] make test-config
+[PASS] make syntax-check
+[PASS] make audit
+
+HOST LIMITATION
+The Win32 OpenGL window cannot be launched on the Linux QA host. The complete
+Win32/OpenGL source passed the project syntax-check with platform stubs. The
+included renderer currently uses the procedural multipart fallback; no new OBJ
+weapon assets were supplied with this revision.

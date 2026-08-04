@@ -1,0 +1,15 @@
+{
+  "version": "1.4.3",
+  "sample_rate": 44100,
+  "channels": 2,
+  "frames": 343980,
+  "duration_seconds": 7.8,
+  "impact_event_count": 1,
+  "old_cursor_wrap_frames": 65536,
+  "old_cursor_wrap_seconds": 1.486077097505669,
+  "old_periodic_correlation": 0.9999126028588737,
+  "fixed_periodic_correlation": 0.0029488515322061734,
+  "peak_pcm16": 28151,
+  "clipped_samples": 0,
+  "deterministic_sha256": "7222fe057994381a4837fa18fc5aeb89b75c0ab46d43c2518ed00d2a82e51750"
+}

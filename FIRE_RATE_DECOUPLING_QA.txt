@@ -1,0 +1,13 @@
+Blank3D v3.13.1 FIRE RATE / PROJECTILE SPEED QA
+================================================
+
+[OK] `projectile_speed` changes only GWP89_Event.speed_fx.
+[OK] `fire_rate_bps=20` resolves to a 50 ms interval.
+[OK] `fire_rate_rpm` and exact `cooldown_ms` aliases are supported.
+[OK] machine_gun: 13.333 shots/s -> 75 ms; projectile speed 46.
+[OK] gatling: 28.571 shots/s -> 35 ms; projectile speed 62.
+[OK] runtime test changes machine-gun projectile speed from 5 to 200 while
+     preserving the 75 ms automatic-fire clock.
+[OK] legacy `speed` remains accepted as a compatibility alias.
+[OK] obsolete global RPYL `weapon bullet_speed ... cooldown ...` removed.
+[OK] full make test, syntax-check and no-allocator audit passed.

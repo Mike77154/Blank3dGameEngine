@@ -1,0 +1,16 @@
+shotgun legacy: starts=13 steals=0 rejects=0 peak_logical=3 peak_physical=3 virtual_peak_est=0 limiter_hits=0
+machinegun legacy: starts=99 steals=10 rejects=0 peak_logical=25 peak_physical=25 virtual_peak_est=0 limiter_hits=0
+pistols legacy: starts=40 steals=0 rejects=0 peak_logical=8 peak_physical=8 virtual_peak_est=0 limiter_hits=0
+firefight+rocket: starts=585 steals=68 rejects=0 peak_logical=104 peak_physical=64 virtual_peak_est=40 limiter_hits=0
+rocket launch+impact: starts=2 steals=0 rejects=0 peak_logical=2 peak_physical=2 virtual_peak_est=0 limiter_hits=0
+gtinkle+gfire: starts=33 steals=0 rejects=0 peak_logical=21 peak_physical=21 virtual_peak_est=0 limiter_hits=0
+all complete sequences: starts=58 steals=11 rejects=0 peak_logical=19 peak_physical=19 virtual_peak_est=0 limiter_hits=0
+pistol complete: starts=4 steals=0 rejects=0 peak_logical=3 peak_physical=3 virtual_peak_est=0 limiter_hits=0
+magnum complete: starts=4 steals=0 rejects=0 peak_logical=3 peak_physical=3 virtual_peak_est=0 limiter_hits=0
+shotgun complete: starts=5 steals=0 rejects=0 peak_logical=3 peak_physical=3 virtual_peak_est=0 limiter_hits=0
+machinegun complete: starts=31 steals=11 rejects=0 peak_logical=19 peak_physical=19 virtual_peak_est=0 limiter_hits=0
+sniper complete: starts=4 steals=0 rejects=0 peak_logical=3 peak_physical=3 virtual_peak_est=0 limiter_hits=0
+grenade complete: starts=3 steals=0 rejects=0 peak_logical=2 peak_physical=2 virtual_peak_est=0 limiter_hits=0
+rocket complete: starts=3 steals=0 rejects=0 peak_logical=2 peak_physical=2 virtual_peak_est=0 limiter_hits=0
+grenade launcher complete: starts=4 steals=0 rejects=0 peak_logical=2 peak_physical=2 virtual_peak_est=0 limiter_hits=0
+banks: pistol=55125 machine=48510 shotgun=92610 rocket=114660 magnum=72765 sniper=114660 grenade_launcher=74970 grenade_blast=220500 rocket_blast=220500 pump=37485

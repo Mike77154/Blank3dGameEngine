@@ -1,0 +1,39 @@
+CHUECKA89 V2.4 PHYSICS/REFERENCE PASS
+=====================================
+
+Approved atom timing retained:
+  SH attack   = 30 ms
+  SH release  = 12 ms
+  ECKT delay  = 82 ms
+  ECKT attack = 0 ms
+
+Changes:
+  - dried SH top-air EQ and global wet tail
+  - added deterministic secondary contact events
+  - rebuilt shotgun, pistol, heavy action, revolver,
+    grenade launcher, launcher preparation, SMG, and MG presets
+  - added deterministic timing micro-jitter to repeated mechanisms
+
+Build commands:
+  make clean
+  make all
+  make test
+  make win32
+
+Compiler mode:
+  -O2 -Wall -Wextra -pedantic -std=c89
+
+Result:
+  native build: PASS
+  smoke tests 44.1/48 kHz: PASS
+  Win32 i686 static archive: PASS
+  rendered previews: PASS
+
+Audio audit:
+  13 core preset WAV files checked
+  clipped full-scale samples: 0
+
+Core constraints:
+  dynamic allocation: none
+  float/double DSP: none
+  signal path: Q15 fixed point

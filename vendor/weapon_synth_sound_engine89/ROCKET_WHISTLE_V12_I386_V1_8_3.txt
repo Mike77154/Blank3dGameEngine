@@ -1,0 +1,8 @@
+i386 validation
+
+- grocketwhistle89 v1.2 core object with -m32: PASS
+- full event facade object with -m32: not repeated in this container because
+  shotpumpkin89.h includes system limits.h and the 32-bit glibc development
+  headers are unavailable (bits/libc-header-start.h missing).
+- This is an environment dependency failure, not a C compiler diagnostic in
+  grocketwhistle89 or the v1.8.3 event changes.

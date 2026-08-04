@@ -1,0 +1,36 @@
+Blank3D v3.22.1 — VPhysics Total Provider Stack QA
+
+Vendored vphysics_total_solver_c89 strict C89: PASS
+Upstream total_solver_selftest: PASS
+Upstream pair_cache_churn: PASS
+Provider getter contract: PASS
+Transform provider read/write callbacks: PASS
+Q20.12 move: PASS
+Q20.12 rotate Y: PASS
+Q20.12 scale persistence: PASS
+Physics-to-scene writeback: PASS
+External-to-kinematic transfer: PASS
+CCS/SICOL ground contact generation: PASS
+Host CCD sweep callback queried: PASS
+Host CCD sweep hit observed: PASS
+240 deterministic provider test steps: PASS
+Complete Win32/OpenGL syntax-check: PASS
+Active allocator audit: PASS
+Blank3D CCS/SICOL regression: PASS
+Core systems regression: PASS
+GAttach attachment stack regression: PASS
+Mechanical weapon regression: PASS
+Universal actor equipment regression: PASS
+Motion89 attacks regression: PASS
+Sensory truth stack regression: PASS
+BigVaderHudder regression: PASS
+
+Portable provider test result:
+PASS: VPhysics providers steps=240 reads=738 writes=738 contacts=322 sweeps=230 hits=12
+
+Known boundary:
+Dynamic-vs-dynamic narrowphase currently uses a conservative bounding-sphere
+proxy. Exact box/sphere/convex shape dispatch can replace the collision provider
+without changing vpTotalSolver or its transform service.
+
+The graphical Win32 runner was not executed on the Linux QA host.

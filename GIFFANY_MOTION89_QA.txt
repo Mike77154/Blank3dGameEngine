@@ -1,0 +1,33 @@
+Blank3D v3.15.2 GIFFANY MOTION89 QA
+===================================
+
+PASS  gairlunge89 standalone C89 static library build
+PASS  ggroundlance89 standalone C89 static library build
+PASS  Q20.12 <-> Q16.16 bridge
+PASS  MinGW32-width Q16.16 multiply/divide regression
+PASS  integer-aligned X/Z direction survives normalization
+PASS  saturating C89 arithmetic without long long or heap
+PASS  dt-scaled units-per-second motion
+PASS  airborne requirement for air lunge
+PASS  grounded requirement for ground lance
+PASS  Air Lunger regression remains green
+PASS  Ground Lancer archetype defaults to zero-hop lance style
+PASS  Ground Lancer Y remains exactly floor-locked during charge
+PASS  Ground Lancer STOP impact finishes on contact-radius shell
+PASS  Pegasus hop remains available as explicit opt-in style
+PASS  snapshot/tracking air target policy
+PASS  push/ram/claw/pierce air intentions
+PASS  lance/pegasus/ram/skim-hop ground styles
+PASS  stop/bounce/pierce ground contact policies
+PASS  impact latch, clear, finished latch and reset
+PASS  transform ownership versus jump/gravity vertical stack
+PASS  FPIL setup and charge execute in one matching rule
+PASS  FPIL action/condition routing
+PASS  RPYL archetypes and aliases
+PASS  air-lunger demonstration state cycle
+PASS  ground-lancer demonstration state cycle
+PASS  complete Blank3D make test
+PASS  Win32 runner C89 syntax-check through platform stubs
+PASS  active integration allocator audit
+
+Visual/feel validation still belongs to the native Win32 MinGW32 build.

@@ -1,0 +1,8 @@
+; Hopper using vendored jump89: zigzag horizontal pursuit plus real gravity arc.
+; It starts a jump only while grounded and farther than 5 units in X/Z.
+; Once close, it completes the current landing and remains idle.
+
+:state=0,plrflatdistfurther=5,grounded:setstate=1,lookatplayer,jump=10,zigzagplayerflat=8
+:state=1,plrflatdistfurther=5,airborne:lookatplayer,zigzagplayerflat=8
+:state=1,plrflatdistwithin=5,airborne:lookatplayer
+:state=1,grounded:setstate=0

@@ -1,0 +1,12 @@
+weapon_synth_sound_engine89 v1.8.2
+
+Compiler flags:
+-std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Results:
+- render_complete_weapon_sequences: PASS
+- unified static libraries: PASS
+- libweapon_synth_sound_engine89.a: 410 KiB approximately
+- test suites: 10/10 PASS
+- rejected events in new capacity sequences: 0
+- clipping in delivered WAV files: 0 samples

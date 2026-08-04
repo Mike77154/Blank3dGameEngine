@@ -1,0 +1,22 @@
+weapon_synth_sound_engine89 v1.4.2
+
+Release build:
+  CFLAGS: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+  make all: PASS
+  make test: PASS
+  make render: PASS
+
+Changed demos:
+  audio/04_full_firefight_plus_gtinkle_gfire_rocket.wav
+    launch: gpaah89 GPAAH89_PRESET_ROCKET_LAUNCHER at 11.750 s
+    impact: wsound_rocketblast89 WSRB89_PRESET_HEAVY_IMPACT at 13.350 s
+
+  audio/06_rocket_launcher_launch_to_impact.wav
+    launch: gpaah89 GPAAH89_PRESET_ROCKET_LAUNCHER at 0.650 s
+    impact: wsound_rocketblast89 WSRB89_PRESET_HEAVY_IMPACT at 2.250 s
+
+  audio/00_v1_4_2_unified_event_showcase.wav
+    launch: WSSE89_EVENT_REPORT with GPAAH89_PRESET_ROCKET_LAUNCHER at 6.000 s
+    impact: WSSE89_EVENT_ROCKET_BLAST at 7.250 s
+
+All three WAVs are deterministic and contain zero clipped samples.

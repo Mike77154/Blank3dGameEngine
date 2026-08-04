@@ -1,0 +1,26 @@
+CC ?= gcc
+AR ?= ar
+CFLAGS ?= -std=c89 -pedantic -Wall -Wextra -Werror -Isrc
+
+LIB = libgmagazine89.a
+OBJ = src/gmagazine89.o
+
+all: $(LIB) test_gmagazine89 demo_gmagazine89
+
+$(OBJ): src/gmagazine89.c src/gmagazine89.h
+	$(CC) $(CFLAGS) -c src/gmagazine89.c -o $(OBJ)
+
+$(LIB): $(OBJ)
+	$(AR) rcs $(LIB) $(OBJ)
+
+test_gmagazine89: src/gmagazine89.c tests/test_gmagazine89.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+demo_gmagazine89: src/gmagazine89.c demo/demo_gmagazine89.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+test: test_gmagazine89
+	./test_gmagazine89
+
+clean:
+	rm -f test_gmagazine89 demo_gmagazine89 $(OBJ) $(LIB)

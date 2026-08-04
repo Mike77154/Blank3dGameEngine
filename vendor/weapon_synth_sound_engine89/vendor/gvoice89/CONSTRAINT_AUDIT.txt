@@ -1,0 +1,7 @@
+PASS: strict C89 compile with -pedantic -Werror
+PASS: no malloc/realloc/free tokens in core source
+PASS: no float/double tokens in core source
+PASS: no stdio/stdlib/math dependency in core source
+PASS: caller-owned storage only
+PASS: deterministic fixed/integer signal path
+PASS: 256 logical / 64 physical / 192 virtual smoke test

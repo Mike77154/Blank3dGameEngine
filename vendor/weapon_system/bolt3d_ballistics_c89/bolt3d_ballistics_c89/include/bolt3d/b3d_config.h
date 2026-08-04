@@ -1,0 +1,25 @@
+#ifndef B3D_CONFIG_H
+#define B3D_CONFIG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define B3D_VERSION_MAJOR 0
+#define B3D_VERSION_MINOR 3
+#define B3D_VERSION_PATCH 0
+
+#define B3D_FIXED_SHIFT 16
+#define B3D_FIXED_FRACTION_MASK 0xFFFFUL
+
+#define B3D_DEFAULT_EVENT_CAPACITY 64
+#define B3D_DEFAULT_PROJECTILE_CAPACITY 128
+#define B3D_DEFAULT_COLLIDER_CAPACITY 128
+#define B3D_DEFAULT_SOLVER_CAPACITY 128
+#define B3D_DEFAULT_CONTACT_CAPACITY 16
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

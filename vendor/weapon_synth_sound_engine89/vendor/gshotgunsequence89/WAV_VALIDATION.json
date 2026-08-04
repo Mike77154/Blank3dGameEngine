@@ -1,0 +1,70 @@
+{
+  "00_shotgun_sequence_with_mid_klek_tik.wav": {
+    "channels": 2,
+    "sample_rate": 44100,
+    "frames": 270004,
+    "seconds": 6.12254,
+    "peak": 19153,
+    "rms": 1582.278,
+    "clips": 0
+  },
+  "01_pump_full_chic_klek_tik_chuk.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 35280,
+    "seconds": 0.8,
+    "peak": 23753,
+    "rms": 2119.465,
+    "clips": 0
+  },
+  "02_pump_v1_1_without_midpoint.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 35280,
+    "seconds": 0.8,
+    "peak": 23753,
+    "rms": 2075.56,
+    "clips": 0
+  },
+  "03_gklek89_midpoint_stem.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 35280,
+    "seconds": 0.8,
+    "peak": 19819,
+    "rms": 390.796,
+    "clips": 0
+  },
+  "04_foley_tik_midpoint_stem.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 35280,
+    "seconds": 0.8,
+    "peak": 7432,
+    "rms": 179.273,
+    "clips": 0
+  },
+  "05_AB_without_midpoint_then_klek_plus_tik.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 81600,
+    "seconds": 1.85034,
+    "peak": 23753,
+    "rms": 1950.575,
+    "clips": 0
+  },
+  "06_klek_then_tik_then_full_pump.wav": {
+    "channels": 1,
+    "sample_rate": 44100,
+    "frames": 132300,
+    "seconds": 3.0,
+    "peak": 23753,
+    "rms": 1116.78,
+    "clips": 0
+  },
+  "_midpoint_window_240_340_ms": {
+    "without_midpoint_rms": 1508.81,
+    "with_klek_tik_rms": 1936.49,
+    "increase_percent": 28.35
+  }
+}

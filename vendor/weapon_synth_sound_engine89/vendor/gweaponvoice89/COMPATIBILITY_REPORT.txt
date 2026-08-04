@@ -1,0 +1,2 @@
+PASS: gshotgunsequence89 v1.3 source compatibility
+Original adapter compiled with v2 vendors; smoke and voice-handler tests passed.

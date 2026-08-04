@@ -1,0 +1,17 @@
+Protocol scan v1.6.2
+
+New active C/H files scanned:
+- vendor/gshotguneq89/include/gshotguneq89.h
+- vendor/gshotguneq89/src/gshotguneq89.c
+- vendor/gshotgunsequence89/include/gshotgunsequence89.h
+- vendor/gshotgunsequence89/src/gshotgunsequence89.c
+- src/render_shotgun_master_showcase.c
+- tests/test_shotgun_master.c
+
+Required runtime protocol:
+- strict C89: PASS
+- caller-owned state: PASS
+- malloc/calloc/realloc/free: none
+- float/double: none
+- dynamic/heap storage: none
+- deterministic seed path: PASS

@@ -1,0 +1,88 @@
+make: Entering directory '/mnt/data/gshotgunsequence89_v1_2'
+mkdir -p build audio
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c src/gshotgunsequence89.c -o build/gshotgunsequence89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gpaah89/src/gpaah89.c -o build/gpaah89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gpump89/src/gpump89.c -o build/gpump89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/chuecka89/src/chuecka89.c -o build/chuecka89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gklek89/src/gklek89.c -o build/gklek89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gweaponfoley89/src/gweaponfoley89.c -o build/gweaponfoley89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gweaponbody89/src/gweaponbody89.c -o build/gweaponbody89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gmuzzlegas89/src/gmuzzlegas89.c -o build/gmuzzlegas89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gballisticcrack89/src/gballisticcrack89.c -o build/gballisticcrack89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/glatetail89/src/glatetail89.c -o build/glatetail89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c vendor/gcinemathump89/src/gcinemathump89.c -o build/gcinemathump89.o
+ar rcs build/libgshotgunsequence89.a build/gshotgunsequence89.o build/gpaah89.o build/gpump89.o build/chuecka89.o build/gklek89.o build/gweaponfoley89.o build/gweaponbody89.o build/gmuzzlegas89.o build/gballisticcrack89.o build/glatetail89.o build/gcinemathump89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c demo/render_shotgun_sequence.c -o build/render_shotgun_sequence.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 build/render_shotgun_sequence.o build/libgshotgunsequence89.a -o build/render_shotgun_sequence
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Ivendor/gpaah89/include -Ivendor/gpump89/include -Ivendor/chuecka89/include -Ivendor/gweaponfoley89/include -Ivendor/gklek89/include -Ivendor/gweaponbody89/include -Ivendor/gmuzzlegas89/include -Ivendor/gballisticcrack89/include -Ivendor/glatetail89/include -Ivendor/gcinemathump89/include -c tests/smoke.c -o build/test_smoke.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 build/test_smoke.o build/libgshotgunsequence89.a -o build/test_smoke
+./build/test_smoke
+./build/render_shotgun_sequence
+gshotgunsequence89 v1.2 rendered; context=98432 bytes
+python3 tools/validate_wav.py audio/*.wav
+{
+  "audio/00_shotgun_sequence_with_mid_klek_tik.wav": {
+    "channels": 2,
+    "clips": 0,
+    "frames": 270004,
+    "peak": 19153,
+    "rms": 1582.278,
+    "sample_rate": 44100,
+    "seconds": 6.122539682539682
+  },
+  "audio/01_pump_full_chic_klek_tik_chuk.wav": {
+    "channels": 1,
+    "clips": 0,
+    "frames": 35280,
+    "peak": 23753,
+    "rms": 2119.465,
+    "sample_rate": 44100,
+    "seconds": 0.8
+  },
+  "audio/02_pump_v1_1_without_midpoint.wav": {
+    "channels": 1,
+    "clips": 0,
+    "frames": 35280,
+    "peak": 23753,
+    "rms": 2075.56,
+    "sample_rate": 44100,
+    "seconds": 0.8
+  },
+  "audio/03_gklek89_midpoint_stem.wav": {
+    "channels": 1,
+    "clips": 0,
+    "frames": 35280,
+    "peak": 19819,
+    "rms": 390.796,
+    "sample_rate": 44100,
+    "seconds": 0.8
+  },
+  "audio/04_foley_tik_midpoint_stem.wav": {
+    "channels": 1,
+    "clips": 0,
+    "frames": 35280,
+    "peak": 7432,
+    "rms": 179.273,
+    "sample_rate": 44100,
+    "seconds": 0.8
+  },
+  "audio/05_AB_without_midpoint_then_klek_plus_tik.wav": {
+    "channels": 1,
+    "clips": 0,
+    "frames": 81600,
+    "peak": 23753,
+    "rms": 1950.575,
+    "sample_rate": 44100,
+    "seconds": 1.8503401360544218
+  },
+  "audio/06_klek_then_tik_then_full_pump.wav": {
+    "channels": 1,
+    "clips": 0,
+    "frames": 132300,
+    "peak": 23753,
+    "rms": 1116.78,
+    "sample_rate": 44100,
+    "seconds": 3.0
+  }
+}
+make: Leaving directory '/mnt/data/gshotgunsequence89_v1_2'

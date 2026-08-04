@@ -1,0 +1,14 @@
+Protocol scan for changed/new C and H paths
+
+Scanned:
+  include/
+  src/
+  tests/
+  vendor/shotpumpkin89/
+  vendor/gshotgunsequence89/
+
+Active call patterns found:
+  malloc/calloc/realloc/free: 0
+  float/double declarations: 0
+
+Runtime remains caller-owned, fixed-capacity and fixed-point/integer.

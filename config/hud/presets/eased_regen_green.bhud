@@ -1,0 +1,44 @@
+hud eased_regen_green -=)
+enabled true
+canvas_width 280
+canvas_height 24
+node regen_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+pos top_left + 0,0
+size 280,24
+kind linear
+direction center_horizontal
+frame bevel_in
+frame_depth 2
+frame_gap 2
+background scanlines
+bg_step 4
+bg_size 1
+draw_bg true
+draw_border true
+smooth_value true
+smooth_speed 120
+ease_value true
+ease_kind smoothstep
+ease_duration 0.28
+auto_state true
+outer_outline true
+inner_shadow true
+gloss true
+fill_scanlines true
+outline_size 1
+gloss_percent 40
+color_bg #04150BE0
+color_fill #45DB78FF
+color_border #C4FFD6FF
+color_empty #123A20DC
+color_outline #010803FF
+color_highlight #E9FFF0FF
+color_gloss #FFFFFF65
+color_bg_detail #2E95536A
+color_state_fill4 #65F594FF
+border_size 1
+(=-

@@ -1,0 +1,8 @@
+weapon_synth_sound_engine89 v1.7.0 protocol scan
+Files: gweaponvoice89, gsynthreport89, gsynthordnance89, gshotgunsequence89, facade, sequence renderer/test
+malloc[[:space:]]*( : 0
+calloc[[:space:]]*( : 0
+realloc[[:space:]]*( : 0
+free[[:space:]]*( : 0
+float[[:space:]] : 0
+double[[:space:]] : 0

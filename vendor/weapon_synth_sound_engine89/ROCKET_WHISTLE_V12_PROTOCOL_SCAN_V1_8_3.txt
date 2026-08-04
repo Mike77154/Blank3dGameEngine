@@ -1,0 +1,16 @@
+Protocol active-token scan — v1.8.3
+
+malloc_calls: 0
+calloc_calls: 0
+realloc_calls: 0
+free_calls: 0
+float_type_tokens: 0
+double_type_tokens: 0
+
+Scanned runtime/API files:
+- vendor/grocketwhistle89/grocketwhistle89.c
+- vendor/grocketwhistle89/grocketwhistle89.h
+- src/weapon_synth_sound_engine89.c
+- include/weapon_synth_sound_engine89.h
+
+Result: PASS

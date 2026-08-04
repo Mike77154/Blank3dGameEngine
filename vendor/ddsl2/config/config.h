@@ -1,0 +1,25 @@
+#ifndef DDSL_CONFIG_H
+#define DDSL_CONFIG_H
+
+#define DDSL_C89 1
+#define DDSL_STANDARD_NAME "dsl_minimum_c89_fixed"
+#define DDSL_STANDARD_MAJOR 1
+#define DDSL_STANDARD_MINOR 0
+
+#ifndef DDSL_MAX_SYMBOLS
+#define DDSL_MAX_SYMBOLS 256
+#endif
+
+#ifndef DDSL_MAX_POLYSYMS
+#define DDSL_MAX_POLYSYMS 256
+#endif
+
+#ifndef DDSL_MAX_REGISTRY_ITEMS
+#define DDSL_MAX_REGISTRY_ITEMS 64
+#endif
+
+#ifndef DDSL_MAX_STREAM_NAME
+#define DDSL_MAX_STREAM_NAME 64
+#endif
+
+#endif /* DDSL_CONFIG_H */

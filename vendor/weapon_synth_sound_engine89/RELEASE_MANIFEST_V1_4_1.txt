@@ -1,0 +1,25 @@
+weapon_synth_sound_engine89 v1.4.1
+rocket rumble/crackle unified event release
+
+Core changes:
+- wsound_rocketblast89 v1.4.0
+- 7 independent rocket noise generators
+- independent rumble and crackle SVFs
+- dedicated rumble motion LFO
+- full wsrb89_params exposed through gsso89_rocket_params
+- deterministic A/B and isolated-layer previews
+
+Validation:
+- strict C89 build: PASS
+- root tests: PASS
+- rocket multi-rate tests: PASS
+- ASan/UBSan: PASS
+- i386 -m32 library build: PASS
+- active-token protocol scan: PASS
+- WAV zero-clipping validation: PASS
+- deterministic rerender: PASS
+
+Important previews:
+- audio/09_rocketblast89_isolated_catalog.wav
+- audio/12_rocketblast_rumble_crackle_layers.wav
+- audio/13_rocketblast_ab_5noise_vs_7noise.wav

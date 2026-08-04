@@ -1,0 +1,9 @@
+weapon_synth_sound_engine89 v1.5.0 i386 build report
+
+Command:
+  make clean
+  make -j2 CFLAGS="-std=c89 -pedantic -Wall -Wextra -Werror -O2 -m32" libs
+
+Result: PASS
+All static-library source units, including wsoundacoustic89 and the v1.5 event facade, compiled into 32-bit objects and were archived successfully.
+The final packaged build/ directory was then restored to the normal optimized host build.

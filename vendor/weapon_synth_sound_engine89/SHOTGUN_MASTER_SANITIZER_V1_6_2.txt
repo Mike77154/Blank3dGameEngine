@@ -1,0 +1,14 @@
+Shotgun master sanitizer report v1.6.2
+
+Targets:
+- test_shotgun_master
+- render_shotgun_master_showcase
+
+Flags:
+-std=c89 -pedantic -Wall -Wextra -Werror -O1 -g
+-fsanitize=address,undefined
+
+Result: PASS
+ASan diagnostics: none
+UBSan diagnostics: none
+Leak detection: disabled because runtime uses no heap.

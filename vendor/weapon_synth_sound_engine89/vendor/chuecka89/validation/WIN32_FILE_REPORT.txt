@@ -1,0 +1,2 @@
+build/chuecka89_win32.o:    Intel i386 COFF object file, not stripped, 5 sections, symbol offset=0x2d10, 24 symbols, 1st section name ".text", 2nd section name ".data"
+build/libchuecka89_win32.a: current ar archive

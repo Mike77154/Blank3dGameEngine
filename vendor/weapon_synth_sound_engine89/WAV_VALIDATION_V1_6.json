@@ -1,0 +1,31 @@
+{
+  "version": "1.6.0",
+  "files": [
+    {
+      "path": "audio/16_phase3_realistic_hybrid_cinematic.wav",
+      "channels": 2,
+      "sample_rate": 44100,
+      "sample_width_bytes": 2,
+      "frames": 529200,
+      "duration_seconds": 12.0,
+      "peak_sample": 6562,
+      "peak_dbfs": -13.9683,
+      "rms_sample": 106.2783,
+      "clipped_samples": 0,
+      "file_sha256": "12e0be334ec514a982b20d402d01108c394f126a46369b9d91551d51cd97f1a8"
+    },
+    {
+      "path": "audio/00_v1_6_0_unified_event_showcase.wav",
+      "channels": 2,
+      "sample_rate": 44100,
+      "sample_width_bytes": 2,
+      "frames": 529200,
+      "duration_seconds": 12.0,
+      "peak_sample": 11736,
+      "peak_dbfs": -8.9186,
+      "rms_sample": 815.6949,
+      "clipped_samples": 0,
+      "file_sha256": "b8e06dc7e6acba57ca0ee05095e850ce386aa31dbbbab98cf8a78e87b9690a78"
+    }
+  ]
+}

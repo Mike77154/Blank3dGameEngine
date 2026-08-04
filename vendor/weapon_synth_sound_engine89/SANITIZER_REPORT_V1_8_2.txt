@@ -1,0 +1,11 @@
+weapon_synth_sound_engine89 v1.8.2 sanitizer report
+
+Flags:
+-std=c89 -pedantic -Wall -Wextra -Werror -O1 -g -fsanitize=address,undefined
+
+Target:
+render_complete_weapon_sequences
+
+Result:
+PASS. The complete optimized sequence renderer also completed with zero rejected events.
+ASAN leak detection was disabled because all runtime state is caller-owned/static by design.

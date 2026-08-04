@@ -1,0 +1,17 @@
+weapon_synth_sound_engine89 v1.4.1 sanitizer report
+
+Build flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O1 -g
+  -fsanitize=address,undefined
+
+Executed suites:
+  test_gsynthsoundengine89             PASS
+  test_gsynthordnance89                PASS
+  test_gsynthsoundexpansion89          PASS
+  test_weapon_synth_sound_engine89     PASS
+
+No AddressSanitizer diagnostics.
+No UndefinedBehaviorSanitizer diagnostics.
+Leak detection disabled because the runtime intentionally performs no dynamic allocation.
+
+RESULT: PASS

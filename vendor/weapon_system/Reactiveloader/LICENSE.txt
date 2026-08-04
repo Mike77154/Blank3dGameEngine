@@ -1,0 +1,4 @@
+CC0 1.0 Universal
+
+This package is released as public-domain style sample code. You may copy,
+modify, integrate, vendor, rename, and redistribute it without attribution.

@@ -1,0 +1,24 @@
+weapon_synth_sound_engine89 v1.9.0
+
+Aggregate library: build/libweapon_synth_sound_engine89.a
+Aggregate objects: 64
+Aggregate library bytes: 473240
+Context bytes: 185840
+Test executables: 12/12 PASS
+ASan/UBSan new integration: PASS
+Protocol scan: PASS
+Render determinism: PASS
+Clipped samples: 0
+Gatling showcase shots: 80
+Nominal Gatling rate: 3000 rpm
+
+New vendored providers:
+- vendor/grocketspin89
+- vendor/ggunmach89
+- vendor/gguntuberotator89
+- vendor/ggatlingwhistle89
+
+New previews:
+- audio/24_rocket_propulsion_spin_fire.wav
+- audio/25_gatling_complete_motor_bed.wav
+- audio/26_rocket_and_gatling_showcase.wav

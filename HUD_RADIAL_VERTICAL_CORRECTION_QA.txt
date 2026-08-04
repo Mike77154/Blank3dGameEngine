@@ -1,0 +1,21 @@
+Blank3D v3.23.1 HUD correction QA
+
+Primary health kind: radial_ring
+Primary radial segments: 1 continuous arc
+Primary damage lag: enabled
+Primary 3D compositor: bevel/outline/shadow/extrude/inner-shadow/gloss
+Vertical kind: segmented
+Vertical direction: bottom_to_top
+Vertical segments: 28
+Vertical segment gap: 1
+Vertical pixel-cell grid: disabled
+Vertical pixel quantization: disabled
+Vertical fill grid/scanlines/pattern: disabled
+ECG node retained: yes
+Ammo bar retained: yes
+Ammo counter retained: yes
+
+make test-bighud: PASS
+make test-gbar-v04-bighud: PASS
+make syntax-check: PASS
+make audit: PASS

@@ -1,0 +1,31 @@
+Blank3D v3.18.1 Perception INI Profiles QA
+======================================
+
+Vendor suites
+-------------
+PASS  3D_NPC_Eyes tests
+PASS  EnlightenerAI A*, perception, targeting, tactical and hardening tests
+PASS  GEDER Truth Gate Pipeline upstream tests
+
+Integration
+-----------
+PASS  Socketer/Soquete3D publishes target pose as absolute T0 truth
+PASS  3D_NPC_Eyes evaluates cone/sphere/box/frustum, range and LOS
+PASS  EnlightenerAI supplies hearing, last-seen memory, alertness and suspicion
+PASS  GEDER accumulates higher truths without erasing Socketer on failure
+PASS  best target position selects visible -> remembered -> heard -> absolute
+PASS  player weapon events emit hearing stimuli
+PASS  target-first FPIL conditions/actions and FPSC compatibility aliases
+PASS  entity [perception] INI fields for all six enemy archetypes
+PASS  legacy RPYL perception fields remain compatible
+
+Regression
+----------
+PASS  targeted perception/GEDER tests
+PASS  complete C89 syntax check using Win32/OpenGL stubs
+PASS  no malloc/realloc/free in active integration
+
+Host limitation
+---------------
+The graphical Win32 executable was not linked or launched on this Linux host.
+Compile and visually test the final PE under MSYS2 MinGW32.

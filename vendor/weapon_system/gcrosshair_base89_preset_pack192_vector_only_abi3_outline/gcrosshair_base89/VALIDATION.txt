@@ -1,0 +1,28 @@
+gcrosshair_base89 validation — preset-pack-192-abi3-outline
+
+- Original Blank3D preset preserved as stable preset ID 0.
+- Existing IDs 0–95 preserved without renumbering.
+- 192 total presets validated.
+- 96 new presets appended as IDs 96–191.
+- 192 vector-only presets.
+- 0 image presets.
+- 0 hybrid presets.
+- No preset exercises image/hybrid mode.
+- 57 presets use ABI 2 non-cross vector shapes.
+- 42 stable TGA asset IDs and lookup paths retained.
+- All referenced asset paths exist.
+- Catalog contains 192 consecutive IDs and 192 unique names/enums.
+- All presets construct a nonzero draw mode and color.
+- Every preset resolves GC89_DRAW_VECTOR and image_id 0.
+- ABI header is byte-identical to gcrosshair_params89 ABI 3.
+- Integration test with gcrosshair_params89 resolves a dynamic hexagon and
+  applies spread to shape radius.
+- Recoil spread remains camera_recoil * 2.2 using fixed-point input x1000.
+- Builds with: -std=c89 -pedantic -Wall -Wextra -Werror
+- Unit test: OK (192 presets, 192 vector-only, ABI3, 57 non-cross shapes).
+- Forbidden API/type scan in C/H: no malloc/realloc/calloc/free/float/double.
+- Linux GCC validation completed.
+- Native 32-bit GCC object validation could not run because this environment
+  lacks the 32-bit libc development headers.
+- MinGW cross-compiler was not available; Win32 batch file retained.
+- ABI 3 outline fields initialize safely and remain disabled by default.

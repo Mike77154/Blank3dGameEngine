@@ -1,0 +1,15 @@
+CC = gcc
+CFLAGS = -std=c89 -pedantic -Wall -Wextra -O2
+
+all: demo_gprojectiletravel89.exe
+
+test: test_gprojectiletravel89.exe
+
+test_gprojectiletravel89.exe: src/gprojectiletravel89.c tests/test_gprojectiletravel89.c
+	$(CC) $(CFLAGS) -Isrc src/gprojectiletravel89.c tests/test_gprojectiletravel89.c -o $@
+
+demo_gprojectiletravel89.exe: src/gprojectiletravel89.c demo/demo_gprojectiletravel89.c
+	$(CC) $(CFLAGS) -Isrc src/gprojectiletravel89.c demo/demo_gprojectiletravel89.c -o $@
+
+clean:
+	del /Q demo_gprojectiletravel89.exe 2>NUL || exit 0

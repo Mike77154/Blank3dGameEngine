@@ -1,0 +1,5 @@
+GEDER Truth Gate Pipeline
+Version: 1.0.0
+Language target: ISO C89
+Storage model: fixed capacity, caller-owned external data, no dynamic allocation
+Numeric model: signed long fixed-point score, Q16.16 by default

@@ -1,0 +1,11 @@
+weapon_synth_sound_engine89 v1.8.1 build report
+
+- Aggregate library: 60 objects
+- wmagazine89.o: linked
+- grocketwhistle89.o: linked
+- game_engine_event_bridge.c: strict C89 compile PASS
+- Existing plus new test suites: 10/10 PASS
+- New integration context size: 114640 bytes
+- New fixed pools: 4 magazine voices + 4 rocket-whistle voices
+- Full sequence renderer: PASS, 0 rejected events
+- Selected renders repeated with identical SHA-256 hashes

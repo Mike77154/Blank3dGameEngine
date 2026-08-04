@@ -1,0 +1,33 @@
+Weapon Synth Sound Engine 89 v1.3.0 build report
+================================================
+
+Compiler profile:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Build targets:
+  render_realtime_showcase       PASS
+  render_ordnance_showcase       PASS
+  test_gsynthsoundengine89       PASS
+  test_gsynthordnance89          PASS
+  libweapon_synth_sound_engine89 PASS
+  libgsynthsoundengine89         PASS
+  libgsynthordnance89            PASS
+
+Measured files:
+  libweapon_synth_sound_engine89.a  227856 bytes
+  libgsynthsoundengine89.a           32642 bytes
+  libgsynthordnance89.a              62694 bytes
+  render_realtime_showcase          149248 bytes
+  render_ordnance_showcase          177848 bytes
+
+Provider state sizes (64-bit ABI):
+  bullet voice    4904 bytes
+  grenade voice  33352 bytes
+  rocket voice   48552 bytes
+  context           56 bytes
+
+Validation:
+  strict C89 build      PASS
+  protocol token scan  PASS
+  i386 object build    PASS
+  WAV clipping         0 samples across release WAVs

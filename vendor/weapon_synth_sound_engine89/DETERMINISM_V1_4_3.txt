@@ -1,0 +1,5 @@
+v1.4.3 realtime render determinism
+Result: PASS
+Two consecutive renders produced identical SHA-256 hashes.
+Focused launch/impact: 7222fe057994381a4837fa18fc5aeb89b75c0ab46d43c2518ed00d2a82e51750
+Full firefight: 74c594f71bb6e9427a500333f75edd68059d5d105cfddd2d4143839c28bc22b7

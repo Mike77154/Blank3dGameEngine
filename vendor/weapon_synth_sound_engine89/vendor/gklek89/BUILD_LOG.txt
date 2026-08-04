@@ -1,0 +1,12 @@
+make: Entering directory '/mnt/data/gklek89_v1_0'
+mkdir -p build audio
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -c src/gklek89.c -o build/gklek89.o
+ar rcs build/libgklek89.a build/gklek89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -c demo/render_gklek89.c -o build/render_gklek89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 build/render_gklek89.o build/libgklek89.a -o build/render_gklek89
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -c tests/smoke.c -o build/test_smoke.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 build/test_smoke.o build/libgklek89.a -o build/test_smoke
+./build/test_smoke
+./build/render_gklek89
+gklek89 rendered; context=224 bytes
+make: Leaving directory '/mnt/data/gklek89_v1_0'

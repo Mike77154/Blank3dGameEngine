@@ -1,0 +1,9 @@
+boca_exprosiv3d v1.1
+====================
+
+- Increased secondary-flash sphere tessellation from 8x4 to 16x8.
+- Increased secondary-flash lobe tessellation from 7x3 to 12x6.
+- Increased gas-cloud tessellation from 7x3 to 10x5.
+- Made the primary secondary-flash volume truly spherical by setting length1 = radius.
+- Raised primitive tessellation caps in the public header to 16 sides and 8 stacks.
+- Updated documentation and recommended shared mesh-buffer sizes for the higher-detail build.

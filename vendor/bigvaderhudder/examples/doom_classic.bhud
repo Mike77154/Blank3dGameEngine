@@ -1,0 +1,39 @@
+
+hud doom_classic -=)
+layer overlay
+z 999
+alpha 1.0
+
+node status_bar -=)
+pos bottom_left
+size 640,80
+image assets/doom/status_bar.png
+
+node face -=)
+type sequence
+bind player.health
+frames 0..100
+path assets/doom/face_%d.png
+pos bottom_center
+
+node health -=)
+type text
+bind player.health
+font doom_big
+color #FF0000
+pos bottom_left + 120,18
+
+node armor -=)
+type text
+bind player.armor
+font doom_big
+color #00AAFF
+pos bottom_left + 320,18
+
+node ammo -=)
+type text
+bind player.ammo
+font doom_big
+color #FFFF00
+pos bottom_right - 120,18
+(=-

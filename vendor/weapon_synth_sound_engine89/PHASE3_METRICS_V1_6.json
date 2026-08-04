@@ -1,0 +1,7 @@
+{
+  "profiles": [
+    {"mode":"realistic","peak":4020,"rms":64,"crest_q8":16080,"low":13180,"mid":17245,"high":2340,"attack_ms_x10":0,"decay_ms":104,"clipped":0,"score_q15":32589},
+    {"mode":"hybrid","peak":5527,"rms":64,"crest_q8":22108,"low":13445,"mid":16500,"high":2820,"attack_ms_x10":0,"decay_ms":183,"clipped":0,"score_q15":32767},
+    {"mode":"cinematic","peak":6518,"rms":64,"crest_q8":26072,"low":20058,"mid":10616,"high":2092,"attack_ms_x10":0,"decay_ms":196,"clipped":0,"score_q15":32767}
+  ]
+}

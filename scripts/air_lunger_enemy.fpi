@@ -1,0 +1,6 @@
+; Mid-air committed attack. Archetype defaults configure CLAW/TRACK.
+:state=0,plrflatdistfurther=5,grounded:lookatplayer,jump=11,setstate=1
+:state=1,attackhit:hurtplayer=9,clearimpact,setstate=2
+:state=1,attackdone:setstate=2
+:state=1,airborne,plrflatdistfurther=2:airlungeplayer=16
+:state=2,grounded:attackreset,setstate=0

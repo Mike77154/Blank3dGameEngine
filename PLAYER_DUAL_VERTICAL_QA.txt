@@ -1,0 +1,16 @@
+Blank3D v3.11.1 player dual fly + jump QA
+==========================================
+
+PASS: DDSL2 key-j emits jump.
+PASS: DDSL2 key-f emits move_up.
+PASS: DDSL2 key-g emits move_down.
+PASS: a body marked flying_entity can execute fly89 movement.
+PASS: the same flying_entity body can start jump89 while grounded.
+PASS: jump89 completes its gravity arc and clamps to floor.
+PASS: active jump state owns Y and blocks simultaneous fly deformation.
+PASS: active reload is bound to H, avoiding the F flight collision.
+PASS: full `make test` regression suite.
+PASS: C89 runner syntax check with platform stubs.
+PASS: no allocator calls in active gameplay/system integration.
+
+Visual Win32 feel remains for local MSYS2/MinGW32 verification.

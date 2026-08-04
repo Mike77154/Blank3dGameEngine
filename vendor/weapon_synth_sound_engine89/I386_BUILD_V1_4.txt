@@ -1,0 +1,7 @@
+weapon_synth_sound_engine89 v1.4.0 i386 validation
+$ make CFLAGS="-m32 -std=c89 -pedantic -Wall -Wextra -Werror -O2" libs examples
+Runtime archive objects: 54
+build/libobjs/src/weapon_synth_sound_engine89.o: ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+build/libobjs/vendor/gfire89/src/gfire89_fx.o: ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+build/game_engine_event_bridge.o: ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+I386 BUILD: PASS

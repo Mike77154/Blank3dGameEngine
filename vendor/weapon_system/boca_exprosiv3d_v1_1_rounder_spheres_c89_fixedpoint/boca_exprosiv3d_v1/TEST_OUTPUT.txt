@@ -1,0 +1,121 @@
+boca_exprosiv3d strict C89 test suite
+sizeof(BEX3D_Profile)   = 104 bytes
+sizeof(BEX3D_Primitive) = 168 bytes
+sizeof(BEX3D_State)      = 6960 bytes
+sizeof(BEX3D_Vertex)     = 32 bytes
+PASS: sin(0)
+PASS: sin(90 degrees)
+PASS: sin(180 degrees)
+PASS: cos(0)
+PASS: fixed multiplication
+PASS: fixed division
+PASS: same seed creates identical geometry descriptors
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: profile fire activates event
+PASS: profile creates at least one primitive
+PASS: profile respects primitive budget
+PASS: fire does not mutate physical profile
+PASS: age zero mesh builds without truncation
+PASS: age zero mesh contains triangles
+PASS: age zero indices stay in range
+PASS: peak mesh builds without truncation
+PASS: peak mesh contains triangles
+PASS: peak indices stay in range
+PASS: event deactivates after duration
+PASS: expired event returns valid empty mesh
+PASS: expired event mesh is empty
+PASS: revolver creates two cylinder-gap jets
+PASS: muzzle brake creates lateral device jets
+PASS: suppressed profile remains inside tiny budget
+PASS: small caller buffer reports truncation safely
+TEST RESULT: all tests passed

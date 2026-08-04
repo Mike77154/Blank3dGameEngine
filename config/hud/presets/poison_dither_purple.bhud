@@ -1,0 +1,52 @@
+hud poison_dither_purple -=)
+enabled true
+canvas_width 280
+canvas_height 26
+node poison_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+state_bind numbar.state
+pos top_left + 0,0
+size 280,26
+kind linear
+direction right_to_left
+frame bevel_in
+frame_depth 3
+frame_gap 2
+background dither
+bg_step 4
+bg_size 2
+draw_bg true
+draw_border true
+draw_pattern true
+pattern_kind crosshatch
+pattern_step 7
+pattern_size 1
+auto_state true
+state_blink true
+blink_period 0.55
+low_ratio 0.35
+critical_ratio 0.16
+outer_outline true
+drop_shadow true
+inner_shadow true
+fill_grid true
+outline_size 2
+shadow_offset 3,3
+color_bg #16081EE8
+color_fill #B957E8FF
+color_border #F0C8FFFF
+color_empty #32123FE8
+color_pattern #E7A8FF90
+color_outline #050107FF
+color_shadow #000000A0
+color_bg_detail #6A288070
+color_state_fill0 #B957E8FF
+color_state_fill1 #D269FFFF
+color_state_fill2 #FF47D7FF
+color_state_fill3 #73D437FF
+color_state_border3 #D7FFB8FF
+border_size 2
+(=-

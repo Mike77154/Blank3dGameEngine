@@ -1,0 +1,9 @@
+weapon_voice_256logical_64physical_stress.wav
+Format: PCM signed 16-bit stereo
+Sample rate: 44100 Hz
+Frames: 264600
+Duration: 6.000 seconds
+Peak absolute sample: 8616
+RMS sample value: 666.733
+Clipped samples: 0
+File size: 1058444 bytes

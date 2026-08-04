@@ -1,0 +1,208 @@
+{
+  "version": "1.8.2",
+  "title": "Physical mechanics sequencing and rocket whistle rebalance",
+  "files": [
+    {
+      "file": "wsse89_v1_8_2_pistol_physical_cycle.wav",
+      "sha256": "e16274c69b5b983fbae7df64c44fa66dbb4fba98a4226b36daa8c024361655a6",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 573300,
+      "duration_seconds": 13.0,
+      "peak_sample": 9799,
+      "peak_dbfs": -10.4854,
+      "rms_sample": 1004.4438,
+      "rms_dbfs": -30.2705,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_magnum_physical_cycle.wav",
+      "sha256": "73096904432b104b56343bd55d3cc340c8c5e326f5f0717cdd1ff3153a349069",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 507150,
+      "duration_seconds": 11.5,
+      "peak_sample": 12927,
+      "peak_dbfs": -8.079,
+      "rms_sample": 977.5263,
+      "rms_dbfs": -30.5064,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_shotgun_physical_cycle.wav",
+      "sha256": "cda55bf7050ebd8c80d0206645f6d0720a4b307d7a7d36333b04e76b40ceb3c3",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 1124550,
+      "duration_seconds": 25.5,
+      "peak_sample": 14142,
+      "peak_dbfs": -7.2988,
+      "rms_sample": 997.0063,
+      "rms_dbfs": -30.335,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_machinegun_physical_cycle.wav",
+      "sha256": "70e8e705bb263ba77cbc54f03699d139babf023faf848d193f851172aa72bf48",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 441000,
+      "duration_seconds": 10.0,
+      "peak_sample": 11773,
+      "peak_dbfs": -8.8913,
+      "rms_sample": 1310.3403,
+      "rms_dbfs": -27.9613,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_sniper_bolt_each_shot.wav",
+      "sha256": "f486682187e1bae451a0dc3ad4a2df5e8caa7340d4d63ae4fbae8246981e34b7",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 705600,
+      "duration_seconds": 16.0,
+      "peak_sample": 15790,
+      "peak_dbfs": -6.3414,
+      "rms_sample": 843.9405,
+      "rms_dbfs": -31.7828,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_rocket_quiet_whistle.wav",
+      "sha256": "a959aac70dd9de34bcae0a9deb6a7ac3beccc7dad3e53a4b7548d2d8884d9f7c",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 1190700,
+      "duration_seconds": 27.0,
+      "peak_sample": 32136,
+      "peak_dbfs": -0.1692,
+      "rms_sample": 4399.9581,
+      "rms_dbfs": -17.44,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_all_physical_sequences.wav",
+      "sha256": "bd831a211d599d7de4a571945d1a41367833eb627b72221e0d68845712d1cce8",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 4674600,
+      "duration_seconds": 106.0,
+      "peak_sample": 30931,
+      "peak_dbfs": -0.5011,
+      "rms_sample": 2301.6884,
+      "rms_dbfs": -23.0681,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_rocket_launch_quiet_whistle_impact.wav",
+      "sha256": "770c16e81d3ae384d34bb575f4baad5ec270ef4c2296548065f100ce75387f2a",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 343980,
+      "duration_seconds": 7.8,
+      "peak_sample": 30500,
+      "peak_dbfs": -0.623,
+      "rms_sample": 3278.4795,
+      "rms_dbfs": -19.9955,
+      "clipped_samples": 0
+    },
+    {
+      "file": "wsse89_v1_8_2_rocket_whistle_ab_old_vs_quiet.wav",
+      "sha256": "c869da0a87c16e5ba24d2ca774245a7c1017bb6367a50851e4b44ba5846a829b",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "frames": 732060,
+      "duration_seconds": 16.6,
+      "peak_sample": 30500,
+      "peak_dbfs": -0.623,
+      "rms_sample": 3410.2712,
+      "rms_dbfs": -19.6532,
+      "clipped_samples": 0
+    }
+  ],
+  "rocket_whistle_comparison": {
+    "old_v1_8_1": {
+      "launch": {
+        "start_s": 0.5,
+        "end_s": 0.82,
+        "peak_sample": 15853,
+        "peak_dbfs": -6.3068,
+        "rms_sample": 3174.7713,
+        "rms_dbfs": -20.2747
+      },
+      "whistle": {
+        "start_s": 0.82,
+        "end_s": 2.15,
+        "peak_sample": 10534,
+        "peak_dbfs": -9.8571,
+        "rms_sample": 4494.3839,
+        "rms_dbfs": -17.2556
+      },
+      "impact": {
+        "start_s": 2.15,
+        "end_s": 2.65,
+        "peak_sample": 30022,
+        "peak_dbfs": -0.7602,
+        "rms_sample": 7741.9108,
+        "rms_dbfs": -12.532
+      }
+    },
+    "new_v1_8_2": {
+      "launch": {
+        "start_s": 0.5,
+        "end_s": 0.82,
+        "peak_sample": 15853,
+        "peak_dbfs": -6.3068,
+        "rms_sample": 2908.4765,
+        "rms_dbfs": -21.0357
+      },
+      "whistle": {
+        "start_s": 0.82,
+        "end_s": 2.15,
+        "peak_sample": 6620,
+        "peak_dbfs": -13.8918,
+        "rms_sample": 1294.1074,
+        "rms_dbfs": -28.0696
+      },
+      "impact": {
+        "start_s": 2.15,
+        "end_s": 2.65,
+        "peak_sample": 30022,
+        "peak_dbfs": -0.7602,
+        "rms_sample": 7712.7461,
+        "rms_dbfs": -12.5648
+      }
+    },
+    "rms_reduction_db": 10.814
+  },
+  "event_counts_from_renderer": {
+    "pistol_one_plus_20_reload": {
+      "starts": 67,
+      "rejects": 0
+    },
+    "magnum_one_plus_6_reload": {
+      "starts": 23,
+      "rejects": 0
+    },
+    "shotgun_one_plus_10_reload": {
+      "starts": 38,
+      "rejects": 0
+    },
+    "machinegun_one_plus_40_reload": {
+      "starts": 165,
+      "rejects": 0
+    },
+    "sniper_one_plus_4_reload": {
+      "starts": 18,
+      "rejects": 0
+    },
+    "rocket_one_plus_4_reload": {
+      "starts": 25,
+      "rejects": 0
+    },
+    "all_sequences": {
+      "starts": 337,
+      "rejects": 0
+    }
+  }
+}

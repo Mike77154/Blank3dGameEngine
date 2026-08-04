@@ -1,0 +1,45 @@
+VALIDATION REPORT
+=================
+
+Validated on 2026-07-13 with GCC and Clang.
+
+PASS: strict ISO C89 compilation
+  -std=c89 -Wall -Wextra -Werror -pedantic-errors
+
+PASS: Total Solver self-test
+  - caller arena begins unaligned
+  - every internal arena segment aligned
+  - legacy preStep/postStep callbacks chained and restored
+  - contacts appended before the step preserved
+  - collision provider contacts generated automatically
+  - external transform provider read/write
+  - external parent mapping
+  - external compose callback invoked
+  - missing math operations use fixed-point fallback
+  - physics authority writes body pose to scene transform
+  - post-physics follow/socket constraint
+  - CCD without sweep provider keeps uniform substepping
+
+PASS: pair-cache churn
+  - 2200 historical pairs with a 2048-entry pair cache
+  - replacement remains valid and emits END for an evicted active pair
+
+PASS: feature builds
+  - VP_ENABLE_ISLANDS=0
+  - VP_ENABLE_SPLIT_IMPULSE=0
+  - both disabled together
+  - VP_ENABLE_MANIFOLDS=0 build compatibility
+
+PASS: AddressSanitizer + UndefinedBehaviorSanitizer self-test
+PASS: Clang strict C89 self-test
+PASS: GCC strict C89 self-test
+
+Strict directories checked:
+  include/
+  src/
+  examples/
+  tests/
+
+No heap allocation calls and no floating-point types are used by the strict
+core. The optional compat/vp_fixed_float_compat.h migration shim is isolated
+and never included by the strict build.

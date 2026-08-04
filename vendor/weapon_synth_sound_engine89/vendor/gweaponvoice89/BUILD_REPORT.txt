@@ -1,0 +1,13 @@
+gweaponvoice89 v2.0 build report
+Compiler: GCC 14.2.0
+Flags: -O2 -std=c89 -pedantic -Wall -Wextra -Werror
+Smoke test: PASS
+Logical voices tested: 256
+Physical voices tested: 64
+Virtual voices tested: 192
+Controlled steals in smoke: 64
+sizeof(gv89_voice): 168 bytes (64-bit build host)
+sizeof(gwv89_context): 2080 bytes (64-bit build host)
+256-slot weapon handler storage: 45088 bytes
+Static library: 28814 bytes
+Compatibility: gshotgunsequence89 v1.3 adapter compiled; smoke and voice-handler tests passed

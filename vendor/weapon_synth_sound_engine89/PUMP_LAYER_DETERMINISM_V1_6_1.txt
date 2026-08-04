@@ -1,0 +1,12 @@
+Determinism validation
+
+The dedicated renderer was executed twice with identical seeds. Both WAV files
+were compared byte-for-byte using cmp.
+
+wsse89_v1_6_1_pump_layers_ab.wav
+  ea19a47a6c0579026928c2901e03b8e21308f2128d530d54884ba530c6054d6d
+
+wsse89_v1_6_1_triple_pump_complete.wav
+  e1f0cd8f449be2fd58c3af45ee566059b9d0d5a1c83af964008e2360a6ced493
+
+Result: PASS

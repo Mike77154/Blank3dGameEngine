@@ -1,0 +1,24 @@
+Validation performed in the build container for version 1.2.0:
+
+  gcc -std=c89 -pedantic -Wall -Wextra -O2 -Iinclude
+
+Results:
+  - core compiled with no warnings
+  - example compiled with no warnings
+  - C89 preview renderer compiled with no warnings
+  - static archive generated
+  - `nm -u` reported no undefined symbols in the core object
+  - 12 individual physical PCM WAV previews plus one physical catalog generated
+  - 12 individual equal-seed A/B WAVs plus one catalog A/B generated
+  - preview format: mono, 44100 Hz, signed 16-bit PCM
+  - context size on the validation host: 6304 bytes
+  - core object size on the validation host: 10904 bytes
+  - static archive size on the validation host: 11318 bytes
+  - source token scan after stripping comments and string literals found no use of:
+    malloc, calloc, realloc, free, float or double
+    in `src/gweaponfoley89.c` or `include/gweaponfoley89.h`
+  - core includes none of math.h, stdlib.h or stdio.h
+  - maximum measured absolute peak in physical previews: 0.944 FS
+  - spectral-centroid change versus 1.1: -0.43 kHz to -3.08 kHz
+
+Sizes vary by compiler, ABI and archive format.

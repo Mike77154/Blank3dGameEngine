@@ -1,0 +1,14 @@
+Undefined symbols in library object:
+                 U memset
+
+Strict build and test command:
+make clean && make all
+
+Result:
+All six presets passed.
+Build flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Host-reported ggm89_state size: 8512 bytes.
+Showcase: 44100 Hz, mono, 16-bit PCM, 20.0 seconds.
+
+Second compiler validation:
+Clang strict C89 build passed all six presets.

@@ -1,0 +1,18 @@
+Blank3D v3.11.0 vertical axis/vendor QA
+
+PASS: formal Blank3DVerticalAxis owns all active Y-axis policy.
+PASS: legacy blank3d_vertical_motion source/header removed.
+PASS: gravity.enabled=true moves ordinary bodies toward their floor.
+PASS: gravity.enabled=false leaves ordinary bodies at their current Y.
+PASS: flying_entity and gravity_immune bypass automatic gravity.
+PASS: fly89 moves up/down and clamps downward motion to floor.
+PASS: jump89 starts only grounded, accelerates downward, and lands/reset.
+PASS: hopper uses jump89 rather than scripted move-down.
+PASS: airdiver89 saves perch, descends, rams and returns without overshoot.
+PASS: external physics provider receives movement/floor/grounded calls.
+PASS: all three vendors compile as independent C89 static libraries.
+PASS: complete portable make test suite.
+PASS: active integration allocator audit.
+PASS: complete Win32/OpenGL source syntax check through platform stubs.
+
+Visual Win32 runtime still requires local MSYS2/MinGW32 execution.

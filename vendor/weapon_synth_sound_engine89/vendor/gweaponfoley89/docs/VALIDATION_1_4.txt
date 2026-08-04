@@ -1,0 +1,31 @@
+gweaponfoley89 1.4 validation
+================================
+
+Compiler:
+  gcc -std=c89 -pedantic -Wall -Wextra -O2 -Iinclude
+
+Results:
+  core compilation: clean
+  example compilation: clean
+  preview renderer: clean
+  undefined symbols in core object: none
+
+Restrictions:
+  three noise sources only
+  no malloc/calloc/realloc/free
+  no heap ownership
+  no float/double
+  no math.h/stdio.h/stdlib.h in the core
+
+Measured on this build:
+  sizeof(gwf89_context): 6864 bytes
+  sizeof(gwf89_hit): 54 bytes
+  sizeof(gwf89_preset): 488 bytes
+  core object text: 6508 bytes
+  preset/static data: 5856 bytes
+  static library archive: 15694 bytes
+  maximum rendered peak: 0.93155 FS
+  clipped samples: 0
+
+The renderer and documentation may use stdio for file generation; the runtime
+core does not.

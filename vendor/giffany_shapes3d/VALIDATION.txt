@@ -1,0 +1,30 @@
+Giffany Shapes3D validation summary
+===================================
+
+Validated with GCC:
+  gcc -O2 -std=c89 -pedantic -Wall -Wextra -Werror
+
+Validated with Clang:
+  clang -O2 -std=c89 -pedantic -Wall -Wextra -Werror
+
+Validated as a 32-bit i386 object:
+  gcc -m32 -O2 -std=c89 -pedantic -Wall -Wextra -Werror -c g3d_shapes.c
+  Result: ELF 32-bit LSB relocatable, Intel i386
+
+Validated with runtime sanitizers:
+  -fsanitize=address,undefined
+
+Automated tests cover:
+  - Q16.16 multiply, divide, square root and color interpolation.
+  - Every mesh generator and its exact buffer-requirement helper.
+  - Box, sphere, cone, frustum, capsule and pyramid topology generation.
+  - Sphere/sphere, sphere/AABB, ray/sphere and ray/AABB queries.
+  - Large-radius sphere separation without squared-distance saturation errors.
+
+A separate winding/normal audit checked every nondegenerate triangle generated for:
+  box, prism, pyramid, bipyramid, cylinder, cone, UV sphere, both hemispheres and capsule.
+  Result: zero triangles with winding opposed to their supplied vertex normals.
+
+The host did not have a MinGW cross-compiler installed, so Windows linking was not run
+here. The library itself compiled as strict freestanding-style C89 and as 32-bit i386;
+`build_mingw32.bat` contains the intended MinGW32 commands.

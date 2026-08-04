@@ -1,0 +1,75 @@
+hud re5_radial_green_3d -=)
+enabled true
+canvas_width 108
+canvas_height 108
+
+node radial_health -=)
+type bar
+z 0
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+overlay_bind numbar.overlay
+overlay_min_bind numbar.overlay_min
+overlay_max_bind numbar.overlay_max
+pos top_left + 0,0
+size 108,108
+kind radial_ring
+radial_start -90
+radial_sweep 360
+radial_inner 68
+radial_steps 96
+radial_segments 1
+radial_gap_deg 0
+radial_cap round
+frame bevel_out
+frame_depth 3
+frame_gap 2
+frame_corner 8
+background solid
+draw_bg true
+draw_border true
+draw_overlay false
+damage_lag true
+lag_speed 32
+smooth_value false
+use_visual true
+auto_state false
+outer_outline true
+drop_shadow true
+extrude true
+inner_shadow true
+gloss true
+outline_size 2
+shadow_offset_x 4
+shadow_offset_y 5
+extrude_depth 3
+gloss_percent 34
+color_bg #071109E8
+color_fill #39D46BFF
+color_lag #C7D65CFF
+color_border #B8FFD0FF
+color_empty #132018F0
+color_outline #020604F0
+color_highlight #E8FFF090
+color_shadow #000000A0
+color_extrude #0C2114E0
+color_gloss #FFFFFF58
+border_size 2
+
+node health_number -=)
+type counter
+z 1
+bind numbar.value
+mode value
+pos top_left + 29,43
+suffix %
+pad 3
+scale 2
+glyph_gap 1
+color #E8FFF0FF
+shadow true
+shadow_color #000000D0
+background false
+border false
+(=-

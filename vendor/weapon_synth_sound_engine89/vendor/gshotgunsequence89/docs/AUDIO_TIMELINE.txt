@@ -1,0 +1,9 @@
+0.320 s  chuecka-only shotgun multi-insert gesture (6 shells, darker insert tone)
+1.100 s  chuecka-only final shell insertion (darker insert tone)
+1.420 s  initial chambering pump: gpump heavy mass + bright synchronized chuecka harmonic
+2.030 s  first shotgun report + five cushion layers
+3.080 s  fired-shell pump: gpump with shell + bright synchronized chuecka harmonic
+3.650 s  second shotgun report + five cushion layers
+4.780 s  fired-shell pump: gpump with shell + bright synchronized chuecka harmonic
+5.220 s  shotgun empty handling Foley
+5.620 s  shotgun safety Foley

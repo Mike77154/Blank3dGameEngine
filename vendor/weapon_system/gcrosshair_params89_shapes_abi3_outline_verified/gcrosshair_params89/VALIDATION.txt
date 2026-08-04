@@ -1,0 +1,12 @@
+gcrosshair_params89 ABI 3 outline validation
+
+- Builds with: -std=c89 -pedantic -Wall -Wextra -Werror
+- Parameter unit test: gcrosshair_params89 ABI3 outline: OK
+- Shape unit test: gcrosshair_params89 shapes: OK
+- Forbidden allocation/type scan: no malloc/realloc/calloc/free or real types
+  in C/H implementation files.
+- Resolves normal/aim/fire/hit/disabled, color policy, vector/image/hybrid,
+  legacy gap spread and shape-size spread.
+- Shape coverage: circle, square, diamond, chevrons, hexagon, brackets and
+  open triangle, side masks and centered trace breaks.
+- ABI 3 outline setter and resolver propagation tested.

@@ -1,0 +1,52 @@
+hud custom_sliced_boss -=)
+enabled true
+canvas_width 420
+canvas_height 36
+node sliced_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+pos top_left + 0,0
+size 420,36
+kind linear
+direction left_to_right
+frame bevel_out
+frame_depth 3
+frame_gap 2
+background checker
+bg_step 8
+bg_size 4
+use_mask true
+mask_kind custom_slices
+mask_steps 12
+mask_slice_count 4
+mask_slice0 0,25,14,2
+mask_slice1 25,25,8,5
+mask_slice2 50,25,5,8
+mask_slice3 75,25,2,14
+draw_bg true
+draw_border true
+damage_lag true
+lag_speed 18
+outer_outline true
+drop_shadow true
+extrude true
+inner_shadow true
+gloss true
+outline_size 2
+shadow_offset 4,5
+extrude_depth 3
+gloss_percent 26
+color_bg #18070BE8
+color_fill #C72D5DFF
+color_lag #F59D54FF
+color_border #FFD2DEFF
+color_empty #3B1020E8
+color_outline #050003FF
+color_shadow #000000A0
+color_extrude #491126E0
+color_gloss #FFFFFF48
+color_bg_detail #7A234166
+border_size 2
+(=-

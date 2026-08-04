@@ -1,0 +1,3 @@
+PASS logical=256 physical=64 virtual=192 voice_bytes=168 ctx_bytes=1760
+logical=256 physical=64 virtual=192 promotions=64 demotions=0
+voice_bytes=168 context_bytes=1760 manager_total_256=44768

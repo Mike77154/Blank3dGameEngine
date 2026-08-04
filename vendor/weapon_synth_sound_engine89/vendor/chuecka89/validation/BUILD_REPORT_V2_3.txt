@@ -1,0 +1,34 @@
+chuecka89 v2.3 final atom + reconstructed FX preset validation
+=================================
+
+Base atom
+- SH attack: 30 ms
+- SH release: 12 ms
+- ECKT delay: 82 ms
+- ECKT attack: 0 ms
+
+Core constraints
+- ISO C89 compile flags: -O2 -Wall -Wextra -pedantic -std=c89
+- no malloc/realloc/free in synthesis core
+- no float/double in synthesis core
+- caller-owned/static storage only
+- Q15 fixed-point signal path
+
+Validated targets in this environment
+- native GCC static library: build/libchuecka89.a
+- Win32 i686 COFF static library via clang/llvm-ar:
+  build/libchuecka89_win32.a
+
+Tests
+- test_smoke: PASS at 44.1 kHz and 48 kHz
+- render_atom_fx: PASS
+- render_presets: PASS (all weapon WAVs regenerated with full FX)
+
+New API
+- ch89_gesture.effect_flags
+- ch89_set_effect_flags()
+- CH89_EFFECT_DISTORTION
+- CH89_EFFECT_EQ
+- CH89_EFFECT_CHORUS
+- CH89_EFFECT_REVERB
+- CH89_EFFECT_ALL

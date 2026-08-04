@@ -1,0 +1,14 @@
+weapon_synth_sound_engine89 v1.5.0 sanitizer report
+
+Flags:
+  -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer
+
+Executed successfully:
+  build/test_weapon_synth_sound_engine89   PASS
+  build/test_phase12_acoustics             PASS
+
+ASAN_OPTIONS=detect_leaks=0
+UBSAN_OPTIONS=print_stacktrace=1
+No AddressSanitizer or UndefinedBehaviorSanitizer diagnostics were emitted.
+
+Note: a combined make invocation that also rebuilt the large showcase renderer reached the command timeout during compilation. The two executable paths that exercise the new facade and acoustic DSP were built and executed cleanly.

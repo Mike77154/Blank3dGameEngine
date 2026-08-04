@@ -1,0 +1,57 @@
+weapon_synth_sound_engine89 v1.4.1 strict C89 build report
+Flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Libraries:
+-rw-r--r-- 1 root root  93932 Jul 19 07:02 build/libgsynthordnance89.a
+-rw-r--r-- 1 root root 168130 Jul 19 07:02 build/libgsynthreport89.a
+-rw-r--r-- 1 root root  61770 Jul 19 07:02 build/libgsynthsoundengine89.a
+-rw-r--r-- 1 root root  38104 Jul 19 07:02 build/libgsynthsoundexpansion89.a
+-rw-r--r-- 1 root root  67712 Jul 19 07:02 build/libgsynthworld89.a
+-rw-r--r-- 1 root root  11286 Jul 19 07:02 build/libweapon_synth_event89.a
+-rw-r--r-- 1 root root 332738 Jul 19 07:02 build/libweapon_synth_sound_engine89.a
+
+Aggregate object count:
+54
+
+Root tests:
+gsynthordnance89 PASS: bullet=4904 grenade=33352 rocket=48776 context=56 starts=3
+gsynthsoundexpansion89 PASS bytes=824
+weapon_synth_sound_engine89 PASS starts=5 rejects=0 action_events=6 context=3712 report_voice=70460
+
+Rocket module tests:
+make: Entering directory '/mnt/data/wsse_work/weapon_synth_sound_engine89_v1_4_1_rocket_rumble_crackle/vendor/wsound_rocketblast89'
+cc -O2 -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Isrc src/wsrb89_dsp.c src/wsrb89_presets.c src/wsound_rocketblast89.c tests/wsrb89_smoke.c -o wsrb89_smoke
+./wsrb89_smoke
+ok sr=8000 preset=0 checksum=8a5be11d nonzero=26682
+ok sr=8000 preset=1 checksum=b5bddd29 nonzero=22184
+ok sr=8000 preset=2 checksum=1d1d3110 nonzero=19129
+ok sr=8000 preset=3 checksum=7cf03276 nonzero=15460
+ok sr=8000 preset=4 checksum=c60ebb13 nonzero=31948
+ok sr=8000 preset=5 checksum=8c055c8b nonzero=31718
+ok sr=8000 preset=6 checksum=da76037b nonzero=14885
+ok sr=22050 preset=0 checksum=a08c6f94 nonzero=73476
+ok sr=22050 preset=1 checksum=ecd515ac nonzero=57241
+ok sr=22050 preset=2 checksum=9c1529fc nonzero=51231
+ok sr=22050 preset=3 checksum=b47e03be nonzero=40922
+ok sr=22050 preset=4 checksum=a802ca4f nonzero=88021
+ok sr=22050 preset=5 checksum=69110374 nonzero=87073
+ok sr=22050 preset=6 checksum=a2defb80 nonzero=40373
+ok sr=44100 preset=0 checksum=10b8fb8f nonzero=142302
+ok sr=44100 preset=1 checksum=c889f033 nonzero=109276
+ok sr=44100 preset=2 checksum=61366a31 nonzero=98441
+ok sr=44100 preset=3 checksum=71fc1fbc nonzero=82051
+ok sr=44100 preset=4 checksum=ac006599 nonzero=174822
+ok sr=44100 preset=5 checksum=b48879d3 nonzero=170662
+ok sr=44100 preset=6 checksum=e00fcea1 nonzero=76763
+ok sr=48000 preset=0 checksum=0e0ea18b nonzero=150326
+ok sr=48000 preset=1 checksum=53205ccd nonzero=116505
+ok sr=48000 preset=2 checksum=722edb9c nonzero=104898
+ok sr=48000 preset=3 checksum=7cf092e6 nonzero=88661
+ok sr=48000 preset=4 checksum=ffa1d1eb nonzero=190395
+ok sr=48000 preset=5 checksum=eb89e6bb nonzero=183717
+ok sr=48000 preset=6 checksum=fb20fcb0 nonzero=84358
+ok octave companions checksum3=d00e6632 checksum5=80388765
+ok rumble/crackle old=e9a59a0b no_lfo=76a38c8c full=d9009670
+make: Leaving directory '/mnt/data/wsse_work/weapon_synth_sound_engine89_v1_4_1_rocket_rumble_crackle/vendor/wsound_rocketblast89'
+
+RESULT: PASS

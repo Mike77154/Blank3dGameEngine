@@ -1,0 +1,9 @@
+weapon_synth_sound_engine89 v1.5.0 determinism report
+
+The phase 1/2 renderer and unified event renderer were executed twice after the final optimized build. SHA-256 outputs matched byte-for-byte:
+
+7643046482795c54c6c9449ce1bc050dc7acb588e6b22dc9c65260e01f08d156  audio/00_v1_5_0_unified_event_showcase.wav
+85452c9cc0c4b7c5a01ab922a8a2ecf88bf6309d0a1418556157b5d513a2a12b  audio/14_phase12_ab_legacy_vs_hybrid.wav
+0b06f090342e7868f4acbb3ec4504652275a47055816b85029f5a9f10f153781  audio/15_phase12_environment_triptych.wav
+
+Result: PASS

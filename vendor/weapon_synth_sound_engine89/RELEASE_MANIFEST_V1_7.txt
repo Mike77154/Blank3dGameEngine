@@ -1,0 +1,28 @@
+weapon_synth_sound_engine89 v1.7.0
+
+Runtime changes
+- gweaponvoice89 mix profiles: REALISTIC / HYBRID / CINEMATIC
+- physical class hierarchy: report/explosion > impact > mechanism/Foley/casing > ambience
+- WEAPON_MODE now synchronizes DNA, acoustic and voice-mix profiles
+- stronger report and ordnance defaults
+- rebalanced shotgun pump against its report
+
+New renderer and previews
+- src/render_complete_weapon_sequences.c
+- audio/07_complete_weapon_sequences_balanced.wav
+- audio/08_pistol_complete.wav
+- audio/09_magnum_complete.wav
+- audio/10_shotgun_complete_balanced.wav
+- audio/11_machinegun_complete.wav
+- audio/12_sniper_complete.wav
+- audio/13_grenade_complete.wav
+- audio/14_rocket_launcher_complete.wav
+- audio/15_grenade_launcher_complete.wav
+- audio/16_shotgun_v1_6_2_vs_v1_7_balance_ab.wav
+
+Validation
+- 9 test suites PASS
+- ASan/UBSan renderer PASS
+- deterministic rerender PASS
+- zero clipping in v1.7 previews
+- strict C89 protocol scan PASS

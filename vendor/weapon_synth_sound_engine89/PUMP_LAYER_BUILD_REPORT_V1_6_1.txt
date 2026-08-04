@@ -1,0 +1,18 @@
+weapon_synth_sound_engine89 v1.6.1 — triple pump layer
+
+Strict flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Results:
+  aggregate library build: PASS
+  shotpumpkin89 object present in aggregate library: PASS
+  gshotgunsequence89 object present in aggregate library: PASS
+  engine test suites: 7/7 PASS
+  standalone gshotgunsequence89 smoke test: PASS
+  dedicated pump layer regression: PASS
+  pump preview renderer: PASS
+
+The monolithic `make all` command was not used as the final validation command
+because every legacy showcase recompiles the full source graph independently.
+Libraries, all test targets, the changed realtime showcase, and the dedicated
+pump renderer were built and executed independently.

@@ -1,0 +1,82 @@
+{
+  "00_full_demo.wav": {
+    "channels": 1,
+    "clipped_samples": 0,
+    "duration_seconds": 24.0,
+    "frames": 1058400,
+    "peak": 19660,
+    "rms": 1028.107,
+    "sample_rate": 44100,
+    "sha256": "dd9f8b911cde84b9a4f179e238afb8bf42ad1c44b0e45e47b92a3976e0fb4090"
+  },
+  "01_body_stem.wav": {
+    "channels": 1,
+    "clipped_samples": 0,
+    "duration_seconds": 24.0,
+    "frames": 1058400,
+    "peak": 31959,
+    "rms": 2384.464,
+    "sample_rate": 44100,
+    "sha256": "f428b5c1156aca99d2d41eeeb65a1289395fb8f276b62deaf3064f210d23b08f"
+  },
+  "02_muzzlegas_stem.wav": {
+    "channels": 1,
+    "clipped_samples": 0,
+    "duration_seconds": 24.0,
+    "frames": 1058400,
+    "peak": 22301,
+    "rms": 530.698,
+    "sample_rate": 44100,
+    "sha256": "c5831ae905d01dc7cefc2e646f11d32d8149ca85c34182647fee6dd511e14955"
+  },
+  "03_ballisticcrack_stem.wav": {
+    "channels": 1,
+    "clipped_samples": 0,
+    "duration_seconds": 24.0,
+    "frames": 1058400,
+    "peak": 26606,
+    "rms": 153.545,
+    "sample_rate": 44100,
+    "sha256": "54b7e7f6a775010f3d813110c85bf10e358e565d412425ffbf71252e7ea03c4d"
+  },
+  "04_latetail_stem.wav": {
+    "channels": 1,
+    "clipped_samples": 0,
+    "duration_seconds": 24.0,
+    "frames": 1058400,
+    "peak": 16383,
+    "rms": 559.59,
+    "sample_rate": 44100,
+    "sha256": "e2d9135a39d9236e9520a21d1408a61db62dae0e920402ba9617d4b31a6af3f0"
+  },
+  "05_cinemathump_stem.wav": {
+    "channels": 1,
+    "clipped_samples": 0,
+    "duration_seconds": 24.0,
+    "frames": 1058400,
+    "peak": 18510,
+    "rms": 1478.642,
+    "sample_rate": 44100,
+    "sha256": "42a92bdbbf2ef82c6625bf2bc68eeea56b20b4dfadaa7beb52af15121a1dcd5b"
+  },
+  "06_cushions_over_sequence_stem.wav": {
+    "channels": 2,
+    "clipped_samples": 0,
+    "duration_seconds": 6.12254,
+    "frames": 270004,
+    "peak": 14309,
+    "rms": 919.543,
+    "sample_rate": 44100,
+    "sha256": "449afc2504da2dabd5733c8aabb8c6322949a8906f96e69fe3c646a407f50dae"
+  },
+  "07_three_original_synths_plus_five_cushions.wav": {
+    "channels": 2,
+    "clipped_samples": 0,
+    "duration_seconds": 6.12254,
+    "frames": 270004,
+    "peak": 32670,
+    "rms": 3125.93,
+    "sample_rate": 44100,
+    "sha256": "8a91f1a37f125e59cc35fde19ad8faadddc986e9b6c98ee1f1834bafc2803d55"
+  }
+}

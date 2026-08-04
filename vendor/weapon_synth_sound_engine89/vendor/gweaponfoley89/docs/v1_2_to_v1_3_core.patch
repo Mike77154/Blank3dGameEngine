@@ -1,0 +1,248 @@
+--- /mnt/data/gweaponfoley89_physical_work/gweaponfoley89/src/gweaponfoley89.c	2026-07-18 06:16:35.551931763 +0000
++++ src/gweaponfoley89.c	2026-07-18 06:35:09.599296644 +0000
+@@ -168,6 +168,68 @@
+     return gwf89_sat16(out);
+ }
+ 
++static gwf89_s16 gwf89_metal_body(gwf89_context *ctx, gwf89_s16 input)
++{
++    static const gwf89_s16 mode_weight_q15[GWF89_METAL_MODES] = {
++        10500, -9200, 7900, -6600
++    };
++    gwf89_s32 mode_sum;
++    gwf89_s32 write_value;
++    gwf89_s32 out;
++    gwf89_s16 delayed;
++    gwf89_s16 damped;
++    gwf89_s16 delta;
++    gwf89_s16 feedback;
++    gwf89_s16 excite;
++    gwf89_s16 wet;
++    unsigned short delay;
++    unsigned short read_pos;
++    unsigned int i;
++
++    /*
++       Four short, mutually inharmonic recirculating paths. White noise is
++       still the only excitation source; these paths provide the decaying
++       rigid-metal body that remains after the contact transient ends.
++       Alternating output polarities prevent the modes from collapsing into
++       a single obvious comb pitch.
++    */
++    excite = (gwf89_s16)(input >> 2);
++    mode_sum = 0L;
++
++    for (i = 0U; i < GWF89_METAL_MODES; ++i) {
++        delay = (unsigned short)ctx->preset->metal_delay[i];
++        if (delay < 2U) delay = 2U;
++        if (delay >= GWF89_METAL_BUFFER) delay = GWF89_METAL_BUFFER - 1U;
++
++        if (ctx->metal_write >= delay)
++            read_pos = (unsigned short)(ctx->metal_write - delay);
++        else
++            read_pos = (unsigned short)(GWF89_METAL_BUFFER + ctx->metal_write - delay);
++
++        delayed = ctx->metal_buffer[i][read_pos];
++        delta = gwf89_sat16((gwf89_s32)delayed - (gwf89_s32)ctx->metal_lp[i]);
++        ctx->metal_lp[i] = gwf89_sat16((gwf89_s32)ctx->metal_lp[i] +
++            (gwf89_s32)gwf89_mul_q15(ctx->preset->metal_damping_q15, delta));
++        damped = ctx->metal_lp[i];
++        feedback = gwf89_mul_q15(damped, ctx->preset->metal_feedback_q15);
++
++        if ((i & 1U) != 0U)
++            write_value = -(gwf89_s32)excite + (gwf89_s32)feedback;
++        else
++            write_value = (gwf89_s32)excite + (gwf89_s32)feedback;
++
++        ctx->metal_buffer[i][ctx->metal_write] = gwf89_sat16(write_value);
++        mode_sum += (gwf89_s32)gwf89_mul_q15(damped, mode_weight_q15[i]);
++    }
++
++    ctx->metal_write = (unsigned short)((ctx->metal_write + 1U) &
++                                        (GWF89_METAL_BUFFER - 1U));
++
++    wet = ctx->preset->metal_wet_q15;
++    out = (gwf89_s32)input + ((mode_sum * (gwf89_s32)wet) >> 15);
++    return gwf89_sat16(out);
++}
++
+ static gwf89_s16 gwf89_chorus(gwf89_context *ctx, gwf89_s16 input)
+ {
+     unsigned short phase;
+@@ -211,13 +273,23 @@
+     gwf89_s16 ap;
+     gwf89_s32 write_value;
+     gwf89_s32 out;
+-    const unsigned short delay_a = 149U;
+-    const unsigned short delay_b = 263U;
+-    const unsigned short delay_ap = 113U;
++    unsigned short delay_a;
++    unsigned short delay_b;
++    unsigned short delay_ap;
+     unsigned short read_a;
+     unsigned short read_b;
+     unsigned short read_ap;
+ 
++    delay_a = ctx->preset->reverb_delay_a;
++    delay_b = ctx->preset->reverb_delay_b;
++    delay_ap = ctx->preset->allpass_delay;
++    if (delay_a < 2U) delay_a = 2U;
++    if (delay_b < 2U) delay_b = 2U;
++    if (delay_ap < 2U) delay_ap = 2U;
++    if (delay_a >= GWF89_REVERB_BUFFER) delay_a = GWF89_REVERB_BUFFER - 1U;
++    if (delay_b >= GWF89_REVERB_BUFFER) delay_b = GWF89_REVERB_BUFFER - 1U;
++    if (delay_ap >= GWF89_ALLPASS_BUFFER) delay_ap = GWF89_ALLPASS_BUFFER - 1U;
++
+     if (ctx->reverb_a_pos >= delay_a) read_a = (unsigned short)(ctx->reverb_a_pos - delay_a);
+     else read_a = (unsigned short)(GWF89_REVERB_BUFFER + ctx->reverb_a_pos - delay_a);
+     if (ctx->reverb_b_pos >= delay_b) read_b = (unsigned short)(ctx->reverb_b_pos - delay_b);
+@@ -269,8 +341,8 @@
+ #define ZHIT HIT(0,0,0,0,0,0,0,0,0,0,EQ_PISTOL_RELEASE,0)
+ 
+ /*
+-   v1.2 physical pass: every contact owns its spectral colour and nonlinear
+-   density. Offsets represent mechanical order, not ammunition handling.
++   v1.3 metallic-body pass: v1.2 micro-contacts excite four short,
++   inharmonic damped-delay modes. White noise remains the only source.
+ */
+ static const gwf89_preset gwf89_presets[GWF89_PRESET_COUNT] = {
+     {
+@@ -282,7 +354,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 2600, 4500, 6400, 6800, 4700, 1800 }, 11800,
+-        1700, 168, 22, 1, 1200, 5600, 900
++        7200, 13500, 21800, { 7, 11, 17, 23 },
++        1550, 168, 22, 1, 1650, 5600, 251, 421, 137, 1700
+     },
+     {
+         "pistol_handling", 4,
+@@ -294,7 +367,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3200, 5200, 6500, 5700, 3500, 1400 }, 10500,
+-        2100, 182, 25, 1, 1500, 6000, 1200
++        7800, 14200, 21000, { 9, 14, 23, 31 },
++        1900, 182, 25, 1, 2100, 6000, 307, 503, 157, 2300
+     },
+     {
+         "magnum_empty", 5,
+@@ -307,7 +381,8 @@
+             ZHIT, ZHIT, ZHIT
+         },
+         { 5200, 7300, 7200, 5000, 2500, 900 }, 14500,
+-        1800, 202, 31, 1, 1800, 6500, 1500
++        9800, 16200, 19600, { 11, 17, 29, 41 },
++        1650, 202, 31, 1, 2500, 6500, 331, 557, 173, 2600
+     },
+     {
+         "magnum_latch", 4,
+@@ -319,7 +394,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 5600, 7600, 6900, 4300, 2100, 800 }, 13800,
+-        2200, 226, 35, 1, 2000, 7000, 1700
++        10600, 16600, 19000, { 13, 19, 31, 43 },
++        1900, 226, 35, 1, 2700, 7000, 367, 601, 191, 2900
+     },
+     {
+         "sniper_empty", 3,
+@@ -330,7 +406,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3600, 5900, 7200, 6200, 3500, 1200 }, 12500,
+-        1600, 187, 20, 1, 1500, 6200, 1200
++        8200, 14600, 20800, { 9, 15, 24, 37 },
++        1500, 187, 20, 1, 2100, 6200, 293, 487, 149, 2100
+     },
+     {
+         "sniper_bolt_dry", 8,
+@@ -345,7 +422,8 @@
+             HIT(7350,1,30,0,120,16500,2400,7500,23500,19000,EQ_DETENT,14500)
+         },
+         { 5600, 7700, 7200, 4800, 2400, 850 }, 14500,
+-        2400, 218, 38, 1, 2200, 7200, 1900
++        11200, 17200, 18700, { 13, 19, 31, 47 },
++        2150, 218, 38, 1, 3100, 7200, 397, 673, 211, 4300
+     },
+     {
+         "smg_empty", 4,
+@@ -357,7 +435,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3600, 6100, 7300, 6200, 3400, 1200 }, 13200,
+-        1500, 148, 18, 2, 1100, 5300, 800
++        7800, 14400, 21400, { 8, 13, 21, 34 },
++        1400, 148, 18, 2, 1650, 5300, 257, 433, 139, 1800
+     },
+     {
+         "smg_selector", 3,
+@@ -368,7 +447,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 2300, 4500, 6500, 7000, 4600, 1600 }, 10200,
+-        1700, 160, 18, 2, 1200, 5400, 900
++        6800, 13100, 22600, { 7, 12, 19, 31 },
++        1550, 160, 18, 2, 1650, 5400, 239, 397, 127, 1600
+     },
+     {
+         "launcher_empty", 3,
+@@ -379,7 +459,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 7600, 8600, 6200, 3300, 1500, 550 }, 15800,
+-        2100, 246, 34, 1, 2400, 7500, 2200
++        12600, 18300, 17200, { 19, 29, 43, 59 },
++        1850, 246, 34, 1, 3600, 7500, 421, 719, 227, 3800
+     },
+     {
+         "launcher_latch", 4,
+@@ -391,7 +472,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 8000, 9000, 6000, 2900, 1200, 450 }, 16500,
+-        2600, 265, 42, 1, 2800, 7900, 2600
++        13800, 19200, 16600, { 21, 31, 47, 61 },
++        2200, 265, 42, 1, 4200, 7900, 463, 773, 241, 4800
+     },
+     {
+         "shotgun_empty", 4,
+@@ -403,7 +485,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 6000, 8100, 7000, 4300, 2000, 700 }, 15000,
+-        1900, 198, 28, 1, 1900, 6800, 1500
++        11000, 17400, 18400, { 13, 23, 37, 53 },
++        1750, 198, 28, 1, 2900, 6800, 353, 587, 181, 3000
+     },
+     {
+         "shotgun_safety", 3,
+@@ -414,7 +497,8 @@
+             ZHIT, ZHIT, ZHIT, ZHIT, ZHIT
+         },
+         { 3000, 5200, 6800, 6900, 3900, 1300 }, 10500,
+-        1800, 178, 20, 2, 1300, 5700, 1000
++        7200, 13600, 22000, { 7, 12, 19, 31 },
++        1600, 178, 20, 2, 1800, 5700, 251, 409, 131, 1700
+     }
+ };
+ 
+@@ -470,6 +554,10 @@
+         for (i = 0; i < 5; ++i) ctx->hit_eq_lp[j][i] = 0;
+     }
+     for (i = 0; i < 5; ++i) ctx->master_eq_lp[i] = 0;
++    gwf89_zero16(&ctx->metal_buffer[0][0],
++                 (unsigned long)GWF89_METAL_MODES * (unsigned long)GWF89_METAL_BUFFER);
++    for (i = 0; i < GWF89_METAL_MODES; ++i) ctx->metal_lp[i] = 0;
++    ctx->metal_write = 0U;
+     gwf89_zero16(ctx->chorus_buffer, GWF89_CHORUS_BUFFER);
+     ctx->chorus_write = 0U;
+     ctx->chorus_phase = (unsigned short)(seed & 65535UL);
+@@ -553,6 +641,7 @@
+     }
+ 
+     shaped = gwf89_sat16(hit_sum);
++    shaped = gwf89_metal_body(ctx, shaped);
+     shaped = gwf89_filterbank(ctx->master_eq_lp, shaped,
+                              ctx->preset->eq_gain_q12);
+     shaped = gwf89_distortion(shaped, ctx->preset->drive_q15);

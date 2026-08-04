@@ -1,0 +1,12 @@
+gpump89 v2_real verification
+
+Build: PASS
+Tests: PASS
+Compiler flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Context bytes: 1016
+Object bytes: 20048
+Static library bytes: 20406
+Embedded signed-8-bit grain samples: 10534
+Heap bytes: 0
+Sine oscillators: 0
+float/double in core: 0

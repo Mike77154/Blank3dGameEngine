@@ -1,0 +1,5 @@
+weapon_synth_sound_engine89 v1.4.0 canonical runtime source audit
+Canonical runtime implementation files: 48
+Excluded intentionally: vendor/chuecka89/src/chuecka89_wav.c (preview/file writer)
+Excluded intentionally: duplicate source copies inside nested sub-vendor folders
+RESULT: PASS — every canonical runtime implementation is present in the top-level Makefile graph

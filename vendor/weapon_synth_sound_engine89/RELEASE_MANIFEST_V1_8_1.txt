@@ -1,0 +1,21 @@
+weapon_synth_sound_engine89 v1.8.1
+
+Runtime additions:
+- vendor/wmagazine89
+- vendor/grocketwhistle89
+- 5 append-only event types
+- fixed caller-owned auxiliary voice pools
+
+Updated demos:
+- pistol one + 20 + reload
+- sniper one + 4 + reload
+- rocket launch/whistle/impact
+- rocket one + 4 + reload
+- all full-capacity sequences
+
+Validation:
+- strict C89 tests
+- sanitizer integration test
+- deterministic render hashes
+- PCM16 WAV validation
+- i386 standalone provider objects

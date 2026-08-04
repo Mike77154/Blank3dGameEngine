@@ -1,0 +1,21 @@
+GEDER Truth Gate Pipeline 1.0.0 - Build report
+
+Validated with:
+  gcc -std=c89 -pedantic -Wall -Wextra
+
+Targets compiled:
+  npc_perception_demo
+  incremental_demo
+  test_geder_truth_gate
+
+Test result:
+  GEDER Truth Gate Pipeline: all tests passed.
+
+Behavior validated:
+  - CONTINUE accumulates truth count, fixed-point score and truth mask.
+  - ACCEPT stops the chain immediately with an accepted final result.
+  - REJECT stops the chain immediately with a rejected final result.
+  - Disabled gates are skipped.
+  - End-of-chain threshold policies work.
+  - Incremental execution evaluates at most one enabled gate per step.
+  - Fixed-point conversion and saturating addition helpers pass tests.

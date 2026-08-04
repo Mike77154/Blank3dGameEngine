@@ -1,0 +1,38 @@
+gweaponfoley89 1.6 validation
+==============================
+
+Compiler command:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude
+
+Results:
+  core compiled without warnings
+  renderer compiled without warnings
+  example compiled without warnings
+  validation smoke test passed
+  deterministic equal-seed/equal-variant render: bit-identical
+  tight and heavy variants: 11,989 differing samples in the bolt test
+  room-send zero: mixed output equals dry stem
+  undefined symbols in core object: none
+  context bytes: 11,000
+  core object bytes: 19,112
+  static library bytes: 19,602
+
+Forbidden core tokens:
+  no malloc/calloc/realloc/free calls
+  no float/double declarations
+  no math.h/stdio.h/stdlib.h include in core
+
+Rendered validation:
+  12 reference presets
+  3 deterministic bolt variants
+  slow/normal/fast bolt examples
+  slow/fast launcher examples
+  dry/room/mix stems
+  maximum measured peak: 0.976105 FS
+  clipped samples: 0
+
+Architecture:
+  three noise streams only
+  no sample playback
+  no heap ownership
+  fixed 44,100 Hz mono PCM

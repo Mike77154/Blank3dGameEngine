@@ -1,0 +1,51 @@
+hud radial_segmented_cyan -=)
+enabled true
+canvas_width 116
+canvas_height 116
+node cyan_ring -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+radial_phase_bind numbar.phase
+pos top_left + 0,0
+size 116,116
+kind radial_ring
+radial_start -90
+radial_sweep 360
+radial_inner 72
+radial_steps 96
+radial_segments 24
+radial_gap_deg 3
+radial_cap square
+frame simple
+frame_depth 2
+background grid
+bg_step 8
+bg_size 1
+draw_bg true
+draw_border true
+smooth_value true
+smooth_speed 160
+outer_outline true
+drop_shadow true
+gloss true
+radial_spokes true
+radial_rings true
+radial_ticks true
+radial_sweep_highlight true
+outline_size 1
+shadow_offset 3,3
+gloss_percent 30
+radial_detail_rings 3
+color_bg #03151AC8
+color_fill #38E4F1FF
+color_border #B8FAFFFF
+color_empty #123038D8
+color_outline #01080AFF
+color_shadow #00000090
+color_highlight #FFFFFFFF
+color_gloss #FFFFFF55
+color_bg_detail #2EBCC866
+border_size 1
+(=-

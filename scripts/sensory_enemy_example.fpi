@@ -1,0 +1,16 @@
+; Ejemplo no asignado: pila Socketer -> Eyes -> Enlightener -> GEDER.
+; La gramática ya no trata al player como caso especial: todo es target.
+
+:state=0,targetvisible,targetdistwithin=28:setstate=1
+:state=0,targetheard:rotatetolastsound,setstate=2
+
+:state=1,targetfullyvisible,targetdistwithin=14:rotatetotarget,firetarget
+:state=1,targetpartial:rotatetotarget,movetotarget=2.2
+:state=1,targetremembered:rotatetolastseen,movetolastseen=2
+:state=1,targetlostfor=5:setstate=0
+
+:state=2,targetheard:rotatetolastsound,movetolastsound=1.8
+:state=2,targetvisible:setstate=1
+
+; Si Eyes y Enlightener no aportan verdad, queda el Socketer absoluto.
+:truthfallbackactive:rotatetotarget,movetotarget=1.2

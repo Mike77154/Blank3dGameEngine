@@ -1,0 +1,18 @@
+97_v1_then_v2_shotgun_comparison.wav
+  v1 pump
+  v2 pump
+  v1 insert
+  v2 insert
+  v1 repeated insert
+  v2 repeated insert
+
+98_focus_atom_and_shotgun.wav
+  SH
+  ECKT
+  SHEKT
+  shotgun pump chik-chok
+  shotshell insert shuk
+  repeated insert sheke-sheke
+
+99_all_presets_montage.wav
+  presets 00 through 12 in numeric order

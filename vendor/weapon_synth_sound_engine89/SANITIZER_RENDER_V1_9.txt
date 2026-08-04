@@ -1,0 +1,1 @@
+rocket_spin_gatling_showcase PASS context=185840 shots=80

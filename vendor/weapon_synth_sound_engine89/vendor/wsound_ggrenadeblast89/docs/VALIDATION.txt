@@ -1,0 +1,79 @@
+wsound_ggrenadeblast89 v1.0.2 validation
+================================================
+
+Build commands:
+  make clean
+  make all
+  make check
+  ./render_previews
+
+Compiler flags:
+  -O2 -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude
+
+Result:
+  PASS
+
+Regression hash:
+  bd6ede3e
+
+State size:
+  native validation host: sizeof(ws_ggb89) = 33304 bytes
+  32-bit i386 data model probe: sizeof(ws_ggb89) = 33108 bytes
+
+Static archive:
+  native validation host: 24078 bytes
+  32-bit i386 compile-only archive: 22210 bytes
+
+Forbidden external-symbol scan:
+  malloc/realloc/calloc/free/pow/sin/cos/exp/sqrt = clean
+
+Forbidden-token scan in include/ and src/:
+  float/double/malloc/realloc/calloc/free = clean
+
+Preview format:
+  44100 Hz
+  mono
+  signed PCM 16-bit
+  no sample reached full-scale clipping in the generated preview set
+
+Transient-jump test, maximum absolute sample-to-sample delta:
+  preset 0:  5331
+  preset 1:  7393
+  preset 2:  9101
+  preset 3:  7348
+  preset 4: 12261
+  preset 5:  8003
+  preset 6:  3035
+  preset 7:  9708
+  threshold: 18000
+  result: PASS
+
+Speaker-safe roughness test, first 500 ms:
+  preset 2 mean |dx|: 125
+  preset 2 mean |d2x|: 104
+  preset 4 mean |dx|: 189
+  preset 4 mean |d2x|: 146
+  result: PASS
+
+Additional 32-bit validation:
+  Core compiled with:
+    -m32 -std=c89 -pedantic -Wall -Wextra -Werror
+  Result:
+    PASS, ELF i386 relocatable objects
+  This validates 32-bit long/short arithmetic assumptions, but is not a
+  Windows/MinGW binary.
+
+v1.0.2 correction validation:
+- Fragment density is evaluated every four samples rather than every sample.
+- Strong fragment pulses cannot immediately retrigger.
+- Fragment noise uses two fixed-point low-pass stages.
+- Fragment attack is slew-limited.
+- Exact reported montage windows were regenerated for A/B review.
+- No heap or floating-point dependency was introduced.
+
+Notes:
+- No MinGW cross-compiler was available in the validation environment.
+  build_mingw32.bat is included for the user's MSYS2/MinGW32 installation.
+- Binary size varies with compiler, architecture, optimization and archive
+  format.
+- The demo uses stdio only to write WAV files. The core library does not.

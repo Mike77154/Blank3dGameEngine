@@ -1,0 +1,3 @@
+ATOM SH release: 18 ms -> 12 ms (-6 ms)
+ECKT delay remains 82 ms.
+No ABI or public header changes.

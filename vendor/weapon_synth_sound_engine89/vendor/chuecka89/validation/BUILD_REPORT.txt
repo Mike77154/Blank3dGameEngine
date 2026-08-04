@@ -1,0 +1,60 @@
+chuecka89 v2 validation report
+
+Native compiler:
+cc (Debian 14.2.0-19) 14.2.0
+Win32 object compiler:
+clang version 17.0.0 (https://github.com/swiftlang/llvm-project.git 10999b6d034fe318f3d56c83bddb6572593a8bb0)
+
+Build flags: -O2 -Wall -Wextra -pedantic -std=c89
+Strict native build: PASS
+Smoke test, 13 presets at 48 kHz: PASS
+Preview render, 13 presets at 44.1 kHz: PASS
+GCC -m32 i386 ELF core object/archive: PASS
+Clang i686-w64-windows-gnu COFF core object/archive: PASS
+
+sizeof(ch89_context) = 15696 bytes
+sizeof(ch89_gesture) = 2174 bytes
+max strokes          = 24
+
+Core forbidden exact-token scan:
+PASS: malloc
+PASS: realloc
+PASS: free
+PASS: float
+PASS: double
+
+Object/static sizes:
+   text	   data	    bss	    dec	    hex	filename
+   8447	    104	      0	   8551	   2167	build/chuecka89.o
+   8983	     52	      0	   9035	   234b	build/chuecka89_32.o
+   8447	    104	      0	   8551	   2167	chuecka89.o (ex build/libchuecka89.a)
+   8983	     52	      0	   9035	   234b	chuecka89_32.o (ex build/libchuecka89_i386.a)
+-rw-r--r-- 1 root root 12K Jul 18 06:17 build/chuecka89_win32.o
+-rw-r--r-- 1 root root 13K Jul 18 06:17 build/libchuecka89_win32.a
+
+build/chuecka89_32.o:    ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+build/chuecka89_win32.o: Intel i386 COFF object file, not stripped, 5 sections, symbol offset=0x2ca0, 23 symbols, 1st section name ".text", 2nd section name ".data"
+
+WAV files:
+-rw-rw-rw- 1 root root  33K Jul 18 06:17 wav/00_shotgun_pump_chik_chok.wav
+-rw-rw-rw- 1 root root  16K Jul 18 06:17 wav/01_shotgun_insert_shuk.wav
+-rw-rw-rw- 1 root root  80K Jul 18 06:17 wav/02_shotgun_multi_insert_sheke.wav
+-rw-rw-rw- 1 root root  20K Jul 18 06:17 wav/03_pistol_slide.wav
+-rw-rw-rw- 1 root root  35K Jul 18 06:17 wav/04_magnum_heavy_action.wav
+-rw-rw-rw- 1 root root  43K Jul 18 06:17 wav/05_revolver_cylinder.wav
+-rw-rw-rw- 1 root root  44K Jul 18 06:17 wav/06_grenade_launcher_breech.wav
+-rw-rw-rw- 1 root root  46K Jul 18 06:17 wav/07_rocket_launcher_deploy.wav
+-rw-rw-rw- 1 root root  77K Jul 18 06:17 wav/08_smg_feed_burst.wav
+-rw-rw-rw- 1 root root  90K Jul 18 06:17 wav/09_machine_gun_feed_burst.wav
+-rw-rw-rw- 1 root root  19K Jul 18 06:17 wav/10_atom_sh.wav
+-rw-rw-rw- 1 root root 9.7K Jul 18 06:17 wav/11_atom_eckt.wav
+-rw-rw-rw- 1 root root  19K Jul 18 06:17 wav/12_atom_shekt.wav
+-rw-r--r-- 1 root root 519K Jul 18 06:16 wav/97_v1_then_v2_shotgun_comparison.wav
+-rw-r--r-- 1 root root 342K Jul 18 06:16 wav/98_focus_atom_and_shotgun.wav
+-rw-r--r-- 1 root root 814K Jul 18 06:16 wav/99_all_presets_montage.wav
+
+Focused montage order:
+SH -> ECKT -> SHEKT -> shotgun pump -> shell insert -> repeated insert
+
+Comparison montage order:
+v1 pump -> v2 pump -> v1 insert -> v2 insert -> v1 repeated insert -> v2 repeated insert

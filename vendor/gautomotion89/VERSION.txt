@@ -1,0 +1,7 @@
+gautomotion89 1.0.0
+
+Modules:
+- gmove89_core 1.0.0
+- gautmove89 1.0.0
+- gmovepattern89 1.0.0
+- gmovesequence89 1.0.0

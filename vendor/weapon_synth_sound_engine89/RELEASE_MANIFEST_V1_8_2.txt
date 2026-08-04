@@ -1,0 +1,16 @@
+weapon_synth_sound_engine89 v1.8.2
+
+Release contents:
+- Full vendored C89 source tree
+- Unified static library and bridge libraries
+- 10 test executables/sources
+- Updated physical-mechanics sequence renderer
+- Pistol, Magnum, shotgun, machine gun, sniper and rocket sequence WAVs
+- Combined sequence WAV
+- Rocket-whistle A/B WAV
+- Build, sanitizer, test, determinism and i386 reports
+- WAV validation JSON and SHA-256 manifest
+- Physics/research notes
+
+Runtime ABI changes: none.
+Showcase composition changes: yes.

@@ -1,0 +1,54 @@
+trail3d89 2.1.0 provider integration validation
+================================================
+
+Primary build
+-------------
+Compiler: gcc 14.2.0
+Flags: -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude
+Result: PASS
+
+Secondary build
+---------------
+Compiler: clang 17.0.0
+Flags: -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude
+Result: PASS
+
+Sanitizer run
+-------------
+Compiler: gcc 14.2.0
+Flags: -std=c89 -pedantic -Wall -Wextra -Werror
+       -fsanitize=undefined,address -fno-omit-frame-pointer -Iinclude
+Result: PASS
+
+Runtime checks
+--------------
+- Legacy ribbon/cross/tube/beam/socket tests: PASS
+- Legacy distance/time/ring/age/LOD behavior: PASS
+- Translation transform: PASS
+- Row-major rotation matrix: PASS
+- Non-uniform XYZ scale: PASS
+- Local point transform: PASS
+- Local orientation transform: PASS
+- Local A/B socket transform: PASS
+- Optional width scaling: PASS
+- Automatic provider stepping: PASS
+- Manual provider stepping: PASS
+- Provider skip handling: PASS
+- Provider raw error preservation: PASS
+- Provider binding retained after trail reset: PASS
+- Provider unbind behavior: PASS
+- Existing demo: PASS
+- Provider demo: PASS
+
+Forbidden runtime/API audit
+---------------------------
+C and header files contain no calls to malloc, calloc, realloc, or free.
+C and header files contain no float or double declarations/literals.
+No long long type is used.
+
+32-bit note
+-----------
+A local `-m32` build could not be completed because the validation container
+lacks 32-bit libc development headers and startup objects. The code itself is
+strict C89 and does not use 64-bit integer types; the intended MinGW32/MSYS2
+build command remains the normal Makefile command with the 32-bit compiler.

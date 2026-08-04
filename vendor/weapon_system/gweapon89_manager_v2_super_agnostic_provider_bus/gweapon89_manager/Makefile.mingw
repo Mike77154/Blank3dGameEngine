@@ -1,0 +1,16 @@
+CC ?= gcc
+CFLAGS ?= -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+all: provider_validation legacy_validation ini_validation
+
+provider_validation: src/gweapon89.c src/gweapon89.h demo/provider_validation.c
+	$(CC) $(CFLAGS) -Isrc src/gweapon89.c demo/provider_validation.c -o provider_validation
+
+legacy_validation: src/gweapon89.c src/gweapon89.h demo/legacy_validation.c
+	$(CC) $(CFLAGS) -Isrc src/gweapon89.c demo/legacy_validation.c -o legacy_validation
+
+ini_validation: src/gweapon89.c src/gweapon89.h demo/ini_validation.c config/provider_weapon.ini
+	$(CC) $(CFLAGS) -Isrc src/gweapon89.c demo/ini_validation.c -o ini_validation
+
+clean:
+	rm -f provider_validation provider_validation.exe legacy_validation legacy_validation.exe ini_validation ini_validation.exe *.o

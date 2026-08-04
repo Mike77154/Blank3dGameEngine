@@ -1,0 +1,16 @@
+weapon_synth_sound_engine89 v1.6.2 shotgun master build report
+
+- Added vendored gshotguneq89 implementation and public header.
+- Added gshotguneq89.o and gshotgunsequence89.o to the unified archive.
+- Unified archive objects: 58
+- Unified archive size: 386354 bytes
+- Updated gshotgunsequence89 to v1.4.0.
+- Added five shotgun model profiles and optional tek provider callbacks.
+- Added examples/shotgun_tek_provider_bridge.c.
+- Strict C89 build: PASS.
+- Engine executable suites: 8/8 PASS.
+- New-path ASan/UBSan: PASS.
+- Three previews: deterministic and zero clipping.
+- Fresh i386 gshotguneq89 object: PASS.
+- Fresh i386 sequence object: unavailable because this container lacks
+  32-bit glibc headers; see SHOTGUN_MASTER_I386_V1_6_2.txt.

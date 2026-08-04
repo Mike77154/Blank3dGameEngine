@@ -1,0 +1,3 @@
+audio/04_full_firefight_plus_gtinkle_gfire_rocket.wav: OK
+audio/06_rocket_launcher_launch_to_impact.wav: OK
+audio/00_v1_4_2_unified_event_showcase.wav: OK

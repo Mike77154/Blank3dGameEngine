@@ -1,0 +1,31 @@
+hud heart_units_red -=)
+enabled true
+canvas_width 300
+canvas_height 32
+node heart_units -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+unit_count_bind numbar.units
+pos top_left + 0,0
+size 300,32
+kind segmented
+direction left_to_right
+segments 10
+segment_gap 3
+frame none
+background solid
+draw_bg false
+draw_border false
+draw_vector_units true
+unit_shape heart
+unit_count 10
+unit_padding 2
+unit_scale_percent 84
+unit_closed true
+unit_filled true
+color_unit_fill #EF3A4CFF
+color_unit_empty #381016D0
+color_unit_outline #FFE0E4FF
+(=-

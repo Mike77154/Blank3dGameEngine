@@ -1,0 +1,31 @@
+hud sprite_clip_template -=)
+enabled true
+canvas_width 280
+canvas_height 30
+node sprite_clip_meter -=)
+type bar
+bind numbar.value
+min_bind numbar.min
+max_bind numbar.max
+pos top_left + 0,0
+size 280,30
+kind sprite_clip
+direction left_to_right
+draw_bg true
+draw_border true
+damage_lag true
+lag_speed 30
+sprite_bg 110
+sprite_fill 111
+sprite_lag 112
+src_bg 0,0,128,16
+src_fill 0,16,128,16
+src_lag 0,32,128,16
+margins 4,4,4,4
+padding 4,3,4,3
+color_bg #101010E0
+color_fill #FFFFFFFF
+color_lag #FFDC70FF
+color_border #FFFFFFFF
+border_size 1
+(=-

@@ -1,0 +1,9 @@
+; ===== INIT =====
+:state=0,always:setvar=0 0,timerstart,state=10
+
+; ===== COUNTING =====
+:state=10,timergreater=1000:incvar=0,timerstart
+:state=10,vargreater=0 3:timerstart,state=20
+
+; ===== STATE 20 =====
+:state=20,timergreater=3000:setvar=0 0,timerstart,state=10

@@ -1,0 +1,41 @@
+Blank3D v3.20.0 GAttach Object Animator QA
+===========================================
+
+VENDORED LIBRARY
+  GAttach89 v1.0.0
+  C89 / Q20.12 / static arrays                       PASS
+  Upstream clean + check with -Werror                PASS
+
+GENERIC ATTACHMENT BRIDGE
+  Arbitrary parent entity IDs                        PASS
+  Arbitrary child object IDs                         PASS
+  Named socket definition                            PASS
+  Soquete3D Q16.16 -> GAttach Q20.12 conversion      PASS
+  Child follows translated/rotated socket            PASS
+  Local grip offset composition                      PASS
+  Move object to another socket                      PASS
+  Hide/show attached object                          PASS
+  Detach without rebuilding animator                 PASS
+
+ANIMATOR CHAIN
+  Attached object transform feeds NM89 root          PASS
+  Body / slide / magazine / barrel packets           PASS
+  Muzzle socket remains non-rendered                 PASS
+  Muzzle socket republished through Soquete3D        PASS
+  Independent muzzle-event ownership preserved      PASS
+
+REGRESSION
+  Core systems                                       PASS
+  Actor weapon isolation                             PASS
+  NPC weapon inventory                               PASS
+  Motion attacks                                     PASS
+  Sensory truth stack                                PASS
+  Perception INI                                     PASS
+  BigVaderHudder                                     PASS
+  Win32/OpenGL syntax check                          PASS
+  malloc/realloc/free audit                          PASS
+
+HOST LIMITATION
+  The Linux QA host cannot launch the final Win32 graphical window. Compile
+  and visually inspect the result under MSYS2 MinGW32. Portable tests and the
+  complete syntax check passed.

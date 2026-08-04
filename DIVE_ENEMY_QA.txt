@@ -1,0 +1,18 @@
+Blank3D v3.10.3 dive enemy QA
+================================
+
+- RPYL dive_enemy command dispatch: OK
+- RPYL dive_bomber_enemy alias registration: OK
+- hover X/Z pursuit dispatch: OK
+- relative player-height conditions parse and dispatch: OK
+- save aerial return position action: OK
+- guided dive action dispatch: OK
+- impact / hurtplayer transition: OK
+- return-to-saved-position action dispatch: OK
+- return-position proximity conditions: OK
+- state reset after return: OK
+- full C89 syntax check with Win32/OpenGL stubs: OK
+- complete portable regression suite: OK
+- active integration allocation audit: OK
+
+Visual Win32 feeling must still be confirmed in the local MSYS2/MinGW32 runner.

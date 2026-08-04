@@ -1,0 +1,68 @@
+rm -rf build
+mkdir -p build
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Isrc -c src/nationalmecanicanimal89.c -o build/nationalmecanicanimal89.o
+ar rcs build/libnationalmecanicanimal89.a build/nationalmecanicanimal89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Isrc build/nationalmecanicanimal89.o tests/test_nm89.c -o build/test_nm89
+build/test_nm89
+PASS Q16.16 multiply
+PASS sin 90 degrees
+PASS cos 180 degrees
+PASS wrapped rotation
+PASS stepped translation
+PASS provider registry
+PASS math provider selector
+PASS easing provider selector
+PASS clock provider selector
+PASS static slide constraint
+PASS constraint bank
+PASS pivot bank
+PASS alignment bank
+PASS root part
+PASS slide part
+PASS transform provider binding
+PASS socket provider binding
+PASS pivot provider binding
+PASS world provider binding
+PASS visibility provider binding
+PASS constraint provider binding
+PASS geometry binding
+PASS clip begin
+PASS track begin
+PASS track key zero
+PASS track key ten
+PASS clip event
+PASS clip end
+PASS action binding
+PASS action trigger
+PASS clock update
+PASS provider then static/dynamic constraints
+PASS custom eased clip channel
+PASS event crossed at tick two
+PASS parent + parent-space socket X
+PASS world provider premultiply Y
+PASS resolved provider Z
+PASS flush
+PASS resolver called
+PASS output called
+PASS resolver changed mesh
+PASS binding visibility provider
+PASS alignment applied to world X
+PASS provider-aware point transform X
+PASS provider-aware point transform Y
+PASS provider-aware point transform Z
+PASS transform samples
+PASS socket samples
+PASS pivot samples
+PASS world samples
+PASS constraint samples
+PASS clock samples
+PASS custom easing samples
+PASS math provider used
+PASS part lookup
+PASS binding id stable
+
+sizeof(nm89_part)=296
+sizeof(nm89_rig)=37016
+
+All NationalMecanicanimal89 tests passed.
+cc -std=c89 -pedantic -Wall -Wextra -Werror -O2 -Iinclude -Isrc build/nationalmecanicanimal89.o examples/pistol_provider_demo.c -o build/pistol_provider_demo

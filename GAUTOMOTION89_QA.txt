@@ -1,0 +1,16 @@
+Blank3D v3.14.0 GAUTOMOTION89 QA
+
+- Upstream vendor standalone build and unit tests: OK
+- Q20.12 <-> Q16.16 engine bridge: OK
+- Flat patterns preserve actor Y: OK
+- Zigzag archetype defaults: OK
+- Runtime style switching: OK
+- Directed move and move-away bridge: OK
+- FPIL scripts with sine/zigzag/pingpong actions: OK
+- Hopper jump89 composition: syntax and language regression OK
+- Dive enemy airdiver89 composition: syntax and language regression OK
+- Complete portable `make test`: OK
+- Complete Win32 runner syntax-check with stubs: OK
+- No malloc/realloc/free in active integration: OK
+
+Visual feel still requires the native MSYS2/MinGW32 runner.

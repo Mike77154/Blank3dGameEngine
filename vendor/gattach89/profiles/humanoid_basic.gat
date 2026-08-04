@@ -1,0 +1,12 @@
+# gattach89 declarative sketch
+# This file is intentionally data-only documentation for editor/tool import.
+# Runtime API uses fixed structs so the engine can load it with its own parser.
+
+entity humanoid_basic
+socket hand_r bone 10 pos 1 0 0 rot_identity
+socket hand_l bone 11 pos -1 0 0 rot_identity
+socket back_weapon bone 20 pos 0 7 -2 rot_identity
+socket head bone 30 pos 0 1 0 rot_identity
+part helmet hidden
+part backpack visible
+part face_mask hidden

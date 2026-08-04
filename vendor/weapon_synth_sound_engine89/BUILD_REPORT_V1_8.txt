@@ -1,0 +1,8 @@
+weapon_synth_sound_engine89 v1.8.0 full-capacity sequences
+
+Target: build/render_complete_weapon_sequences
+Compiler flags: -std=c89 -pedantic -Wall -Wextra -Werror -O2
+Result: PASS
+Existing test executables: 9/9 PASS
+Event rejects in all new sequence renders: 0
+Combined timeline: 106.000 seconds, chronological order preserved.

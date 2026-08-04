@@ -1,0 +1,57 @@
+Blank3D v3.22.1 — VPhysics Casing Bounce QA
+================================================
+
+Root-cause inspection
+---------------------
+PASS  legacy floor clamp identified
+PASS  perpetual hardcoded rotation identified
+PASS  missing angular sleep path identified
+PASS  iterative restitution collapse identified
+PASS  resting-contact sleep counter reset identified
+
+Casing integration
+------------------
+PASS  casing body allocated in shared VPhysics world
+PASS  pistol/rifle/shotgun/magnum/sniper profiles
+PASS  ejection linear velocity
+PASS  deterministic angular tumble variation
+PASS  oriented-box support contact
+PASS  surface contact point instead of centre point
+PASS  world collision via CCS/SICOL
+PASS  shell-shell collision disabled
+PASS  per-shell CCD disabled
+PASS  quaternion/position draw matrix
+PASS  actor-agnostic ejection axes
+PASS  three-second lifetime and body release
+PASS  manual fallback no longer spins forever
+
+Solver corrections
+------------------
+PASS  restitution target cached before PGS iterations
+PASS  visible impact rebound preserved
+PASS  low-speed restitution threshold = 0.5 units/s
+PASS  resting impulses no longer erase sleep progress
+PASS  body sleeps after angular/linear damping
+
+Portable test result
+--------------------
+PASS: casing VPhysics rebound + angular damping + sleep in 345 steps
+
+Regression set
+--------------
+PASS  VPhysics upstream strict C89 + -Werror
+PASS  Total Solver selftest
+PASS  pair-cache churn
+PASS  VPhysics provider bridge
+PASS  collision regression
+PASS  projectile meshes
+PASS  weapon modules
+PASS  actor equipment
+PASS  mechanical weapon
+PASS  full Win32/OpenGL syntax-check
+PASS  no malloc/realloc/free in active integration
+
+Host limitation
+---------------
+The graphical Win32 executable was not launched on this Linux host. The
+portable physics tests and full Win32/OpenGL source syntax-check passed.

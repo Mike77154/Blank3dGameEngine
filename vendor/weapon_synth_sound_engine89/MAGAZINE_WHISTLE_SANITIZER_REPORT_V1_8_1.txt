@@ -1,0 +1,5 @@
+weapon_synth_sound_engine89 v1.8.1 sanitizer report
+
+- test_magazine_whistle_integration: ASan + UBSan PASS
+- Full 106-second renderer under ASan/UBSan exceeded the process time limit while generating all historical WAVs; no sanitizer diagnostic was emitted before timeout.
+- Full optimized renderer completed twice with deterministic hashes, zero rejected events and zero clipped samples in selected release WAVs.

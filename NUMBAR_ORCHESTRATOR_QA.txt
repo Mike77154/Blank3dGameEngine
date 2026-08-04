@@ -1,0 +1,39 @@
+Blank3D v3.24.0 NumBar preset orchestrator QA
+
+ARCHITECTURE
+[PASS] GFO invokes draw_numbar(path)
+[PASS] INI owns placement, scale, z-order and bindings
+[PASS] .bhud owns style and local visual behavior
+[PASS] base gameplay.bighud retains ECG without duplicated bars
+[PASS] player.gfo invokes gameplay.ini
+
+PARSER / CACHE
+[PASS] multiple [numbar name] sections
+[PASS] natural preset canvas
+[PASS] independent X/Y scale
+[PASS] generic numbar.* channels
+[PASS] second counter value / reserve
+[PASS] dynamic segments, units, states, phase and layers
+[PASS] visible_when
+[PASS] cached repeat request does not duplicate instances
+[PASS] stale actor slots released after draw
+[PASS] fixed pools; no malloc/realloc/free
+
+PRESETS
+[PASS] 20 reusable presets parse through BigVaderHudder
+[PASS] radial ring and radial pie
+[PASS] linear and segmented horizontal/vertical
+[PASS] sprite clip and nine-slice templates
+[PASS] masks: hex, slant and custom slices
+[PASS] layers, overlays, mid band, markers and states
+[PASS] damage lag, smoothing, easing and blink
+[PASS] vector units including custom points
+[PASS] full GBar89 v0.4 compositor effects represented
+
+TEST TARGETS
+make test-numbar
+make test-bighud
+make test-gfo-entities
+make test-gbar-v04-bighud
+make syntax-check
+make audit

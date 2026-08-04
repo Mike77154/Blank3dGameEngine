@@ -1,0 +1,1 @@
+rocket_spin_gatling_integration PASS context=185840 spin=7476593 spool=21950304 firing=29305242 tail=33232030

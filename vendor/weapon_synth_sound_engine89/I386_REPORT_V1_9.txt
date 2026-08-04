@@ -1,0 +1,13 @@
+weapon_synth_sound_engine89 v1.9.0 i386 report
+
+Result: NOT COMPLETED IN THIS CONTAINER.
+
+The compiler accepted initial -m32 translation units, then stopped when a
+header included <limits.h> and the host could not find:
+
+  bits/libc-header-start.h
+
+This is the same missing glibc multilib development-header limitation observed
+in earlier releases. It is an environment/toolchain limitation, not a C89
+compiler diagnostic produced by the new DSP code. Native strict-C89 builds,
+all runtime tests and ASan/UBSan validation passed.

@@ -1,0 +1,17 @@
+weapon_synth_sound_engine89 v1.8.3 release manifest
+
+Engine version: 1.8.3
+Rocket whistle vendor: grocketwhistle89 v1.2
+Old vendor v1.1 runtime tree present: NO
+Unified static-library objects: 60
+grocketwhistle89.o in unified library: 1
+Public event added: WSSE89_EVENT_ROCKET_WHISTLE_FX
+Public defaults helper added: wsse89_rocket_whistle_fx_defaults
+Context bytes at 44.1 kHz build: 117104
+Previous v1.8.2 context bytes: 114640
+Context increase: 2464 bytes
+Tests: 11/11 PASS
+ASan/UBSan changed path: PASS
+Vendor core i386 object: PASS
+Determinism: PASS
+Delivered WAV clipping: 0 samples

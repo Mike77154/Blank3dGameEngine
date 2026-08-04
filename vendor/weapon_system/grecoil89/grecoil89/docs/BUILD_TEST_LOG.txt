@@ -1,0 +1,19 @@
+Build test performed with:
+
+gcc -std=c89 -Wall -Wextra -pedantic -Iinclude
+
+Targets compiled:
+
+- demo_grecoil89
+- demo_bridge
+- grecoil89_curve_dump
+
+Sample output from curve dump:
+
+tick,fire,aim_pitch_milli,aim_yaw_milli,camera_pitch_milli,camera_yaw_milli,weapon_back_milli,weapon_up_milli,spread_milli,shot_index
+0,1,113,-12,85,-8,54,11,78,1
+1,0,191,-20,148,-12,89,23,78,1
+2,0,238,-28,183,-20,105,35,78,1
+3,1,367,-28,285,-20,156,50,89,2
+
+No C89 pedantic warnings were emitted in this environment.

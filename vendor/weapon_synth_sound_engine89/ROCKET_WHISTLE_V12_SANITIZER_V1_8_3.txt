@@ -1,0 +1,10 @@
+ASan/UBSan validation
+
+Instrumented components:
+- vendor/grocketwhistle89/grocketwhistle89.c
+- src/weapon_synth_sound_engine89.c
+- tests/test_magazine_whistle_integration.c
+
+Result: PASS
+ASAN_OPTIONS=detect_leaks=0
+No AddressSanitizer or UndefinedBehaviorSanitizer diagnostics.

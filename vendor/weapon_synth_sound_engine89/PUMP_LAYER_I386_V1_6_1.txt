@@ -1,0 +1,13 @@
+i386 compile validation
+
+Objects compiled with:
+  -m32 -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Results:
+  shotpumpkin89.o      ELF 32-bit LSB relocatable, Intel i386 — PASS
+  gshotgunsequence89.o ELF 32-bit LSB relocatable, Intel i386 — PASS
+
+The container lacks 32-bit glibc development headers. For compile-only ABI
+validation, minimal validation-only limits.h/string.h declarations were supplied;
+they are not part of the runtime or public package API. No 32-bit executable was
+linked.

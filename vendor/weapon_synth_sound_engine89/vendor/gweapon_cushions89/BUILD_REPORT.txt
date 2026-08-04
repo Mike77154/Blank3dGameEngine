@@ -1,0 +1,38 @@
+GWEAPON CUSHIONS 89 v1.0 BUILD REPORT
+Date: 2026-07-18
+
+Compiler validation:
+  GCC strict C89: PASS (-std=c89 -pedantic -Wall -Wextra -Werror -O2)
+  Clang strict C89: PASS (-std=c89 -pedantic -Wall -Wextra -Werror -O2)
+  Smoke tests: PASS (5/5)
+  Engine pull examples: PASS (5/5)
+  Deterministic rerender hashes: PASS
+  Forbidden core calls/types: no malloc/calloc/realloc/free; no float/double; no math.h
+
+Caller-owned context sizes on validation host:
+  gweaponbody89            8344 bytes
+  gmuzzlegas89               80 bytes
+  gballisticcrack89          56 bytes
+  glatetail89             41020 bytes
+  gcinemathump89             44 bytes
+  TOTAL                   49544 bytes
+
+Static archive sizes on validation host:
+  gweaponbody89            5382 bytes
+  gmuzzlegas89             4828 bytes
+  gballisticcrack89        4246 bytes
+  glatetail89              5132 bytes
+  gcinemathump89           4690 bytes
+  TOTAL                   24278 bytes
+
+Audio validation:
+  00_full_demo.wav                             1ch 44100 Hz  24.000s peak=19660 rms= 1028.11 clips=0
+  01_body_stem.wav                             1ch 44100 Hz  24.000s peak=31959 rms= 2384.46 clips=0
+  02_muzzlegas_stem.wav                        1ch 44100 Hz  24.000s peak=22301 rms=  530.70 clips=0
+  03_ballisticcrack_stem.wav                   1ch 44100 Hz  24.000s peak=26606 rms=  153.54 clips=0
+  04_latetail_stem.wav                         1ch 44100 Hz  24.000s peak=16383 rms=  559.59 clips=0
+  05_cinemathump_stem.wav                      1ch 44100 Hz  24.000s peak=18510 rms= 1478.64 clips=0
+  06_cushions_over_sequence_stem.wav           2ch 44100 Hz   6.123s peak=14309 rms=  919.54 clips=0
+  07_three_original_synths_plus_five_cushions.wav  2ch 44100 Hz   6.123s peak=32670 rms= 3125.93 clips=0
+
+Note: archive/object sizes are toolchain and target dependent. Rebuild for MinGW32.

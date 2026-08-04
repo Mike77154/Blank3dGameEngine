@@ -1,0 +1,31 @@
+gcrosshair_core89 ABI3 outline validation
+
+Compiler flags:
+  -O2 -std=c89 -pedantic -Wall -Wextra -Werror
+
+Passed:
+  test_core
+    - original four-arm cross
+    - center placement
+    - dot and image hybrid path
+    - scale animation
+
+  test_abi3_shapes
+    - GC89_TYPES_ABI_VERSION == 3
+    - GC89_CORE_ABI_VERSION == 3
+    - all eight shape families emit vector primitives
+    - segment/direction fields, rotation and break values exercised
+
+  test_outline
+    - outline geometry emits before normal geometry
+    - line thickness adds two times the requested border width
+    - center-dot diameter adds two times the requested border width
+    - independent outline and normal colors preserved
+
+  cross-library integration smoke test
+    - gcrosshair_base89 constructs a real preset
+    - gcrosshair_params89 resolves ABI 3 outline fields
+    - gcrosshair_core89 emits outline and normal primitives
+
+Constraints retained:
+  C89; fixed point; no malloc/realloc/free; no float/double; no renderer dependency.

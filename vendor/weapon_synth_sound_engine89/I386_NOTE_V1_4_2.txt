@@ -1,0 +1,6 @@
+The v1.4.2 changes are host-side demo scheduling and fixed-point synthesis calls.
+A fresh -m32 compile of the demo translation units could not be performed in this
+container because 32-bit glibc development headers are not installed
+(bits/libc-header-start.h was unavailable). This is an environment limitation,
+not a compiler diagnostic from the engine code. The public runtime ABI was not
+changed; only WSSE89_VERSION_PATCH moved from 1 to 2.

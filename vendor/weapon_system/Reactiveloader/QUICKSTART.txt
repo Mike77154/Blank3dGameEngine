@@ -1,0 +1,27 @@
+Reactiveloader quickstart
+=========================
+
+1) Include:
+   #include "reactiveloader.h"
+
+2) Create a profile:
+   RLD_Profile p;
+   RLD_MakePistolProfile(&p, 1);
+
+3) Create a context:
+   RLD_Context ctx;
+   RLD_ContextInit(&ctx, entity_id, weapon_id);
+
+4) Start reload:
+   RLD_Begin(&ctx, &p, current_mag_ammo, ammo_needed);
+
+5) Tick:
+   input = 0;
+   if (reload_pressed_this_frame) input |= RLD_INPUT_RELOAD_PRESS;
+   if (fire_pressed_this_frame)   input |= RLD_INPUT_FIRE_PRESS;
+   RLD_Tick(&ctx, &p, input, &callbacks);
+
+6) On done:
+   weapon.ammo_in_mag = ctx.ammo_after;
+   weapon.reload_bonus_ticks = ctx.bonus_ticks_left;
+   weapon.reload_result = ctx.result;

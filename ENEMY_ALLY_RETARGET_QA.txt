@@ -1,0 +1,23 @@
+Blank3D v3.25.1 Enemy/Ally Retarget QA
+
+PASS  GFaction vendor demos under strict C89 and -Werror
+PASS  hostile -> player is legal
+PASS  hostile -> armed ally is legal
+PASS  hostile -> hostile is rejected
+PASS  neutral candidates are rejected
+PASS  nearer armed ally can outrank the player
+PASS  current-target retention avoids equal-score flicker
+PASS  recent ally damage overrides player target retention
+PASS  Q20.12 distance converts to GFaction Q16.16 correctly in active source
+PASS  gunner_enemy.fpi uses target-first conditions/actions
+PASS  generic enemy.fpi uses target-first conditions/actions
+PASS  pattern and ping-pong movement use the selected target
+PASS  perception stack regression
+PASS  universal actor equipment regression
+PASS  NPC weapon inventory regression
+PASS  GFO armed ally regression
+PASS  full active Win32/OpenGL syntax check with stubs
+PASS  no malloc/realloc/free in active integration
+
+The Win32 window was not executed on this Linux host; visible runtime behavior
+must be confirmed with the user's MinGW32 build.

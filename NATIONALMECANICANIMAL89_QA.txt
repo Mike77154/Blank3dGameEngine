@@ -1,0 +1,39 @@
+Blank3D v3.20.0 NationalMecanicanimal89 QA
+==========================================
+
+SELECTED LIBRARY
+  NationalMecanicanimal89 v0.1.0
+
+UPSTREAM
+  Strict C89 -Werror suite                         PASS
+  56 upstream tests                                PASS
+  Fixed math / hierarchy / constraints             PASS
+  Transform, world, socket, pivot providers        PASS
+  Visibility, geometry resolver/output             PASS
+  Clips, easing, actions and events                PASS
+
+BLANK3D BRIDGE
+  GAttach89 child-object root ownership             PASS
+  Four mechanical geometry packets                  PASS
+  Fire recoil carriage and slide cycle              PASS
+  Mechanical slide_rear marker                      PASS
+  Real reload extraction/removal/insertion          PASS
+  Mechanical clamp envelope                         PASS
+  Muzzle is a socket, never geometry                 PASS
+  Exact return to idle/home                          PASS
+
+REGRESSION
+  Sensory truth stack                                PASS
+  Perception INI profiles                            PASS
+  Motion attacks                                     PASS
+  NPC weapon inventory                               PASS
+  BigVaderHudder                                     PASS
+  Core systems                                       PASS
+  Complete Win32/OpenGL syntax check                 PASS
+  malloc/realloc/free active-integration audit       PASS
+
+LIMITATION
+  The Win32 graphical executable cannot be launched on the Linux QA host.
+  Final visual placement must be confirmed after compiling under MSYS2
+  MinGW32. The complete active source was nevertheless parsed against the
+  project's Win32/OpenGL stubs.

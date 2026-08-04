@@ -1,0 +1,27 @@
+grecoil89 1.1.0 - external transform provider
+================================================
+
+Added:
+- include/grecoil89_provider.h
+- src/grecoil89_provider.c
+- demo/demo_provider.c
+- docs/PROVIDER.md
+- docs/PROVIDER_TEST_LOG.txt
+
+Provider modes:
+- OFF: provider ignores samples.
+- PULL: provider caches transforms for another library to query.
+- PUSH: provider invokes another library's set_rotate/set_move callbacks.
+
+Exported channels:
+- aim rotate
+- camera rotate
+- weapon rotate
+- weapon move (side/up/back)
+
+Compatibility:
+- Existing grecoil89 and grecoil89_bridge APIs remain available.
+- No malloc/realloc/calloc/free.
+- No heap ownership.
+- No float/double.
+- Strict C89 and fixed-point Q8.8.

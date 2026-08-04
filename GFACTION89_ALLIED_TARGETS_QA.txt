@@ -1,0 +1,61 @@
+Blank3D v3.25.1 GFaction89 Allied Targets QA
+================================================
+
+Vendor
+------
+PASS  gfaction89 zombie-rampage demo, strict C89 + -Werror
+PASS  gfaction89 faction-war demo, strict C89 + -Werror
+PASS  no heap allocation in active integration
+PASS  no float/double in simulation integration
+
+Relationship bridge
+-------------------
+PASS  player and armed ally resolve as allies
+PASS  ally cannot attack player
+PASS  ally can attack hostile
+PASS  hostile cannot attack hostile
+PASS  hostile can attack player
+PASS  hostile can attack ally
+PASS  neutral actors remain non-hostile and are not selected for attack
+PASS  recent-damage context can promote ally as hostile target
+PASS  fixed-point target scoring chooses highest legal candidate
+
+Runtime content
+---------------
+PASS  RPYL recognizes armed_ally, ally and ally_gunner commands
+PASS  startup.rpy dispatches 8 actor spawns including armed ally
+PASS  armed_ally.fpi parses and executes target-first fire flow
+PASS  armed_ally entity INI loads HP 60, composed mesh and FPIL logic
+PASS  blue capsule body requirement fits static mesh capacity
+PASS  GWeapon/GAttach/mechanical weapon regressions
+
+Perception and combat
+---------------------
+PASS  target switch clears target-specific sensory memory
+PASS  Socketer + Eyes + Enlightener perception regression
+PASS  projectile and explosion damage use GFaction legality
+PASS  self-projectile owner contact no longer traps a bullet forever
+PASS  collision provider regression
+PASS  motion-attack and truth-gate regressions
+
+HUD / physics inherited regressions
+-----------------------------------
+PASS  NumBar and BigVaderHudder regressions
+PASS  GBar89 v0.4 full-surface regression
+PASS  VPhysics transform/collision provider regression
+PASS  VPhysics casing rebound/sleep regression
+
+Platform validation
+-------------------
+PASS  complete Win32/OpenGL source syntax check with platform stubs
+PASS  allocator audit
+NOTE  The Win32 graphical runner could not be launched on this Linux host.
+      Final visual placement and live firefight should be checked in MSYS2.
+
+AGGREGATE NOTE
+--------------
+The full `make test` sequence was also attempted. It reached the final, duplicate
+Win32/OpenGL syntax-check after the preceding suites completed without a reported
+failure, but the host command was terminated by the 300-second execution limit.
+The same `make syntax-check` target passed independently afterward, together with
+`make audit` and the focused GFaction integration suites.

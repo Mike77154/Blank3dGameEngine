@@ -1,0 +1,3 @@
+Protocol scan v1.8.1
+Scopes: src/, include/, vendor/wmagazine89/, vendor/grocketwhistle89/
+Active forbidden tokens: 0

@@ -1,0 +1,31 @@
+weapon_synth_sound_engine89 v1.5.0 — final build report
+
+Compiler flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Results:
+  make all                                      PASS
+  make test                                     PASS
+  test_gsynthsoundengine89                      PASS
+  test_gsynthordnance89                         PASS
+  test_gsynthsoundexpansion89                   PASS
+  test_weapon_synth_sound_engine89              PASS
+  test_phase12_acoustics                        PASS
+  render_phase12_showcase                       PASS
+  render_unified_event_showcase                 PASS
+  examples/game_engine_event_bridge.c           PASS
+
+Complete static library:
+  build/libweapon_synth_sound_engine89.a
+  bytes: 348162
+  objects: 55
+
+Acoustic stack sizes on this host:
+  sizeof(wsounda89_context): 496 bytes
+  sizeof(gssw89_context):    1176 bytes
+  sizeof(wsse89_context):    4216 bytes
+
+44.1 kHz caller-owned acoustic memory examples:
+  direct delay for 100 m at 343 m/s: 12,861 int16 samples (25,722 bytes)
+  minimum world delay:                3,544 int16 samples (7,088 bytes)
+  showcase world delay:              14,000 int16 samples (28,000 bytes)

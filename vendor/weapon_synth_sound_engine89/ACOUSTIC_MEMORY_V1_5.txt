@@ -1,0 +1,14 @@
+weapon_synth_sound_engine89 v1.5.0 acoustic memory
+
+Context objects (host build):
+  wsounda89_context  496 bytes
+  gssw89_context     1176 bytes
+  wsse89_context     4216 bytes
+
+Caller-owned delay memory at 44.1 kHz:
+  direct path, 100 m at 343 m/s  12,861 int16 = 25,722 bytes
+  minimum world ring             3,544 int16 = 7,088 bytes
+  recommended/full showcase      14,000 int16 = 28,000 bytes
+
+The minimum world ring uses graceful delay clamping. A larger ring preserves longer early reflections and late-delay lines.
+For true per-source acoustics, multiply wsounda89_context plus its direct/world rings by the chosen static pool capacity.

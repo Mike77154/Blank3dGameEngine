@@ -1,0 +1,10 @@
+weapon_synth_sound_engine89 v1.7.0
+- strict C89 build: PASS
+- unified static library: PASS
+- complete sequence renderer: PASS
+- nine executable test suites: PASS
+- ASan/UBSan complete sequence renderer: PASS
+- deterministic rerender: PASS
+- WAV clipping: 0 samples in all v1.7 sequence previews
+- i386 runtime objects: gweaponvoice89, gsynthreport89 and gsynthordnance89 PASS
+- i386 gshotgunsequence89: not repeated in this container because 32-bit glibc headers are unavailable

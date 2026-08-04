@@ -1,0 +1,12 @@
+Validation performed with:
+  gcc -O2 -std=c89 -pedantic -Wall -Wextra -Werror
+
+Results:
+  gcrosshair_params89 legacy: OK
+  gcrosshair_params89 shapes: OK
+  gcrosshair_base89: OK (192 presets, 192 vector-only, ABI3, 57 non-cross shapes)
+
+Static catalog audit:
+  Presets parsed: 192
+  Non-vector draw modes: 0
+  Nonzero preset image IDs: 0

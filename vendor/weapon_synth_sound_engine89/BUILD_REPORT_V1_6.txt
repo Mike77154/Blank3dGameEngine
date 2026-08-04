@@ -1,0 +1,29 @@
+weapon_synth_sound_engine89 v1.6.0 build report
+
+Compiler policy:
+  -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Results:
+  make all: PASS
+  make test: PASS
+  make render: PASS
+  aggregate archive: build/libweapon_synth_sound_engine89.a
+  aggregate archive bytes: 363716
+  archive object count: 56
+  public event values before EVENT_COUNT: 41
+  dispatchable events excluding NONE: 40
+
+Test suites:
+  gsynthsoundengine89: PASS
+  gsynthordnance89: PASS
+  gsynthsoundexpansion89: PASS
+  unified event engine: PASS
+  Phase 1/2 acoustics: PASS
+  Phase 3 DNA/metrics: PASS
+
+Phase 3 runtime facts:
+  wsse89_context bytes reported by test: 4368
+  report voice bytes reported by test: 70468
+  deterministic Weapon DNA sequence: PASS
+  same-seed independent-context regression: PASS
+  metrics validation: PASS
