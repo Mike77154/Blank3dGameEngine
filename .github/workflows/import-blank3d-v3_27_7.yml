@@ -1,0 +1,97 @@
+name: Import Blank3D v3.27.7 source tree
+
+on:
+  push:
+    branches:
+      - Mike77154
+    paths:
+      - 'blank3d_v3_27_7_goldie_audio_monika_fontcore_vendor_stack.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack-and-commit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: Mike77154
+          fetch-depth: 0
+
+      - name: Validate, replace tree, and unpack archive
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import shutil
+          import tempfile
+          import zipfile
+
+          repo = Path.cwd()
+          archive_name = 'blank3d_v3_27_7_goldie_audio_monika_fontcore_vendor_stack.zip'
+          archive = repo / archive_name
+          workflow = repo / '.github/workflows/import-blank3d-v3_27_7.yml'
+
+          if not archive.is_file():
+              raise SystemExit(f'Archive not found: {archive}')
+
+          with tempfile.TemporaryDirectory() as td:
+              temp = Path(td)
+              with zipfile.ZipFile(archive) as zf:
+                  for info in zf.infolist():
+                      member = PurePosixPath(info.filename)
+                      if member.is_absolute() or '..' in member.parts:
+                          raise SystemExit(f'Unsafe ZIP member: {info.filename}')
+                  zf.extractall(temp)
+
+              entries = list(temp.iterdir())
+              source = entries[0] if len(entries) == 1 and entries[0].is_dir() else temp
+
+              # Sanity gate: do not wipe the tracked tree for an unrelated ZIP.
+              if not (source / 'src').is_dir() or not (source / 'Makefile').is_file():
+                  raise SystemExit('Archive does not look like the expected Blank3D source tree')
+
+              # Replace the previous imported project, preserving Git metadata,
+              # this one-shot workflow, and the archive until extraction is complete.
+              for item in list(repo.iterdir()):
+                  if item.name in {'.git', '.github', archive_name}:
+                      continue
+                  if item.is_dir():
+                      shutil.rmtree(item)
+                  else:
+                      item.unlink()
+
+              for item in source.iterdir():
+                  destination = repo / item.name
+                  if item.is_dir():
+                      shutil.copytree(item, destination, dirs_exist_ok=True)
+                  else:
+                      shutil.copy2(item, destination)
+
+          archive.unlink()
+          workflow.unlink(missing_ok=True)
+
+          workflows_dir = repo / '.github/workflows'
+          github_dir = repo / '.github'
+          try:
+              workflows_dir.rmdir()
+          except OSError:
+              pass
+          try:
+              github_dir.rmdir()
+          except OSError:
+              pass
+          PY
+
+      - name: Commit imported project
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Import Blank3D Game Engine v3.27.7 Goldie Audio + Monika FontCore vendor stack'
+          git push origin HEAD:Mike77154
