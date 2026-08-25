@@ -1,0 +1,231 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  merge_group:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make gcc clang pkg-config cmake binutils python3
+      - name: Build, test, ABI smoke, policy audit, governance audit, and portability audit
+        run: |
+          make clean
+          CC=${{ matrix.cc }} make all test-smoke abi-check policy-audit governance-audit portability-audit install-api-smoke api-surface-audit
+      - name: Benchmark build smoke
+        run: |
+          CC=${{ matrix.cc }} make tools/pcx_bench
+          ./tools/pcx_bench 8
+      - name: Compatibility and benchmark report smoke
+        run: |
+          CC=${{ matrix.cc }} make compat-report benchmark-report
+      - name: CMake package smoke
+        run: |
+          CC=${{ matrix.cc }} make cmake-smoke
+      - name: Install layout smoke
+        run: |
+          VERSION="$(cat VERSION)"
+          rm -rf .dest
+          CC=${{ matrix.cc }} make install DESTDIR="$PWD/.dest" PREFIX=/usr
+          test -f .dest/usr/lib/libpcx.a
+          test -f .dest/usr/lib/libpcx.so
+          test -f .dest/usr/lib/libpcx.so.1
+          test -f ".dest/usr/lib/libpcx.so.${VERSION}"
+          test -f .dest/usr/include/pcx/pcx.h
+          test ! -e .dest/usr/include/pcx/pcx_chunk.h
+          test ! -e .dest/usr/include/pcx/pcx_decoder.h
+          test -f .dest/usr/lib/pkgconfig/pcx.pc
+
+  sanitizers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make clang cmake binutils python3
+      - name: ASan + UBSan
+        run: |
+          CC=clang make test-sanitizers
+          CC=clang make test-hardened
+
+  observability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make gcc clang python3 gcovr cmake binutils
+      - name: Generated corpus + coverage reports
+        run: |
+          CC=gcc make compat-report coverage-report benchmark-report
+
+  supply-chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make gcc clang python3 pkg-config cmake binutils
+      - name: Deterministic release smoke
+        env:
+          SOURCE_DATE_EPOCH: 1735689600
+        run: |
+          VERSION="$(cat VERSION)"
+          CC=gcc make release-package
+          make verify-release
+          make verify-provenance
+          make verify-repro
+          test -f dist/manifest.json
+          test -f dist/SHA256SUMS
+          test -f "dist/pcx-${VERSION}-source.cdx.json"
+          test -f "dist/pcx-${VERSION}-binary.cdx.json"
+          test -f dist/verification-policy.json
+          test -f "dist/pcx-${VERSION}-provenance.intoto.jsonl"
+
+  package-ecosystem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make gcc clang pkg-config cmake python3 zip unzip
+      - name: Packaging ecosystem smoke
+        run: |
+          CC=gcc make ecosystem-audit pkgconfig-smoke cpack-smoke
+      - name: Upload packaging reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pcx-packaging-reports
+          path: tests/package_reports
+
+  portability-matrix:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: gcc
+            configure_preset: linux-gcc-release
+            build_preset: linux-gcc-release
+            test_preset: linux-gcc-release
+          - os: ubuntu-latest
+            compiler: clang
+            configure_preset: linux-clang-release
+            build_preset: linux-clang-release
+            test_preset: linux-clang-release
+          - os: macos-latest
+            compiler: clang
+            configure_preset: macos-clang-release
+            build_preset: macos-clang-release
+            test_preset: macos-clang-release
+          - os: windows-latest
+            compiler: msvc
+            configure_preset: windows-msvc-release
+            build_preset: windows-msvc-release
+            test_preset: windows-msvc-release
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Install Linux toolchain
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y gcc clang cmake make
+      - name: List available presets
+        run: cmake --list-presets
+      - name: Configure
+        run: cmake --preset ${{ matrix.configure_preset }}
+      - name: Build
+        run: cmake --build --preset ${{ matrix.build_preset }}
+      - name: Test
+        run: ctest --preset ${{ matrix.test_preset }}
+
+  analysis-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make gcc g++ clang cmake python3
+      - name: Header matrix, analyzer smoke, contract audit, and buffer-contract audit
+        run: |
+          make header-matrix-smoke analyzer-smoke compiler-contracts-audit buffer-contract-smoke buffer-contracts-audit
+
+
+  merge-gate:
+    name: merge-gate
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    needs:
+      - build-and-test
+      - sanitizers
+      - observability
+      - supply-chain
+      - package-ecosystem
+      - portability-matrix
+      - analysis-contracts
+    steps:
+      - name: Require upstream jobs to succeed
+        env:
+          BUILD_AND_TEST_RESULT: ${{ needs.build-and-test.result }}
+          SANITIZERS_RESULT: ${{ needs.sanitizers.result }}
+          OBSERVABILITY_RESULT: ${{ needs.observability.result }}
+          SUPPLY_CHAIN_RESULT: ${{ needs.supply-chain.result }}
+          PACKAGE_ECOSYSTEM_RESULT: ${{ needs.package-ecosystem.result }}
+          PORTABILITY_RESULT: ${{ needs.portability-matrix.result }}
+          ANALYSIS_CONTRACTS_RESULT: ${{ needs.analysis-contracts.result }}
+        run: |
+          test "$BUILD_AND_TEST_RESULT" = success
+          test "$SANITIZERS_RESULT" = success
+          test "$OBSERVABILITY_RESULT" = success
+          test "$SUPPLY_CHAIN_RESULT" = success
+          test "$PACKAGE_ECOSYSTEM_RESULT" = success
+          test "$PORTABILITY_RESULT" = success
+          test "$ANALYSIS_CONTRACTS_RESULT" = success

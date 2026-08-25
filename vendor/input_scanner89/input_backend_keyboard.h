@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "input_scanner.h"
+#include "input_keys89.h"
 
 #define INPUT_KEYBOARD_MAX_KEYS 256
 #define INPUT_KEY_NONE (-1)
@@ -64,6 +65,18 @@ int input_keyboard_backend_set_key(InputKeyboardBackend *backend,
                                    int key_code,
                                    int is_down);
 int input_keyboard_backend_key_down(const InputKeyboardBackend *backend, int key_code);
+
+/* Canonical input_keys89 bridge.  These helpers interpret keyboard identity as
+ * USB HID page 0x07 usages while preserving the legacy integer-key API above. */
+int input_keyboard_backend_bind_input_key89(InputKeyboardBackend *backend,
+                                            int button_index,
+                                            input_key89 key);
+int input_keyboard_backend_set_input_key89(InputKeyboardBackend *backend,
+                                           input_key89 key,
+                                           int is_down);
+int input_keyboard_backend_input_key89_down(const InputKeyboardBackend *backend,
+                                             input_key89 key);
+
 int input_keyboard_backend_poll(void *user_data, input_bits_t *out_bits);
 
 #ifdef __cplusplus

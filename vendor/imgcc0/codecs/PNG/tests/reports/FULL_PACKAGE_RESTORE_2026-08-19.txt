@@ -1,0 +1,49 @@
+PNG C89/fixed89 full-package restoration audit — 2026-08-19
+
+SOURCE ARCHIVE INVENTORY
+original files: 158
+original paths present in final tree: 158/158
+byte-identical original paths: 127
+sanitized/superseded original paths: 31
+missing original paths: 0
+
+CORPUS / FIXTURES
+original fuzz corpus seeds: 109/109 restored byte-for-byte
+root PNG fixtures: 2/2 restored byte-for-byte
+standalone fuzz corpus executions: 109/109 passed across 9 targets
+
+SANITIZED DEVELOPMENT C/H AUDIT
+OK: heap allocation calls
+OK: floating types
+OK: explicit 64-bit integer types
+OK: LP64-sensitive explicit declarations
+OK: long integer literal suffixes
+OK: floating numeric literals
+
+TEST RESULTS
+migrated original test_upgrade.c: ALL_TESTS_OK
+libpng curated differential: DIFF_OK
+roundtrip smoke: ROUNDTRIP_OK
+repeat arena smoke: OK / arena returns to zero
+full local gate: ALL_LOCAL_C89_PROTOCOL_TESTS_OK
+
+PACKAGE MANAGERS
+The supplied PNG.zip contained no Conan recipe and no vcpkg manifest/port files.
+No package-manager files were deleted, and none were fabricated.
+
+RESTORED INFRASTRUCTURE
+.github/workflows: restored (3 workflows)
+ci/: restored and redirected to sanitized full gate
+differential/: restored; C harness migrated to fixed89/static arena
+fuzz/: restored; 9 C targets + standalone driver migrated to fixed89/static arena
+fuzz/corpus/: original 109 seeds preserved byte-for-byte
+fuzz/generate_corpus.py + png.dict: restored
+test_upgrade.c: restored and migrated
+test_differential_libpng.c: restored and migrated
+historical eventloop reports: restored
+long-form documentation: restored under docs/
+new regression/tests/tools from sanitation package: retained
+
+NOTES
+Non-C host tooling (shell, YAML, Python) remains in its native language; it now invokes the sanitized C89 build.
+The external libpng/libFuzzer/AFL/sanitizer implementations are reference/host dependencies, not codec-owned runtime code.

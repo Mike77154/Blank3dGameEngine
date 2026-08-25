@@ -1,0 +1,30 @@
+PHASE 67 VALIDATION
+
+Implemented: public reproducible comparative benchmark suite for one-shot zlib-wrapper benchmarking.
+
+Builds:
+- Release configure/build: OK
+- Release build targets: zragflib, zragf_bench_phase67_public, core smoke tests: OK
+- Werror configure/build: OK
+
+CTest:
+- Release directed ctest: OK (native, wrappers, phase64, phase65, phase66, phase67 bench smoke)
+- Werror directed ctest: OK (same set)
+
+Benchmark artifacts:
+- CSV rows generated in sample run: 63
+- Summary markdown written: yes
+- Built-in synthetic corpora: text/json/logs/png/photo/normalmap/binary
+- External file inputs: supported via CLI arguments
+
+Comparator status in this build:
+- zragflib: yes
+- zlib: yes
+- libdeflate: yes
+- miniz: not wired in this build (documented follow-up)
+
+Key output files:
+- bench/results/phase67/phase67_public.csv
+- bench/results/phase67/phase67_public.md
+- docs/BENCHMARKS.md
+- tools/run_phase67_public.py

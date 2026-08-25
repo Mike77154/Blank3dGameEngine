@@ -1,0 +1,15 @@
+# Curated static-PNG corpus for libpng differential testing.
+# APNG-only animation streams are intentionally excluded from the libpng comparison pass.
+fuzz/corpus/png_fuzz_decode_full/valid_rgba.png
+fuzz/corpus/png_fuzz_decode_full/valid_gray.png
+fuzz/corpus/png_fuzz_decode_full/valid_text_iccp.png
+fuzz/corpus/png_fuzz_decode_full/valid_unknown.png
+fuzz/corpus/png_fuzz_decode_full/valid_palette_meta.png
+fuzz/corpus/png_fuzz_decode_full/valid_largeish.png
+fuzz/corpus/png_fuzz_decode_full/bad_crc.png
+fuzz/corpus/png_fuzz_decode_full/truncated.png
+fuzz/corpus/png_fuzz_decode_full/huge_ihdr.png
+fuzz/corpus/png_fuzz_decode_full/out_of_order.png
+fuzz/corpus/png_fuzz_decode_full/too_many_unknownish.png
+fuzz/corpus/png_fuzz_decode_full/large_chunk_header.png
+test_adam7_iccp.png

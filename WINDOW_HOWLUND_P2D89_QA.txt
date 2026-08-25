@@ -1,0 +1,112 @@
+Blank3D v3.27.3 - HOWM89 / WindowsWindow89 / Primitive2DDatabase89 QA
+=====================================================================
+
+Release intent
+--------------
+1. GenWinConfigC89 remains the native-window state/config authority.
+2. GenWinConfigC89 must not know that HOWM89/Howlund exists.
+3. A reusable adapter translates the gwc89_provider contract into HOWM89.
+4. Blank3D's former direct Win32 native-window creator is isolated as the
+   optional HOWM89 backend WindowsWindow89.
+5. Blank3D keeps only the native HWND/HDC renderer-interoperability bridge.
+6. Primitive2DDatabase89 v0.4.0 encyclopedic is vendored byte-for-byte first;
+   no HUD/crosshair/editor migration is performed in this release.
+
+Native window authority
+-----------------------
+Blank3D/GameVerbs/GeneralConfig.cfg
+        -> GenWinConfigC89
+        -> gwc89_provider
+        -> HOWM89 <-> GenWinConfigC89 adapter
+        -> Howlund Window Maker 89
+        -> WindowsWindow89
+        -> Win32
+
+Boundary audits
+---------------
+PASS: GenWinConfigC89 include/src contains no HOWM89/WindowsWindow89 dependency.
+PASS: src/blank3d_window_win32.c contains no CreateWindowA/RegisterClassA,
+      AdjustWindowRect, SetWindowLongA or SetWindowPos native-window policy.
+PASS: WindowsWindow89 owns the extracted Win32 window creation/configuration.
+PASS: HOWM89 bundled Win32/X11/Cocoa/auto backends remain present and optional.
+PASS: user-supplied HOWM89 backends remain supported.
+
+HOWM89 integration additions
+----------------------------
+- Optional backend callback center_on_monitor.
+- Portable howm89_window_center_on_monitor() operation.
+- Optional reusable adapters/genwinconfigc89 layer.
+- HOWM89 core remains independent from GenWinConfigC89 and Blank3D.
+
+WindowsWindow89
+---------------
+PASS: caller-owned fixed-capacity state; no engine-owned native window policy.
+PASS: strict C89 syntax compile through the Win32 test stub.
+PASS: source Protocol89 audit.
+NOTE: center_on_monitor currently implements monitor index 0, preserving the
+      historical primary-monitor behavior. Multi-monitor selection remains a
+      backend extension point.
+
+Primitive2DDatabase89
+---------------------
+Upstream files preserved byte-for-byte: 79
+Catalog shapes: 720
+Catalog submodules: 57
+Commands emitted by full traversal: 16321
+Geometry: Q14 fixed point
+IR: POINT/MOVE/LINE/QUAD/CUBIC/CLOSE
+PASS: strict C89 compile/full catalog traversal.
+PASS: no heap/floating-point/explicit 64-bit types in include/src.
+NOTE: upstream prebuilt test_modular_clang is preserved as supplied but is not
+      executed or linked by Blank3D. QA rebuilds the source test instead.
+NOTE: future Blank3D draw bridge can convert Q14 -> Q16 exactly with << 2.
+
+Regression gates
+----------------
+PASS: make test-display-sextet89
+PASS: make test-howm89-vendor
+PASS: make test-howm89-genwin-adapter
+PASS: make test-windowswindow89-backend
+PASS: make test-primitive2d89-vendor
+PASS: make audit-window-authority89
+PASS: make test-time-stack89
+PASS: make test-config
+PASS: make test-languages
+PASS: make test-projectilevisual2d89-bridge
+PASS: make test-casing-physics
+PASS: make syntax-check
+PASS: camera profile catalog regression
+
+Preservation
+------------
+Baseline: blank3d_v3_27_3_display_sextet89_generalconfig.zip
+Baseline non-directory files: 6810
+Baseline paths missing after integration: 0
+Primitive2D upstream paths missing: 0
+Primitive2D upstream byte mismatches: 0
+
+Intentional existing-file integration changes
+---------------------------------------------
+- Makefile
+- DISPLAY_SEXTET89_INTEGRATION.md
+- HOWLUND_WINDOW_MAKER_PROVIDER_NOTE.md
+- src/blank3d_window_win32.c
+- src/blank3d_window_win32.h
+- src/monika_blank3d.c
+- tests/platform_stubs/windows.h
+
+New major trees/files
+---------------------
+- vendor/howlund_window_maker89/
+- vendor/windowswindow89/
+- vendor/primitive2d_database89/
+- tests/test_howm89_genwinconfigc89_adapter.c
+- HOWM89_GENWIN_WINDOWSWINDOW89_INTEGRATION.md
+- PRIMITIVE2D_DATABASE89_VENDOR.md
+- WINDOW_HOWLUND_P2D89_QA.txt
+
+Build artifact policy
+---------------------
+No newly generated .o/.a/test executables/build outputs are included. The only
+prebuilt executable in Primitive2DDatabase89 is the intentional upstream
+artifact test_modular_clang and is covered by the upstream preservation rule.

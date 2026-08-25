@@ -1,0 +1,15 @@
+built /mnt/data/pngv3work/differential/out/test_differential_libpng
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/valid_rgba.png
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/valid_gray.png
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/valid_text_iccp.png
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/valid_unknown.png
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/valid_palette_meta.png
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/valid_largeish.png
+MATCH-REJECT /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/bad_crc.png ref=reject ours=-4
+MATCH-REJECT /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/truncated.png ref=reject ours=-1
+MATCH-REJECT /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/huge_ihdr.png ref=reject ours=-8
+MATCH-REJECT /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/out_of_order.png ref=reject ours=-1
+MATCH /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/too_many_unknownish.png
+MATCH-REJECT /mnt/data/pngv3work/fuzz/corpus/png_fuzz_decode_full/large_chunk_header.png ref=reject ours=-11
+MATCH /mnt/data/pngv3work/test_adam7_iccp.png
+DIFF_OK

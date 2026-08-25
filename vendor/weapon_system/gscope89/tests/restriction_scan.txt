@@ -1,0 +1,6 @@
+Forbidden-token scan:
+malloc: PASS
+realloc: PASS
+free(: PASS
+double: PASS
+float: PASS

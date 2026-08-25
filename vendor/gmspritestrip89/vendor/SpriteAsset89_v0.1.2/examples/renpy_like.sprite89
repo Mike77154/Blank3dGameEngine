@@ -1,0 +1,6 @@
+image hero idle:
+    "assets/sprites/hero_idle_0.png"
+    pause 0.10
+    "assets/sprites/hero_idle_1.png"
+    pause 0.15
+    repeat

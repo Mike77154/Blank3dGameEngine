@@ -1,0 +1,51 @@
+Blank3D Vehicle INI / PlayerDriving Yard QA
+============================================
+
+Baseline:
+  blank3d_v3_27_3_vehicle_optional_providers.zip
+
+Final targeted regression:
+  test-mount-vehicle            PASS
+  test-languages                PASS
+  test-vehicle-ini-yard         PASS
+  test-vehicle-system-split     PASS
+  test-vehicle-providers        PASS
+  test-gatling-geometry-stack   PASS
+  test-sattele-stack            PASS
+  test-flamethrower-stack       PASS
+  test-uzi-pickup               PASS
+  test-health-pickup            PASS
+  test-weapon-modules           PASS
+  syntax-check                  PASS
+
+Vehicle yard assertions:
+  car + motorcycle + tank INIs load as 3 independent instances
+  PlayerDriving DDSL authority seam works
+  car throttle grows over time
+  late car speed exceeds early speed
+  late car speed exceeds 7 world-units/s Player baseline
+  physical RIGHT steering displaces to vehicle local-right
+  reverse brakes, enters gear 0, then grows in reverse speed
+  final reverse exceeds 6 world-units/s regression floor
+  motorcycle independent drive path works
+  tank independent drive path works
+
+Compatibility:
+  Provider-free gvehicle demos remain byte-identical to the previous
+  optional-provider baseline when using the default velocity retention.
+  demo_vehicle89.csv SHA-256:
+    49b063ffdb17d70af6345d8b9a93f9e48dfee3880261eaf73b8d7c963ae694fd
+  demo_multi_vehicle89.csv SHA-256:
+    4bf3e70b482e001b3dec8b8fb8ba5922059fb8f149fd69f5fc700d6204fbb46e
+
+C89 policy audit on the newly changed vehicle seam:
+  allocator calls malloc/calloc/realloc/free: none
+  float/double tokens: none
+
+Important scope notes:
+  - npcdriving is authored/policy-ready, but autonomous NPC boarding and
+    AI command feeding are not implemented/claimed in this pass.
+  - motorcyclemovement89 is the current specialized seam over the wheeled
+    baseline; true lean/counter-steer is future work.
+  - visuals are deliberately box placeholders.
+  - no MinGW Win32 executable was produced in this Linux environment.

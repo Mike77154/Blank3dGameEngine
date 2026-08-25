@@ -515,6 +515,30 @@ static void b3d_prop(void *user, const char *key, const char *raw,
     }
 
     if (node->type == B3D_BIGHUD_NODE_BAR) {
+        if (b3d_text_eq(key, "vector_ammo_indicator")) {
+            if (!b3d_parse_bool(text, &boolean_value))
+                b3d_build_error(build, "bad vector_ammo_indicator value");
+            else node->unit_renderer_kind = boolean_value ?
+                B3D_BIGHUD_UNIT_RENDERER_GPROJ_AMMO :
+                B3D_BIGHUD_UNIT_RENDERER_DEFAULT;
+            return;
+        }
+        if (b3d_text_eq(key, "active_reload_visualizer") ||
+            b3d_text_eq(key, "reload_visualizer")) {
+            if (!b3d_parse_bool(text, &boolean_value))
+                b3d_build_error(build, "bad active_reload_visualizer value");
+            else node->active_reload_visualizer = boolean_value;
+            return;
+        }
+        if (b3d_text_eq(key, "unit_renderer")) {
+            if (b3d_text_eq(text, "gproj_ammo") ||
+                b3d_text_eq(text, "vector_ammo_indicator"))
+                node->unit_renderer_kind = B3D_BIGHUD_UNIT_RENDERER_GPROJ_AMMO;
+            else if (b3d_text_eq(text, "default") || b3d_text_eq(text, "gbar"))
+                node->unit_renderer_kind = B3D_BIGHUD_UNIT_RENDERER_DEFAULT;
+            else b3d_build_error(build, "bad GBar89 unit_renderer");
+            return;
+        }
         if (b3d_text_eq(key, "unit_shape") || b3d_text_eq(key, "vector_shape")) {
             if (!b3d_copy_unit_shape(node, text)) b3d_build_error(build, "bad GBar89 unit_shape");
             return;

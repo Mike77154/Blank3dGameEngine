@@ -1,0 +1,55 @@
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c gscopeini89/src/gscopeini89.c -o gscopeini89.o
+ar rcs libgscopeini89.a gscopeini89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c gtelescopiczoom89/src/gtelescopiczoom89.c -o gtelescopiczoom89.o
+ar rcs libgtelescopiczoom89.a gtelescopiczoom89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c gsway89/src/gsway89.c -o gsway89.o
+ar rcs libgsway89.a gsway89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c gsniperhud89/src/gsniperhud89.c -o gsniperhud89.o
+ar rcs libgsniperhud89.a gsniperhud89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -c gaimquery89/src/gaimquery89.c -o gaimquery89.o
+ar rcs libgaimquery89.a gaimquery89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Igscopebundle89/include -Igscopeprovider89/include -Igscopeini89/include -Imodules/gscopepaint89/include -Imodules/gscopevector89/include -Imodules/gscoperaster89/include -Imodules/gscopebars89/include -Imodules/gscopepresets89/include -Igsniperhud89/include -Igtelescopiczoom89/include -Iinclude -c gscopeprovider89/src/gscopeprovider89.c -o gscopeprovider89.o
+ar rcs libgscopeprovider89.a gscopeprovider89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Igscopebundle89/include -Igscopeprovider89/include -Igscopeini89/include -Imodules/gscopepaint89/include -Imodules/gscopevector89/include -Imodules/gscoperaster89/include -Imodules/gscopebars89/include -Imodules/gscopepresets89/include -Igsniperhud89/include -Igtelescopiczoom89/include -Iinclude -c gscopebundle89/src/gscopebundle89.c -o gscopebundle89.o
+ar rcs libgscopebundle89.a gscopebundle89.o
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude examples/demo_split.c \
+	libgtelescopiczoom89.a libgsway89.a \
+	libgsniperhud89.a libgaimquery89.a libgscopeini89.a -o demo_split
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Igscopebundle89/include -Igscopeprovider89/include -Igscopeini89/include -Imodules/gscopepaint89/include -Imodules/gscopevector89/include -Imodules/gscoperaster89/include -Imodules/gscopebars89/include -Imodules/gscopepresets89/include -Igsniperhud89/include -Igtelescopiczoom89/include -Iinclude \
+	gscopeini89/src/gscopeini89.c \
+	modules/gscopepaint89/src/gscopepaint89.c \
+	modules/gscopevector89/src/gscopevector89.c \
+	modules/gscoperaster89/src/gscoperaster89.c \
+	modules/gscopebars89/src/gscopebars89.c \
+	modules/gscopepresets89/src/gscopepresets89.c \
+	gsniperhud89/src/gsniperhud89.c \
+	gtelescopiczoom89/src/gtelescopiczoom89.c \
+	gscopeprovider89/src/gscopeprovider89.c \
+	gscopebundle89/src/gscopebundle89.c \
+	tests/provider_bundle_smoke.c -o tests/provider_bundle_smoke
+./demo_split >/dev/null
+make -C modules/gscopepresets89 test
+make[1]: Entering directory '/mnt/data/gscope89_recipe_ini_v0_3/modules/gscopepresets89'
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Ideps -I../gscopevector89/include -I../gscopepaint89/include ../gscopepaint89/src/gscopepaint89.c ../gscopevector89/src/gscopevector89.c src/gscopepresets89.c tests/test_all_presets.c -o test_all_presets
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Ideps -I../gscopevector89/include -I../gscopepaint89/include ../gscopepaint89/src/gscopepaint89.c ../gscopevector89/src/gscopevector89.c src/gscopepresets89.c tests/verify_pack192.c -o tests/verify_pack192
+cd ../.. && modules/gscopepresets89/test_all_presets
+presets=192 commands=5388 painter_glyphs=0 sprites=0 failures=0
+cd ../.. && modules/gscopepresets89/tests/verify_pack192
+verified 192 INI presets; IDs, names, vector geometry and selector are valid
+make[1]: Leaving directory '/mnt/data/gscope89_recipe_ini_v0_3/modules/gscopepresets89'
+./tests/provider_bundle_smoke
+preset=svd_pso1_dragunov shapes=22 primitive_provider_seen=22 paint_provider_seen=107 sink=107 zoom_mode=1 fov=5483
+strict_external_missing=blocked err=1
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Igscopebundle89/include -Igscopeprovider89/include -Igscopeini89/include -Imodules/gscopepaint89/include -Imodules/gscopevector89/include -Imodules/gscoperaster89/include -Imodules/gscopebars89/include -Imodules/gscopepresets89/include -Igsniperhud89/include -Igtelescopiczoom89/include -Iinclude \
+	gscopeini89/src/gscopeini89.c \
+	modules/gscopepaint89/src/gscopepaint89.c \
+	modules/gscopevector89/src/gscopevector89.c \
+	modules/gscoperaster89/src/gscoperaster89.c \
+	modules/gscopebars89/src/gscopebars89.c \
+	modules/gscopepresets89/src/gscopepresets89.c \
+	gsniperhud89/src/gsniperhud89.c \
+	gtelescopiczoom89/src/gtelescopiczoom89.c \
+	gscopeprovider89/src/gscopeprovider89.c \
+	gscopebundle89/src/gscopebundle89.c \
+	examples/provider_host_example.c -o examples/provider_host_example
+provider registered; recipe scope=pso1

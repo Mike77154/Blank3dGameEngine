@@ -1,0 +1,4 @@
+OK: heap allocation calls
+OK: floating types
+OK: explicit 64-bit integer types
+OK: LP64-sensitive declarations

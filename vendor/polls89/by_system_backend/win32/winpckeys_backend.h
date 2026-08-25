@@ -7,8 +7,11 @@ extern "C" {
 
 #include <stddef.h>
 
-#include "polls/key_pc.h"
-#include "polls/polls_scanner_iface.h"
+#include "key_pc.h"
+#include "polls_scanner_iface.h"
+#include "input_keys89.h"
+
+#define WINPCKEYS_MAX_BUTTONS 64
 
 /* Backend de teclado PC para Windows (win32).
  *
@@ -27,7 +30,7 @@ typedef struct winpckeys_backend {
     key_pc_context key_ctx;
 
     /* bindings: botón lógico -> tecla física (KEY_PC_*) */
-    key_pc_code *button_keys;
+    key_pc_code button_keys[WINPCKEYS_MAX_BUTTONS];
     int          button_capacity;
 
     /* Scanner enchufable (NO builtin) */
@@ -38,7 +41,7 @@ typedef struct winpckeys_backend {
 /* Inicializa key_pc + limpia bindings. No adjunta scanner. */
 void winpckeys_backend_init(winpckeys_backend *kb);
 
-/* Libera memoria interna (bindings). No destruye el scanner externo. */
+/* Limpia estado interno. No destruye el scanner externo. */
 void winpckeys_backend_shutdown(winpckeys_backend *kb);
 
 /* Adjunta un scanner externo (input_scanner u otro).
@@ -60,6 +63,12 @@ void winpckeys_backend_update(winpckeys_backend *kb);
 int  winpckeys_button_hold(const winpckeys_backend *kb, int button_index);
 int  winpckeys_button_pressed(const winpckeys_backend *kb, int button_index);
 int  winpckeys_button_released(const winpckeys_backend *kb, int button_index);
+
+/* Canonical/raw path used by the four-head input stack. */
+int  winpckeys_input_key_down(const winpckeys_backend *kb, input_key89 key);
+int  winpckeys_bind_input_key89(winpckeys_backend *kb,
+                                int button_index,
+                                input_key89 key);
 
 #ifdef __cplusplus
 }

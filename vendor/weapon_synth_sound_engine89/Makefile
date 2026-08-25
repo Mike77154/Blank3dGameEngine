@@ -177,13 +177,40 @@ EXPANSION_BRIDGE_TARGET = build/libgsynthsoundexpansion89.a
 WORLD_BRIDGE_TARGET = build/libgsynthworld89.a
 EVENT_FACADE_TARGET = build/libweapon_synth_event89.a
 
-LIB_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(ALL_CORE_SOURCES))
-REPORT_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(VOICE_SOURCES) $(BASE_SYNTH_SOURCES) src/gsynthreport89.c)
-BASE_BRIDGE_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(VOICE_SOURCES) vendor/gtinkle89/src/gtinkle89.c vendor/gfire89/src/gfire89.c src/gsynthsoundengine89.c)
-ORDNANCE_BRIDGE_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(VOICE_SOURCES) $(ORDNANCE_SOURCES))
-EXPANSION_BRIDGE_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(EXPANSION_SOURCES))
-WORLD_BRIDGE_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(VOICE_SOURCES) $(WORLD_SOURCES))
-EVENT_FACADE_OBJECTS = $(patsubst %.c,build/libobjs/%.o,$(UNIFIED_FACADE_SOURCE))
+# Keep archive object paths deliberately short.  The previous layout mirrored the
+# complete vendored source path below build/libobjs/.  On Win32/MinGW32 that can
+# exceed legacy MAX_PATH when Blank3D itself lives in a long project directory
+# (for example wsoundmuzzledevice89.o exceeded 260 characters).
+#
+# ALL_CORE_SOURCES currently has unique basenames; each flattened object gets an
+# explicit dependency rule below, so the source path remains unambiguous while
+# ar.exe only receives short build/libobjs/<basename>.o paths.
+obj_for = build/libobjs/$(notdir $(patsubst %.c,%.o,$(1)))
+
+LIB_OBJECTS = $(foreach s,$(ALL_CORE_SOURCES),$(call obj_for,$(s)))
+REPORT_OBJECTS = $(foreach s,$(VOICE_SOURCES) $(BASE_SYNTH_SOURCES) src/gsynthreport89.c,$(call obj_for,$(s)))
+BASE_BRIDGE_OBJECTS = $(foreach s,$(VOICE_SOURCES) vendor/gtinkle89/src/gtinkle89.c vendor/gfire89/src/gfire89.c src/gsynthsoundengine89.c,$(call obj_for,$(s)))
+ORDNANCE_BRIDGE_OBJECTS = $(foreach s,$(VOICE_SOURCES) $(ORDNANCE_SOURCES),$(call obj_for,$(s)))
+EXPANSION_BRIDGE_OBJECTS = $(foreach s,$(EXPANSION_SOURCES),$(call obj_for,$(s)))
+WORLD_BRIDGE_OBJECTS = $(foreach s,$(VOICE_SOURCES) $(WORLD_SOURCES),$(call obj_for,$(s)))
+EVENT_FACADE_OBJECTS = $(foreach s,$(UNIFIED_FACADE_SOURCE),$(call obj_for,$(s)))
+
+# Flattening depends on unique source basenames.  Fail loudly if a future vendor
+# introduces a duplicate instead of silently archiving the wrong object.
+ifneq ($(words $(LIB_OBJECTS)),$(words $(sort $(LIB_OBJECTS))))
+$(error weapon_synth_sound_engine89: duplicate source basenames cannot be flattened safely)
+endif
+
+# Generate one explicit rule per source.  This avoids reconstructing a source
+# path from a flattened object basename and keeps the archive prerequisites
+# correct under GNU make -j as well as serial builds.
+define make_libobj_rule
+$(call obj_for,$(1)): $(1)
+	mkdir -p $$(dir $$@)
+	$$(CC) $$(CFLAGS) $$(INCLUDES) -c $$< -o $$@
+endef
+
+$(foreach s,$(ALL_CORE_SOURCES),$(eval $(call make_libobj_rule,$(s))))
 
 all: libs demos tests examples
 
@@ -277,10 +304,6 @@ $(EXAMPLE_TARGET): examples/game_engine_event_bridge.c
 
 $(SHOTGUN_TEK_EXAMPLE_TARGET): examples/shotgun_tek_provider_bridge.c
 	mkdir -p build
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-build/libobjs/%.o: %.c
-	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIB_TARGET): $(LIB_OBJECTS)

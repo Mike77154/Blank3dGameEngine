@@ -1,0 +1,78 @@
+{
+  "cases": [
+    {
+      "id": "generated-indexed2",
+      "path": "generated_indexed2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "generated",
+        "2bpp"
+      ]
+    },
+    {
+      "id": "generated-os2v2-64",
+      "path": "generated_os2v2_64.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "generated",
+        "os2-v2",
+        "64-byte-dib"
+      ]
+    },
+    {
+      "id": "generated-invalid-topdown-rle8",
+      "path": "invalid_topdown_rle8.bmp",
+      "expected": {
+        "parse_ok": false
+      },
+      "tags": [
+        "generated",
+        "bad",
+        "top-down",
+        "rle-invalid"
+      ]
+    },
+    {
+      "id": "generated-payload-png",
+      "path": "payload_png.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "generated",
+        "embedded-png"
+      ]
+    },
+    {
+      "id": "generated-payload-jpeg",
+      "path": "payload_jpeg_round3.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "generated",
+        "embedded-jpeg"
+      ]
+    },
+    {
+      "id": "generated-valid-rgb24",
+      "path": "valid_rgb24.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "generated",
+        "baseline"
+      ]
+    }
+  ]
+}

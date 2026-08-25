@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "id": "generated-4plane",
+      "path": "generated_4plane.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true,
+        "indexed_ok": true,
+        "strict_ok": true
+      },
+      "tags": [
+        "generated",
+        "4-plane"
+      ]
+    },
+    {
+      "id": "generated-raw-odd-stride",
+      "path": "generated_raw_odd_stride.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true,
+        "indexed_ok": true,
+        "strict_ok": false
+      },
+      "tags": [
+        "generated",
+        "raw",
+        "odd-stride"
+      ]
+    },
+    {
+      "id": "generated-valid-indexed8",
+      "path": "valid_indexed8_palette.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true,
+        "indexed_ok": true,
+        "strict_ok": true
+      },
+      "tags": [
+        "generated",
+        "baseline"
+      ]
+    },
+    {
+      "id": "generated-invalid-reserved",
+      "path": "invalid_reserved_round3.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true,
+        "strict_ok": false
+      },
+      "tags": [
+        "generated",
+        "reserved-nonzero"
+      ]
+    },
+    {
+      "id": "generated-malformed-truncated-rle",
+      "path": "malformed_truncated_rle.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": false
+      },
+      "tags": [
+        "generated",
+        "bad",
+        "truncated-rle"
+      ]
+    }
+  ]
+}

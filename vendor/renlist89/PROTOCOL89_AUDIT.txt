@@ -1,0 +1,12 @@
+RenList89 protocol audit
+========================
+C89 core: yes
+Dynamic allocation: none
+malloc/calloc/realloc/free: none
+float/double: none
+long long / explicit 64-bit integer types: none
+Filesystem: none
+Renderer/image decoder: none
+Dependencies: C library string comparison only
+Storage: fixed compile-time arrays
+Times: integer milliseconds; decimal pause text converted with integer math

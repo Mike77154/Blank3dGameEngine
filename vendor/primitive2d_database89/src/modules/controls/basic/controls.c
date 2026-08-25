@@ -1,0 +1,15 @@
+#include "p2d89_internal.h"
+
+static const P2D89_ShapeInfo shapes[] = {
+    { P2D89_SHAPE_PLAY, "play", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_PAUSE, "pause", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_STOP, "stop", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_RECORD, "record", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_FAST_FORWARD, "fast_forward", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_REWIND, "rewind", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_SKIP_NEXT, "skip_next", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_SYMMETRIC_X|P2D89_FLAG_SYMMETRIC_Y, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_SKIP_PREVIOUS, "skip_previous", "controls", "media", P2D89_MODULE_CONTROLS, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+};
+
+static int p2d89_emit_controls_media(P2D89_ShapeId id,const P2D89_Provider *p){static const p2d89_q14 play[]={-8192,-14336,14336,0,-8192,14336};static const p2d89_q14 stop[]={-12288,-12288,12288,-12288,12288,12288,-12288,12288};static const p2d89_q14 bar1[]={-8192,-14336,-2048,-14336,-2048,14336,-8192,14336};static const p2d89_q14 bar2[]={2048,-14336,8192,-14336,8192,14336,2048,14336};static const p2d89_q14 tri1[]={-14336,-12288,0,0,-14336,12288};static const p2d89_q14 tri2[]={-2048,-12288,12288,0,-2048,12288};static const p2d89_q14 skipbar[]={10240,-14336,14336,-14336,14336,14336,10240,14336};p2d89_u16 rot;if(id==P2D89_SHAPE_PLAY)return p2d89_i_poly(play,3U,1,p);if(id==P2D89_SHAPE_STOP)return p2d89_i_poly(stop,4U,1,p);if(id==P2D89_SHAPE_RECORD)return p2d89_emit_ellipse(12288,12288,1,p);if(id==P2D89_SHAPE_PAUSE){if(!p2d89_i_poly(bar1,4U,1,p))return 0;return p2d89_i_poly(bar2,4U,1,p);}if(id==P2D89_SHAPE_FAST_FORWARD||id==P2D89_SHAPE_REWIND||id==P2D89_SHAPE_SKIP_NEXT||id==P2D89_SHAPE_SKIP_PREVIOUS){rot=(id==P2D89_SHAPE_REWIND||id==P2D89_SHAPE_SKIP_PREVIOUS)?32768U:0U;if(!p2d89_i_rot_poly(tri1,3U,rot,1,p))return 0;if(!p2d89_i_rot_poly(tri2,3U,rot,1,p))return 0;if(id==P2D89_SHAPE_SKIP_NEXT||id==P2D89_SHAPE_SKIP_PREVIOUS)return p2d89_i_rot_poly(skipbar,4U,rot,1,p);return 1;}return 0;}
+const P2D89_Submodule p2d89_submodule_controls_media = { { P2D89_MODULE_CONTROLS, "controls", "media", (unsigned int)(sizeof(shapes)/sizeof(shapes[0])) }, shapes, p2d89_emit_controls_media };

@@ -1,0 +1,16 @@
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+dist/
+.release/
+build-cmake/
+.cmake-stage/
+examples/cmake_consumer/build/
+.dest/
+tests/test_smoke
+tools/pcx_diag_cli
+tools/pcx_bench
+tools/pcx_compat_cli
+build/presets/

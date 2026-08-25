@@ -1,0 +1,21 @@
+{
+  "phase": 70,
+  "manifest": "bench/corpora/phase70_local_locked_manifest.json",
+  "corpus_root": "bench/corpora",
+  "archive_cache": null,
+  "lockfile": "bench/results/phase70/phase70_corpus_lock.json",
+  "frozen_manifest": "bench/results/phase70/phase70_frozen_manifest.json",
+  "csv": "bench/results/phase70/phase70_public.csv",
+  "summary": "bench/results/phase70/phase70_public.md",
+  "validation_json": "bench/results/phase70/phase70_png_tiff_validation.json",
+  "repeat": 3,
+  "warmup": 1,
+  "quick": true,
+  "hashes": {
+    "phase70_corpus_lock.json": "328e2f1b0d1063bedaffc9055d692d1c0cdfec8e72aa2658d80969d0393bc608",
+    "phase70_frozen_manifest.json": "0113831b3bac514692de7c1570f1ad4c2623162f7a4f25c0174661753f5ff2ff",
+    "phase70_public.csv": "b2f7839d75940d7c7c8086b9035daf6ba6a8c8ff8fb55d7b9adb7e443ae5bf0d",
+    "phase70_public.md": "2c34330634cca58f5c947071e1b170053e01f2a6556109d7ec95260f44c605f7",
+    "phase70_png_tiff_validation.json": "77fd1372c6acb5c301fe2415fc1885fee963dfb9c7797f53565e2227766901c1"
+  }
+}

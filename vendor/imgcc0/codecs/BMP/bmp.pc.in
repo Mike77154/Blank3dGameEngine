@@ -1,0 +1,9 @@
+prefix=@PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: bmp
+Description: Hardened BMP encoder/decoder library
+Version: @VERSION@
+Libs: -L${libdir} -lbmp
+Cflags: -I${includedir}

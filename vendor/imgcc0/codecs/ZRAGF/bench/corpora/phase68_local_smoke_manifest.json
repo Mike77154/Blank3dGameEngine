@@ -1,0 +1,27 @@
+{
+  "manifest_version": 1,
+  "name": "phase68-local-smoke",
+  "description": "Local smoke manifest to exercise manifest-aware benchmark runner without network access.",
+  "datasets": [
+    {
+      "id": "local-smoke",
+      "kind": "existing",
+      "family": "mixed",
+      "root": "local_smoke",
+      "files": [
+        {
+          "path": "alpha.txt"
+        },
+        {
+          "path": "binary.bin"
+        },
+        {
+          "path": "sprite.png"
+        },
+        {
+          "path": "strip.tiff"
+        }
+      ]
+    }
+  ]
+}

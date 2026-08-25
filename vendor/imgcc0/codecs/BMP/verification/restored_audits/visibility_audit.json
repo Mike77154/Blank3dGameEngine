@@ -1,0 +1,7 @@
+{
+  "project": "bmp",
+  "ok": true,
+  "public_header": "include/bmp/bmp.h",
+  "export_header": "include/bmp/bmp_export.h",
+  "findings": []
+}

@@ -1,0 +1,4 @@
+Local sanitizer/runtime note:
+- The repository includes libFuzzer/AFL++ targets, ClusterFuzzLite workflows, and sanitizer build plumbing for address/undefined/memory modes.
+- In this container, executing ASan-instrumented binaries fails even for a trivial standalone C program, which points to an environment/runtime issue rather than a repo-specific crash.
+- Functional validation completed here used the normal test suite, the libpng differential harness, and the local CI wrapper.

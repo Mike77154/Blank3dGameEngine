@@ -1,0 +1,39 @@
+Blank3D v3.27.1 Katana Mecanim / Physical Damage QA
+====================================================
+
+Validated in the portable Linux toolchain:
+
+1. make test-katana-melee
+   PASS: katana89 procedural mesh conversion
+   PASS: katana.ini parser and frame window
+   PASS: NationalMecanicanimal89 slash clip
+   PASS: active-window swept oriented box
+   PASS: configured damage event
+   PASS: one hit per enemy per swing
+   PASS: return to idle
+
+2. make syntax-check
+   PASS: complete active Win32/OpenGL source parsed as ISO C89
+
+3. make audit
+   PASS: no malloc/realloc/free calls in active gameplay integration
+   PASS: no float/double tokens in the katana simulation modules
+
+4. Existing regression groups
+   PASS: test-mechanical-weapon
+   PASS: test-attachment-stack
+   PASS: test-collision
+
+Not performed here:
+- Final i686-w64-mingw32-gcc link (cross compiler unavailable).
+- Interactive OpenGL visual verification.
+
+MSYS2 Portable smoke test:
+- Build normally.
+- Confirm the katana is centred directly in front of the player.
+- Approach a hostile enemy.
+- Press K.
+- Press F3 to inspect green enemy hurt capsules and the red oriented blade box.
+- Confirm the red OBB appears only in the configured active interval.
+- Hold or repeat K: one enemy must lose health only once per completed swing.
+- Verify firearms, projectiles and NPC weapon behavior remain unchanged.

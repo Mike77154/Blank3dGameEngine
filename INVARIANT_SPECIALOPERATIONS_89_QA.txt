@@ -1,0 +1,31 @@
+invariantSpecialoperations_89 integration QA
+============================================
+
+Standalone/core
+  [OK] strict C89 core build
+  [OK] no heap API in core/adapters
+  [OK] no float/double in core/adapters
+  [OK] one-way relation
+  [OK] SpecOp=Viceversa relation expansion
+  [OK] sequential external assertions: latest assertion resolves final state
+  [OK] DDSL2 declaration extraction
+  [OK] multiple consecutive invariant declarations
+  [OK] flags89/FlagStore adapter
+
+Blank3D integration
+  [OK] player.ddsl2: Up -> walk_forward
+  [OK] player.ddsl2: Shift + Up -> run_forward
+  [OK] player.ddsl2 invariant: walk/run mutual exclusion via Viceversa
+  [OK] Up alone emits walk only
+  [OK] Shift+Up emits run only after invariant resolution
+  [OK] DDSL2 + FPIL + RPYL regression test
+  [OK] universal input stack regression
+  [OK] 3d_movementbaseverbs89 standalone regression
+  [OK] Gamlib3D movement provider regression
+  [OK] complete source syntax-check
+  [OK] Win32 four-head input syntax-check
+  [OK] active integration allocation audit
+
+Note: this environment does not provide the user's i686-w64-mingw32 linker,
+so final blank3d.exe linking remains a native MSYS2/MinGW32 check.  The complete
+active source passed the repository's syntax checks.

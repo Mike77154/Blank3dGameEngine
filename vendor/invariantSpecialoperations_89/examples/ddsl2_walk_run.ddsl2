@@ -1,0 +1,7 @@
+# Normal input rules stay ordinary DDSL2.
+If key_hold Up then walk_forward
+If key_hold Shift and key_hold Up then run_forward
+
+# invariantSpecialoperations_89 extension:
+If walk_forward TRUE then run_forward FALSE
+Apply SpecOp=Viceversa

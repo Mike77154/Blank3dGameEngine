@@ -112,6 +112,36 @@ int input_keyboard_backend_key_down(const InputKeyboardBackend *backend, int key
     return (backend->key_down[key_code] != 0U);
 }
 
+
+int input_keyboard_backend_bind_input_key89(InputKeyboardBackend *backend,
+                                            int button_index,
+                                            input_key89 key)
+{
+    unsigned int usage;
+    if (!input_keys89_keyboard_usage(key, &usage)) return INPUT_ERR_BAD_INDEX;
+    if (usage >= INPUT_KEYBOARD_MAX_KEYS) return INPUT_ERR_BAD_INDEX;
+    return input_keyboard_backend_bind(backend, button_index, (int)usage);
+}
+
+int input_keyboard_backend_set_input_key89(InputKeyboardBackend *backend,
+                                           input_key89 key,
+                                           int is_down)
+{
+    unsigned int usage;
+    if (!input_keys89_keyboard_usage(key, &usage)) return INPUT_ERR_BAD_INDEX;
+    if (usage >= INPUT_KEYBOARD_MAX_KEYS) return INPUT_ERR_BAD_INDEX;
+    return input_keyboard_backend_set_key(backend, (int)usage, is_down);
+}
+
+int input_keyboard_backend_input_key89_down(const InputKeyboardBackend *backend,
+                                             input_key89 key)
+{
+    unsigned int usage;
+    if (!input_keys89_keyboard_usage(key, &usage)) return 0;
+    if (usage >= INPUT_KEYBOARD_MAX_KEYS) return 0;
+    return input_keyboard_backend_key_down(backend, (int)usage);
+}
+
 int input_keyboard_backend_poll(void *user_data, input_bits_t *out_bits)
 {
     InputKeyboardBackend *backend;

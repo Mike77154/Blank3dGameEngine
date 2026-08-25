@@ -1,0 +1,31 @@
+Blank3D Homing Rocket Launcher ID13 QA
+======================================
+
+Base: blank3d_v3_27_3_shango_weapon.zip
+
+Weapon identity
+- weapon_id=13
+- ammo_id=12 (homing_rockets)
+- projectile_id=13
+- projectile_mesh_id=12 (rocketmeshes RPG7 PG7VR)
+
+Behavior
+- Satellaborner89: OFF. Projectile spawns at normal weapon muzzle.
+- Telesearcher89: ON.
+- Stable target lock: telesearcher_reacquire=0.
+- Steering gain: 0.28.
+- Target vertical offset: +0.85 world units.
+- Physical projectile is retained (not player hitscan).
+- Explosive-class radius: 8 world units, same class as normal rocket launcher.
+
+Test loadout
+- weapon_13=1
+- ammo_12=6
+
+Verification performed
+- make test-weapon-ini: PASS
+- make test-projectile-meshes: PASS
+- make test-sattele-stack: PASS
+- make syntax-check: PASS
+
+No Win32 executable was generated in this environment. Rebuild blank3d.exe with the project's MinGW32 toolchain.

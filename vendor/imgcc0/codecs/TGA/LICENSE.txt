@@ -1,0 +1,10 @@
+CC0 1.0 Universal (summary notice)
+
+The contents of this package are dedicated to the public domain under CC0 1.0
+Universal, to the extent possible under law.
+
+You can copy, modify, distribute, and perform the work, even for commercial
+purposes, all without asking permission.
+
+For the full legal text of CC0 1.0 Universal, see the official Creative
+Commons publication.

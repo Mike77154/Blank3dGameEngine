@@ -1,0 +1,17 @@
+Blank3D v3.26.0 — CAMERA INI CATALOG QA
+========================================
+
+PASS: production directory loads TPS Centred, OTS and FPS as separate INIs
+PASS: fourth isometric test camera is discovered without code changes
+PASS: profiles are sorted by order and cycle wraps correctly
+PASS: selection works by stable profile.id
+PASS: TPS has zero shoulder offset
+PASS: OTS has an independent positive shoulder offset
+PASS: FPS uses the first-person rig
+PASS: camera profile directory and startup ID load from blank3d.toml
+PASS: player camera provider remains isolated from NPC requests
+PASS: 900-frame moving/rotating automatic-fire regression
+PASS: player camera ray authority regression
+PASS: complete C89 syntax check
+PASS: active integration allocator audit
+NOT RUN: graphical Win32 build/run; i686-w64-mingw32-gcc is unavailable

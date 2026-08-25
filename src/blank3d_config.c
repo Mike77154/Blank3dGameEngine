@@ -3,6 +3,64 @@
 #include <stdio.h>
 #include <string.h>
 
+static void b3d_config_copy_slice(char *dst, unsigned int capacity,
+                                  conf_slice_t value,
+                                  const char *fallback)
+{
+    unsigned int i;
+    const char *src;
+    if (!dst || capacity == 0U) return;
+    if (value.ptr) {
+        i = 0U;
+        while (i < value.len && i + 1U < capacity) {
+            dst[i] = value.ptr[i];
+            ++i;
+        }
+        dst[i] = '\0';
+        return;
+    }
+    src = fallback ? fallback : "";
+    i = 0U;
+    while (src[i] != '\0' && i + 1U < capacity) {
+        dst[i] = src[i];
+        ++i;
+    }
+    dst[i] = '\0';
+}
+
+
+static int b3d_config_parse_size_slice(conf_slice_t value,
+                                       int *out_width,
+                                       int *out_height)
+{
+    char temp[64];
+    unsigned int i;
+    int width;
+    int height;
+    char separator;
+    if (!out_width || !out_height || !value.ptr || value.len == 0U)
+        return 0;
+    i = 0U;
+    while (i < value.len && i + 1U < sizeof(temp)) {
+        temp[i] = value.ptr[i];
+        ++i;
+    }
+    temp[i] = '\0';
+    width = 0;
+    height = 0;
+    separator = 0;
+    if (sscanf(temp, "%d %c %d", &width, &separator, &height) != 3)
+        return 0;
+    if (!(separator == 'x' || separator == 'X' ||
+          separator == ',' || separator == ':'))
+        return 0;
+    if (width <= 0 || height <= 0 || width > 1048576 || height > 1048576)
+        return 0;
+    *out_width = width;
+    *out_height = height;
+    return 1;
+}
+
 static void b3d_config_status(Blank3DConfig *config, const char *text)
 {
     if (!config) return;
@@ -16,8 +74,17 @@ void blank3d_config_defaults(Blank3DConfig *config)
     if (!config) return;
     memset(config, 0, sizeof(*config));
     config->audio_enabled = 1;
+    config->text_enabled = 1;
+    config->text_font_path[0] = '\0';
+    config->text_pixel_size = 7;
     config->start_first_person = 0;
+    strcpy(config->camera_profile_dir, "config/cameras");
+    strcpy(config->camera_start_profile, "tps_centred");
     config->lock_mouse = 1;
+    config->camera_draw_width = 960;
+    config->camera_draw_height = 540;
+    config->scene_screen_width = 1920;
+    config->scene_screen_height = 1080;
     config->initial_weapon = 1;
     config->gatling_spinup_ms = 360;
     config->slingshot_charge_ms = 900;
@@ -39,6 +106,10 @@ void blank3d_config_defaults(Blank3DConfig *config)
     config->ammo_rockets = 8;
     config->ammo_gatling = 900;
     config->ammo_stones = 60;
+    config->ammo_hand_grenades = 6;
+    config->ammo_shango_cells = 6;
+    config->ammo_homing_rockets = 6;
+    config->ammo_fuel = 360;
     config->damage_multiplier_q16 = CONF_FIXED_ONE;
     config->speed_multiplier_q16 = CONF_FIXED_ONE;
     config->recoil_multiplier_q16 = CONF_FIXED_ONE;
@@ -49,6 +120,9 @@ void blank3d_config_defaults(Blank3DConfig *config)
     config->flag_can_fire = 1;
     config->flag_can_reload = 1;
     config->flag_active_reload = 1;
+    config->skybox_enabled = 0;
+    strcpy(config->skybox_catalog, "config/skybox/catalog.ini");
+    strcpy(config->skybox_recipe, "procedural_default");
     b3d_config_status(config, "defaults");
 }
 
@@ -58,7 +132,10 @@ int blank3d_config_load(Blank3DConfig *config, const char *path)
     long size;
     unsigned int read_count;
     conf_err_t error;
+    conf_slice_t empty;
     if (!config || !path) return 0;
+    empty.ptr = (const char *)0;
+    empty.len = 0U;
     blank3d_config_defaults(config);
     file = fopen(path, "rb");
     if (!file) {
@@ -90,8 +167,40 @@ int blank3d_config_load(Blank3DConfig *config, const char *path)
         return 0;
     }
     config->audio_enabled = conf_get_bool(&config->parser, "audio.enabled", config->audio_enabled);
+    config->text_enabled = conf_get_bool(&config->parser, "text.enabled", config->text_enabled);
+    b3d_config_copy_slice(config->text_font_path, sizeof(config->text_font_path),
+                          conf_get_string(&config->parser, "text.font", empty),
+                          config->text_font_path);
+    config->text_pixel_size = (int)conf_get_int(&config->parser, "text.pixel_size",
+                                                 config->text_pixel_size);
+    if (config->text_pixel_size < 5) config->text_pixel_size = 5;
+    if (config->text_pixel_size > 96) config->text_pixel_size = 96;
     config->start_first_person = conf_get_bool(&config->parser, "camera.first_person", config->start_first_person);
+    b3d_config_copy_slice(config->camera_profile_dir,
+                          sizeof(config->camera_profile_dir),
+                          conf_get_string(&config->parser, "camera.profile_dir",
+                                          empty),
+                          config->camera_profile_dir);
+    b3d_config_copy_slice(config->camera_start_profile,
+                          sizeof(config->camera_start_profile),
+                          conf_get_string(&config->parser, "camera.start_profile",
+                                          empty),
+                          config->camera_start_profile);
     config->lock_mouse = conf_get_bool(&config->parser, "camera.lock_mouse", config->lock_mouse);
+    {
+        conf_slice_t camera_size;
+        conf_slice_t scene_size;
+        camera_size = conf_get_string(&config->parser,
+                                      "camera.camerasizedraw", empty);
+        scene_size = conf_get_string(&config->parser,
+                                     "scene.scenescreensize", empty);
+        (void)b3d_config_parse_size_slice(camera_size,
+                                          &config->camera_draw_width,
+                                          &config->camera_draw_height);
+        (void)b3d_config_parse_size_slice(scene_size,
+                                          &config->scene_screen_width,
+                                          &config->scene_screen_height);
+    }
     config->initial_weapon = (int)conf_get_int(&config->parser, "weapon.initial", config->initial_weapon);
     config->gatling_spinup_ms = (int)conf_get_int(&config->parser, "weapon.gatling_spinup_ms", config->gatling_spinup_ms);
     config->slingshot_charge_ms = (int)conf_get_int(&config->parser, "weapon.slingshot_charge_ms", config->slingshot_charge_ms);
@@ -113,6 +222,10 @@ int blank3d_config_load(Blank3DConfig *config, const char *path)
     config->ammo_rockets = (int)conf_get_int(&config->parser, "inventory.ammo_rockets", config->ammo_rockets);
     config->ammo_gatling = (int)conf_get_int(&config->parser, "inventory.ammo_gatling", config->ammo_gatling);
     config->ammo_stones = (int)conf_get_int(&config->parser, "inventory.ammo_stones", config->ammo_stones);
+    config->ammo_hand_grenades = (int)conf_get_int(&config->parser, "inventory.ammo_hand_grenades", config->ammo_hand_grenades);
+    config->ammo_shango_cells = (int)conf_get_int(&config->parser, "inventory.ammo_shango_cells", config->ammo_shango_cells);
+    config->ammo_homing_rockets = (int)conf_get_int(&config->parser, "inventory.ammo_homing_rockets", config->ammo_homing_rockets);
+    config->ammo_fuel = (int)conf_get_int(&config->parser, "inventory.ammo_fuel", config->ammo_fuel);
     config->damage_multiplier_q16 = conf_get_fixed(&config->parser, "numeric.damage_multiplier", config->damage_multiplier_q16);
     config->speed_multiplier_q16 = conf_get_fixed(&config->parser, "numeric.speed_multiplier", config->speed_multiplier_q16);
     config->recoil_multiplier_q16 = conf_get_fixed(&config->parser, "numeric.recoil_multiplier", config->recoil_multiplier_q16);
@@ -123,6 +236,13 @@ int blank3d_config_load(Blank3DConfig *config, const char *path)
     config->flag_can_fire = conf_get_bool(&config->parser, "flags.can_fire", config->flag_can_fire);
     config->flag_can_reload = conf_get_bool(&config->parser, "flags.can_reload", config->flag_can_reload);
     config->flag_active_reload = conf_get_bool(&config->parser, "flags.active_reload", config->flag_active_reload);
+    config->skybox_enabled = conf_get_bool(&config->parser, "skybox.enabled", config->skybox_enabled);
+    b3d_config_copy_slice(config->skybox_catalog, sizeof(config->skybox_catalog),
+                          conf_get_string(&config->parser, "skybox.catalog", empty),
+                          config->skybox_catalog);
+    b3d_config_copy_slice(config->skybox_recipe, sizeof(config->skybox_recipe),
+                          conf_get_string(&config->parser, "skybox.recipe", empty),
+                          config->skybox_recipe);
     config->loaded = 1;
     b3d_config_status(config, "config/blank3d.toml loaded");
     return 1;

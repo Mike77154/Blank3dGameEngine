@@ -1,0 +1,53 @@
+{
+  "phase": 70,
+  "created_utc": "2026-03-16T01:40:58Z",
+  "manifest": "bench/corpora/phase70_local_locked_manifest.json",
+  "root": "bench/corpora",
+  "archive_cache": null,
+  "datasets": [
+    {
+      "id": "local-phase70",
+      "kind": "existing",
+      "family": "mixed",
+      "version": "phase70-local-v1",
+      "files": [
+        {
+          "path": "bench/corpora/local_phase70/alpha.txt",
+          "relative_path": "alpha.txt",
+          "size": 45,
+          "sha256": "11ce73616d8ca01bdf55ccfcb0526fece90c0cf94593e43364ee70df641cbdbf"
+        },
+        {
+          "path": "bench/corpora/local_phase70/binary.bin",
+          "relative_path": "binary.bin",
+          "size": 257,
+          "sha256": "fa0aee61a053432dc0346f68728b23d05c089e03765ddb97c8c8abc9620b906e"
+        },
+        {
+          "path": "bench/corpora/local_phase70/sprite_rgba.png",
+          "relative_path": "sprite_rgba.png",
+          "size": 102,
+          "sha256": "a2f658b2b0c5e7198265112325f0af41300f0ad34d8f117e5f0fbd0f1c17aaae"
+        },
+        {
+          "path": "bench/corpora/local_phase70/strip_gray.tiff",
+          "relative_path": "strip_gray.tiff",
+          "size": 528,
+          "sha256": "283b7d1047b04d28cba50429b2cbd1345d6dc910b3dee46bef450851942e606e"
+        },
+        {
+          "path": "bench/corpora/local_phase70/sprite_palette.png",
+          "relative_path": "sprite_palette.png",
+          "size": 860,
+          "sha256": "5a1b510e11a1c49e54454f420e7458a2abecf38d3f2bcdd083493aed0a0345b1"
+        },
+        {
+          "path": "bench/corpora/local_phase70/strip_rgb.tiff",
+          "relative_path": "strip_rgb.tiff",
+          "size": 908,
+          "sha256": "edf214b72589e6e4dabd399b95d967662dcb6e0609465a406760ea649315743f"
+        }
+      ]
+    }
+  ]
+}

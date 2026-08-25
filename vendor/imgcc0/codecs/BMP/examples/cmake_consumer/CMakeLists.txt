@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(bmp_consumer LANGUAGES C)
+find_package(bmp CONFIG REQUIRED)
+add_executable(bmp_consumer main.c)
+target_link_libraries(bmp_consumer PRIVATE bmp::bmp)
+set_target_properties(bmp_consumer PROPERTIES C_STANDARD 99 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)

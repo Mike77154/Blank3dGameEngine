@@ -1,0 +1,11 @@
+detect: MUGEN ElecbyteFnt binary
+open-binary: ok features=0x00000200
+extract: pcx=3734 text=197 comment='Z - CharCAD - www.zcharcad.kit.n'
+open-text: ok glyphs=10 size=1x29 spacing=1,1 type=2
+sheet: 219x29 stride=219 format=1 palette=256
+sample-scale: 1 sample='0123456789
+0123456789
+0123456789
+0123456789
+'
+wrote: proof_rush_fnt.png bytes=59788

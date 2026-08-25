@@ -1,0 +1,11 @@
+ImageSequencer89 protocol audit
+===============================
+C89 core: yes
+Dynamic allocation: none
+malloc/calloc/realloc/free: none
+float/double: none
+long long / explicit 64-bit integer types: none
+Filesystem/render/image decoder dependencies: none
+Storage: fixed compile-time arrays
+Time: integer milliseconds
+Speed: Q16.16

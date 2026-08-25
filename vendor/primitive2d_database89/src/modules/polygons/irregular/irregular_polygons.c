@@ -1,0 +1,14 @@
+#include "p2d89_internal.h"
+
+static const P2D89_ShapeInfo shapes[] = {
+    { P2D89_SHAPE_IRREGULAR_QUAD_A, "irregular_quad_a", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_IRREGULAR_QUAD_B, "irregular_quad_b", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_IRREGULAR_PENTAGON, "irregular_pentagon", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_IRREGULAR_HEXAGON, "irregular_hexagon", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_IRREGULAR_HEPTAGON, "irregular_heptagon", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_IRREGULAR_OCTAGON, "irregular_octagon", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_LIGHTNING_BOLT, "lightning_bolt", "polygons", "irregular", P2D89_MODULE_POLYGONS, P2D89_FLAG_CLOSED|P2D89_FLAG_CONCAVE, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_MITER },
+};
+
+static int p2d89_emit_polygons_irregular(P2D89_ShapeId id,const P2D89_Provider *p){static const p2d89_q14 qa[]={-14336,-12288,12288,-16384,16384,8192,-8192,14336};static const p2d89_q14 qb[]={-16384,-4096,2048,-16384,14336,-2048,8192,16384};static const p2d89_q14 p5[]={-14336,-8192,-2048,-16384,14336,-6144,12288,12288,-8192,14336};static const p2d89_q14 p6[]={-14336,-10240,-2048,-16384,12288,-10240,16384,4096,4096,14336,-12288,10240};static const p2d89_q14 p7[]={-14336,-8192,-4096,-16384,8192,-14336,16384,-2048,12288,12288,0,16384,-12288,8192};static const p2d89_q14 p8[]={-14336,-8192,-6144,-16384,6144,-14336,16384,-6144,14336,8192,4096,16384,-8192,14336,-16384,2048};static const p2d89_q14 bolt[]={-4096,-16384,8192,-4096,2048,-4096,8192,4096,0,4096,4096,16384,-12288,2048,-4096,2048};if(id==P2D89_SHAPE_IRREGULAR_QUAD_A)return p2d89_i_poly(qa,4U,1,p);if(id==P2D89_SHAPE_IRREGULAR_QUAD_B)return p2d89_i_poly(qb,4U,1,p);if(id==P2D89_SHAPE_IRREGULAR_PENTAGON)return p2d89_i_poly(p5,5U,1,p);if(id==P2D89_SHAPE_IRREGULAR_HEXAGON)return p2d89_i_poly(p6,6U,1,p);if(id==P2D89_SHAPE_IRREGULAR_HEPTAGON)return p2d89_i_poly(p7,7U,1,p);if(id==P2D89_SHAPE_IRREGULAR_OCTAGON)return p2d89_i_poly(p8,8U,1,p);if(id==P2D89_SHAPE_LIGHTNING_BOLT)return p2d89_i_poly(bolt,8U,1,p);return 0;}
+const P2D89_Submodule p2d89_submodule_polygons_irregular = { { P2D89_MODULE_POLYGONS, "polygons", "irregular", (unsigned int)(sizeof(shapes)/sizeof(shapes[0])) }, shapes, p2d89_emit_polygons_irregular };

@@ -1,0 +1,18 @@
+{
+  "malloc": 0,
+  "calloc": 0,
+  "realloc": 0,
+  "free": 0,
+  "heap": 0,
+  "float": 0,
+  "double": 0,
+  "long long": 0,
+  "unsigned long": 0,
+  "size_t": 0,
+  "uint64_t": 0,
+  "int64_t": 0,
+  "stdint.h": 0,
+  "stddef.h": 0,
+  "bmp_u64": 0,
+  "bmp_s64": 0
+}

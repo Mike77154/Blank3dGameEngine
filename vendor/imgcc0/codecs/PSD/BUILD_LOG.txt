@@ -1,0 +1,70 @@
+$ make clean && make test
+rm -f src/psd89_core.o src/psd89_util.o src/psd89_stdio.o src/psd89_zip.o src/psd89_read.o src/psd89_write.o src/psd89_compose.o src/psd89_vector_bezier.o src/psd89_mask_global_tags.o src/psd89_zip_diag.o src/psd89_advanced.o libpsd89.a examples/file_roundtrip examples/layer_mask_roundtrip examples/group_roundtrip examples/advanced_roundtrip examples/fidelity_roundtrip examples/fidelity_roundtrip_v23 tests/test_v12 tests/test_v13 tests/test_v14 tests/test_v15 tests/test_v16 tests/test_v17 tests/test_v18 tests/test_v20 tests/test_v21 tests/test_v22 tests/test_v23 tests/corpus_runner tests/test_v12_roundtrip.psd tests/test_v13_roundtrip.psd tests/test_v14_shifted_mask.psd tests/test_v14_real_mask.psd tests/test_v15_zip.psd tests/test_v15_zip_pred.psd tests/test_v20_roundtrip.psd tests/corpus/*.psd example_file_roundtrip.psd example_layer_mask_roundtrip.psd examples/example_advanced_roundtrip.psd examples/example_fidelity_roundtrip.psd examples/example_fidelity_roundtrip_v23.psd
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_core.o src/psd89_core.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_util.o src/psd89_util.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_stdio.o src/psd89_stdio.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_zip.o src/psd89_zip.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_read.o src/psd89_read.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_write.o src/psd89_write.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_compose.o src/psd89_compose.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_vector_bezier.o src/psd89_vector_bezier.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_mask_global_tags.o src/psd89_mask_global_tags.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_zip_diag.o src/psd89_zip_diag.c
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude   -c -o src/psd89_advanced.o src/psd89_advanced.c
+ar -rv libpsd89.a src/psd89_core.o src/psd89_util.o src/psd89_stdio.o src/psd89_zip.o src/psd89_read.o src/psd89_write.o src/psd89_compose.o src/psd89_vector_bezier.o src/psd89_mask_global_tags.o src/psd89_zip_diag.o src/psd89_advanced.o
+ar: creating libpsd89.a
+a - src/psd89_core.o
+a - src/psd89_util.o
+a - src/psd89_stdio.o
+a - src/psd89_zip.o
+a - src/psd89_read.o
+a - src/psd89_write.o
+a - src/psd89_compose.o
+a - src/psd89_vector_bezier.o
+a - src/psd89_mask_global_tags.o
+a - src/psd89_zip_diag.o
+a - src/psd89_advanced.o
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o examples/file_roundtrip examples/file_roundtrip.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o examples/layer_mask_roundtrip examples/layer_mask_roundtrip.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o examples/group_roundtrip examples/group_roundtrip.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o examples/advanced_roundtrip examples/advanced_roundtrip.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o examples/fidelity_roundtrip examples/fidelity_roundtrip.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o examples/fidelity_roundtrip_v23 examples/fidelity_roundtrip_v23.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v12 tests/test_v12.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v13 tests/test_v13.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v14 tests/test_v14.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v15 tests/test_v15.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v16 tests/test_v16.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v17 tests/test_v17.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v18 tests/test_v18.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v20 tests/test_v20.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v21 tests/test_v21.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v22 tests/test_v22.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/test_v23 tests/test_v23.c libpsd89.a -lz
+cc -std=c89 -Wall -Wextra -pedantic -Iinclude -o tests/corpus_runner tests/corpus_runner.c libpsd89.a -lz
+./tests/test_v12
+test_v12: ok
+./tests/test_v13
+test_v13: ok
+./tests/test_v14
+test_v14: ok
+./tests/test_v15
+test_v15: ok
+./tests/test_v16
+test_v16: ok
+./tests/test_v17
+test_v17: ok
+./tests/test_v18
+test_v18: ok
+./tests/test_v20
+test_v20: ok
+./tests/test_v21
+test_v21: ok
+./tests/test_v22
+test_v22: ok
+./tests/test_v23
+test_v23: ok
+./tests/corpus_runner
+corpus_runner: wrote mask, clipping, vector, zip, v17, and v18 fixtures
+$ ./examples/fidelity_roundtrip_v23
+fidelity_roundtrip_v23: wrote examples/example_fidelity_roundtrip_v23.psd (ds=1 og=1 ig=1 bevel=1)

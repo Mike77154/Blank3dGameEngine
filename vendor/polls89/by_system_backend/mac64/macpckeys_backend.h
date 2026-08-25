@@ -7,8 +7,11 @@ extern "C" {
 
 #include <stddef.h>
 
-#include "polls/key_pc.h"
-#include "polls/polls_scanner_iface.h"
+#include "key_pc.h"
+#include "polls_scanner_iface.h"
+#include "input_keys89.h"
+
+#define MACPCKEYS_MAX_BUTTONS 64
 
 /* Backend de teclado PC para macOS. */
 
@@ -16,7 +19,7 @@ typedef struct macpckeys_backend {
     key_pc_context key_ctx;
 
     /* bindings: botón lógico -> tecla física (KEY_PC_*) */
-    key_pc_code *button_keys;
+    key_pc_code button_keys[MACPCKEYS_MAX_BUTTONS];
     int          button_capacity;
 
     /* Scanner enchufable (NO builtin) */
@@ -37,6 +40,8 @@ void macpckeys_backend_update(macpckeys_backend *kb);
 int  macpckeys_button_hold(const macpckeys_backend *kb, int button_index);
 int  macpckeys_button_pressed(const macpckeys_backend *kb, int button_index);
 int  macpckeys_button_released(const macpckeys_backend *kb, int button_index);
+int  macpckeys_input_key_down(const macpckeys_backend *kb, input_key89 key);
+int  macpckeys_bind_input_key89(macpckeys_backend *kb, int button_index, input_key89 key);
 
 #ifdef __cplusplus
 }

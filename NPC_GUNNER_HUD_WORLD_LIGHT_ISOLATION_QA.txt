@@ -1,0 +1,36 @@
+NPC GUNNER HUD WORLD-LIGHT ISOLATION QA
+========================================
+
+Root-cause audit
+----------------
+PASS  NPC muzzle lights enable a world OpenGL light (GL_LIGHT1).
+PASS  player HUD health source is g.player_hp.
+PASS  player HUD clip source is blank3d_systems_clip(&g.systems).
+PASS  player HUD reserve source is blank3d_systems_reserve(&g.systems).
+PASS  player clip/reserve query B3D_PLAYER_ACTOR_ID in blank3d_systems.c.
+
+State-boundary fix
+------------------
+PASS  HUD begin disables GL_LIGHTING.
+PASS  HUD begin disables GL_TEXTURE_2D baseline.
+PASS  HUD begin disables depth and resets white current color.
+PASS  HUD end normalizes texture/blend/color and restores world lighting/depth.
+PASS  generic image overlay has the same world-light isolation boundary.
+PASS  active player-health NumBar has no gameplay.threat overlay binding.
+
+Regression tests
+----------------
+PASS  make test-hud-world-light-isolation89
+PASS  make test-visual-feedback-authority89
+PASS  make test-numbar
+PASS  make test-bighud
+PASS  make test-gbar-v04-bighud
+PASS  make test-crosshair-runtime
+PASS  make test-weapon-ini
+PASS  make syntax-check
+
+Interpretation
+--------------
+The observed NPC-fire -> player-HUD reaction was a render-state leak, not a
+shared ammo/health telemetry source.  NPC world muzzle lighting remains valid,
+but it can no longer illuminate/tint player screen-space presentation.

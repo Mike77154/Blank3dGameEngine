@@ -49,22 +49,35 @@ int main(void)
     blank3d_input_init(&input);
     blank3d_input_set_backend(&input, &backend);
 
-    if (blank3d_input_key_from_name("W") != KEY_PC_W ||
-        blank3d_input_key_from_name("Up") != KEY_PC_UP ||
-        blank3d_input_key_from_name("PageUp") != KEY_PC_PAGE_UP ||
-        blank3d_input_key_from_name("LeftShift") != KEY_PC_LSHIFT ||
-        blank3d_input_key_from_name("F24") != KEY_PC_F24) {
-        puts("key name normalization failed");
+    if (blank3d_input_key_from_name("W") != INPUT_KEY89_KB(0x1AU) ||
+        blank3d_input_key_from_name("Up") != INPUT_KEY89_UP ||
+        blank3d_input_key_from_name("ArrowUp") != INPUT_KEY89_UP ||
+        blank3d_input_key_from_name("PageUp") != INPUT_KEY89_PAGE_UP ||
+        blank3d_input_key_from_name("LeftShift") != INPUT_KEY89_LSHIFT ||
+        blank3d_input_key_from_name("F24") != INPUT_KEY89_KB(0x73U)) {
+        puts("input_keys89 name/HID normalization failed");
         return 1;
     }
 
-    set_key(&keyboard, KEY_PC_W, 1);
-    set_key(&keyboard, KEY_PC_UP, 1);
+    /* Backend bits are USB HID usages, not key_pc_code enum values. */
+    set_key(&keyboard, 0x1A, 1); /* W */
+    set_key(&keyboard, 0x52, 1); /* Up */
     blank3d_input_update(&input);
     if (!blank3d_input_query_name(&input, "hold", "W") ||
         !blank3d_input_query_name(&input, "pressed", "Up")) {
         puts("hold/pressed query failed");
         return 2;
+    }
+
+    /* Regression coverage for symbolic names resolved directly to HID identity. */
+    set_key(&keyboard, 0x1E, 1); /* top-row 1 */
+    set_key(&keyboard, 0xE1, 1); /* Left Shift */
+    blank3d_input_update(&input);
+    if (!blank3d_input_query_name(&input, "hold", "1") ||
+        !blank3d_input_query_name(&input, "hold", "LeftShift") ||
+        !blank3d_input_query_name(&input, "hold", "Up")) {
+        puts("HID/key_pc translation regression");
+        return 8;
     }
 
     blank3d_input_update(&input);
@@ -74,7 +87,7 @@ int main(void)
         return 3;
     }
 
-    set_key(&keyboard, KEY_PC_W, 0);
+    set_key(&keyboard, 0x1A, 0); /* W */
     blank3d_input_update(&input);
     if (!blank3d_input_query_name(&input, "released", "W")) {
         puts("release query failed");
@@ -83,10 +96,10 @@ int main(void)
 
     blank3d_input_begin_capture(&input, "jump", SCANEMU_LISTEN_KEYS |
                                                SCANEMU_CAPTURE_ON_PRESS);
-    set_key(&keyboard, KEY_PC_J, 1);
+    set_key(&keyboard, 0x0D, 1); /* J */
     blank3d_input_update(&input);
     if (!blank3d_input_capture_get(&input, "jump", &token) ||
-        token.type != SCANEMU_T_KEY || token.code != KEY_PC_J) {
+        token.type != SCANEMU_T_KEY || token.code != 0x0D) {
         puts("scanemu89 capture failed");
         return 5;
     }

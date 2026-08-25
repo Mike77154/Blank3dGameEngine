@@ -1,0 +1,29 @@
+inventory script/lang entries:
+  DFLT/dflt features=0
+  cyrl/MKD  features=0
+  cyrl/SRB  features=0
+  cyrl/dflt features=0
+  grek/dflt features=0
+  latn/AZE  features=0
+  latn/CAT  features=0
+  latn/CRT  features=0
+  latn/ESP  features=0
+  latn/GAG  features=0
+  latn/GAL  features=0
+  latn/ISM  features=0
+  latn/KAZ  features=0
+  latn/KRK  features=0
+  latn/KSM  features=0
+  latn/LSM  features=0
+  latn/MOL  features=0
+  latn/NSM  features=0
+  latn/ROM  features=0
+  latn/SKS  features=0
+  latn/SSM  features=0
+  latn/TAT  features=0
+  latn/TRK  features=0
+  latn/dflt features=0
+  math/dflt features=0
+features emitted: single=2 liga=7 context=0 reverse=0 kern=0 mark=0 mkmk=0
+HVAR v0.20 loss-report: present=no sparse_maps=0 compact_segments=0 item_deltas=0 status=lossless-candidate region_validate=static-check
+wrote examples/dejavu_serif_v20_smoke_pack.h: 3447 cmap, 3528 advances, 3525 classes, 2 single, 7 ligatures, 0 contexts, 0 reverse, 0 kern, 0 mark, 0 mkmk, 71 markmeta, 0 fvar axes, HVAR=no, scripts=25, unitsPerEm=2048

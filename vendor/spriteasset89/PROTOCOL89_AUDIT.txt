@@ -1,0 +1,9 @@
+SpriteAsset89 protocol audit
+============================
+C dialect: C89 / pedantic-errors
+Dynamic allocation calls in active C/H: 0
+float/double tokens in active C/H: 0
+long long/int64_t/uint64_t tokens in active C/H: 0
+Core ownership: fixed-capacity / caller-provider model
+Standalone unit test: PASS
+ASan + UBSan standalone test: PASS

@@ -1,0 +1,20 @@
+Internal ctest changing into directory: /tmp/phase69/build
+Test project /tmp/phase69/build
+    Start  1: zragf_test_native
+1/7 Test  #1: zragf_test_native ......................   Passed    0.02 sec
+    Start  2: zragf_test_wrappers
+2/7 Test  #2: zragf_test_wrappers ....................   Passed    0.02 sec
+    Start  6: zragf_test_phase64_alloc_workspace
+3/7 Test  #6: zragf_test_phase64_alloc_workspace .....   Passed    0.02 sec
+    Start  7: zragf_test_phase65_wrapper_workspace
+4/7 Test  #7: zragf_test_phase65_wrapper_workspace ...   Passed    0.04 sec
+    Start  8: zragf_test_phase66_c89_smoke
+5/7 Test  #8: zragf_test_phase66_c89_smoke ...........   Passed    0.01 sec
+    Start 67: zragf_test_phase68_public_manifest
+6/7 Test #67: zragf_test_phase68_public_manifest .....   Passed    1.39 sec
+    Start 68: zragf_test_phase69_locked_corpora
+7/7 Test #68: zragf_test_phase69_locked_corpora ......   Passed    5.43 sec
+
+100% tests passed, 0 tests failed out of 7
+
+Total Test time (real) =   6.93 sec

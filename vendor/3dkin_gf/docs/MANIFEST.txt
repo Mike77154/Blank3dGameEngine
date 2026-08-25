@@ -1,0 +1,17 @@
+./LICENSE.txt
+./Makefile
+./README.md
+./build_mingw32.bat
+./docs/API_QUICKREF.md
+./docs/BUILD_VERIFICATION.txt
+./docs/DESIGN.md
+./docs/MANIFEST.txt
+./examples/condition_demo.c
+./examples/verb_demo.c
+./include/gk3d.h
+./include/gk3d_config.h
+./include/gk3d_fixed.h
+./prebuilt/mingw32/gk3d.o
+./prebuilt/mingw32/libgk3d.a
+./src/gk3d.c
+./tests/test_gk3d.c

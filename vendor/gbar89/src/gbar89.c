@@ -877,6 +877,8 @@ void gbar89_init(GBar89_Meter *meter)
     meter->unit_count = 0;
     meter->unit_padding = 2;
     meter->unit_scale_percent = 80;
+    meter->unit_renderer_user = 0;
+    meter->unit_renderer = 0;
 }
 
 void gbar89_set_rect(GBar89_Meter *meter, int x, int y, int w, int h)
@@ -1424,6 +1426,17 @@ void gbar89_set_unit_vector(GBar89_Meter *meter,
     meter->unit_count = unit_count;
     meter->unit_padding = padding;
     meter->unit_scale_percent = scale_percent;
+}
+
+void gbar89_set_unit_renderer(GBar89_Meter *meter,
+                              GBar89_UnitRenderFn renderer,
+                              void *user)
+{
+    if (meter == 0) {
+        return;
+    }
+    meter->unit_renderer = renderer;
+    meter->unit_renderer_user = user;
 }
 
 void gbar89_set_state(GBar89_Meter *meter, int state)
@@ -2560,7 +2573,16 @@ static void gbar89_draw_vector_glyph(const GBar89_Meter *m,
     int gy;
     int scale;
 
-    if (m == 0 || ops == 0 || slot == 0 || m->unit_points == 0) {
+    if (m == 0 || ops == 0 || slot == 0) {
+        return;
+    }
+    if (m->unit_renderer != 0) {
+        m->unit_renderer(m->unit_renderer_user, ops, slot, fill_color,
+                         m->style.color_unit_outline,
+                         m->unit_scale_percent);
+        return;
+    }
+    if (m->unit_points == 0) {
         return;
     }
     n = m->unit_point_count;
@@ -2645,7 +2667,8 @@ static void gbar89_draw_vector_units(const GBar89_Meter *m,
         return;
     }
     if ((m->flags & GBAR89_FLAG_DRAW_VECTOR_UNITS) == 0 ||
-        m->unit_points == 0 || m->unit_point_count < 2) {
+        (m->unit_renderer == 0 &&
+         (m->unit_points == 0 || m->unit_point_count < 2))) {
         return;
     }
     count = m->unit_count;
@@ -4182,7 +4205,8 @@ static void gbar89_draw_radial_vector_units(const GBar89_Meter *m,
     unsigned long color;
 
     if ((m->flags & GBAR89_FLAG_DRAW_VECTOR_UNITS) == 0 ||
-        m->unit_points == 0 || m->unit_point_count < 2) {
+        (m->unit_renderer == 0 &&
+         (m->unit_points == 0 || m->unit_point_count < 2))) {
         return;
     }
     count = m->unit_count;

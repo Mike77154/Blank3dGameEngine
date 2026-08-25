@@ -1,6 +1,7 @@
 #include "blank3d_systems.h"
 #include "blank3d_weapon_ini.h"
 #include "blank3d_weapon_loadout.h"
+#include "blank3d_weapon_host_io.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -9,6 +10,9 @@
 
 #define B3D_AMMO_ITEM_BASE 100
 #define B3D_NUM_OWNER B3D_PLAYER_ACTOR_ID
+#define B3D_PLAYER_HEALTH_MAX 100
+#define B3D_PBB_RULE_HEALTH_BELOW_MAX 1
+#define B3D_PBB_EFFECT_HEAL_FROM_ITEM_AMOUNT 1
 
 static int b3d_clamp_int(int value, int minimum, int maximum)
 {
@@ -33,6 +37,115 @@ static void b3d_set_status(Blank3DSystems *systems, const char *text)
     if (!text) text = "";
     strncpy(systems->status, text, sizeof(systems->status) - 1U);
     systems->status[sizeof(systems->status) - 1U] = '\0';
+}
+
+static int b3d_item_grant_weapon_provider(void *user,
+                                          int host_actor_id,
+                                          int weapon_id,
+                                          int amount,
+                                          int auto_equip)
+{
+    return blank3d_systems_grant_weapon((Blank3DSystems *)user,
+                                        host_actor_id, weapon_id, amount,
+                                        auto_equip);
+}
+
+static int b3d_item_grant_ammo_provider(void *user,
+                                        int host_actor_id,
+                                        int ammo_id,
+                                        int amount)
+{
+    return blank3d_systems_grant_ammo((Blank3DSystems *)user,
+                                      host_actor_id, ammo_id, amount);
+}
+
+static int b3d_item_custom_rule(PBB_ItemWorld *world,
+                                int actor_id,
+                                int item_id,
+                                const PBB_ItemRule *rule)
+{
+    Blank3DSystems *systems;
+    int maximum;
+    (void)item_id;
+    if (!world || !rule) return 0;
+    systems = (Blank3DSystems *)pbb_item_world_get_user_data(world);
+    if (!systems || actor_id != systems->player_item_actor_id) return 0;
+    if (rule->a == B3D_PBB_RULE_HEALTH_BELOW_MAX) {
+        maximum = rule->b > 0 ? rule->b : B3D_PLAYER_HEALTH_MAX;
+        return blank3d_systems_player_health(systems) < maximum;
+    }
+    return 0;
+}
+
+static int b3d_item_custom_effect(PBB_ItemWorld *world,
+                                  int actor_id,
+                                  int item_id,
+                                  const PBB_ItemEffect *effect)
+{
+    Blank3DSystems *systems;
+    const PBB_Item *item;
+    int current;
+    int maximum;
+    int amount;
+    if (!world || !effect) return 0;
+    systems = (Blank3DSystems *)pbb_item_world_get_user_data(world);
+    if (!systems || actor_id != systems->player_item_actor_id) return 0;
+    if (effect->a != B3D_PBB_EFFECT_HEAL_FROM_ITEM_AMOUNT) return 0;
+    item = pbb_item_get_const(world, item_id);
+    if (!item) return 0;
+    maximum = effect->b > 0 ? effect->b : B3D_PLAYER_HEALTH_MAX;
+    current = blank3d_systems_player_health(systems);
+    if (current >= maximum) return 0;
+    amount = item->amount;
+    if (amount <= 0) return 0;
+    if (amount > maximum - current) amount = maximum - current;
+    blank3d_systems_heal_player(systems, amount);
+    return 1;
+}
+
+static void b3d_init_item_contact(Blank3DSystems *systems)
+{
+    PBBCTW89_WeaponProvider provider;
+    int actor_id;
+    if (!systems) return;
+
+    ct89_init(&systems->contact_triggers);
+    pbb_item_world_init(&systems->item_world);
+    pbb_item_world_set_callbacks(&systems->item_world,
+                                 b3d_item_custom_rule,
+                                 b3d_item_custom_effect,
+                                 systems);
+    pbbctw89_init(&systems->item_contact_bridge);
+    (void)pbbctw89_attach(&systems->item_contact_bridge,
+                          &systems->contact_triggers,
+                          &systems->item_world);
+
+    pbbctw89_weapon_provider_init(&provider);
+    provider.user = systems;
+    provider.grant_weapon = b3d_item_grant_weapon_provider;
+    provider.grant_ammo = b3d_item_grant_ammo_provider;
+    pbbctw89_set_weapon_provider(&systems->item_contact_bridge, &provider);
+
+    actor_id = pbb_item_actor_create(&systems->item_world,
+                                     PBB_ACTOR_CLASS_PLAYER,
+                                     1UL,
+                                     0L, 0L,
+                                     PBB_FIXED_HALF,
+                                     PBB_FIXED_HALF);
+    systems->player_item_actor_id = actor_id;
+    if (actor_id != PBB_ITEM_INVALID_ID) {
+        (void)pbb_item_actor_set_masks(&systems->item_world, actor_id,
+                                       PBB_ITEM_CATEGORY_ANY,
+                                       PBB_ITEM_CATEGORY_ANY);
+        (void)pbbctw89_bind_actor(&systems->item_contact_bridge,
+                                  (CT89_Subject)B3D_PLAYER_ACTOR_ID,
+                                  actor_id, B3D_PLAYER_ACTOR_ID);
+    }
+}
+
+void blank3d_systems_reset_item_contact(Blank3DSystems *systems)
+{
+    b3d_init_item_contact(systems);
 }
 
 static const char *b3d_flag_key(int key)
@@ -342,10 +455,12 @@ static void b3d_init_inventory(Blank3DSystems *systems)
     if (!systems) return;
 
     memset(ammo_seen, 0, sizeof(ammo_seen));
-    (void)blank3d_weapon_catalog_load(&systems->weapon_catalog,
-        "config/weapons/weapons.ini", status, sizeof(status));
-    (void)blank3d_player_weapon_loadout_load(&systems->player_weapon_loadout,
-        "config/weapons/player_weapons.ini", status, sizeof(status));
+    (void)gweaponloadout89_catalog_load(&systems->weapons,
+        &systems->weapon_catalog, "config/weapons/weapons.ini",
+        status, sizeof(status));
+    (void)gweaponloadout89_load(&systems->weapons,
+        &systems->player_weapon_loadout, "config/weapons/player_weapons.ini",
+        status, sizeof(status));
     systems->starting_weapon_id = systems->player_weapon_loadout.equipped_weapon_id;
 
     item_count = 0;
@@ -609,9 +724,13 @@ void blank3d_systems_init_from_ini(Blank3DSystems *systems,
     memset(systems, 0, sizeof(*systems));
     b3d_init_numbers(systems);
     b3d_init_flags(systems);
-    b3d_init_inventory(systems);
 
     gwp89_init(&systems->weapons);
+    (void)blank3d_weapon_host_io_bind(&systems->weapons);
+    /* Loadout is Weapon-System policy; filesystem access remains a host hook. */
+    b3d_init_inventory(systems);
+    b3d_init_item_contact(systems);
+
     gwp89_add_provider(&systems->weapons, GWP89_SERVICE_MATH3D, 120,
                        "blank3d.gamlib3d-math", systems, b3d_math_provider);
     gwp89_add_provider(&systems->weapons, GWP89_SERVICE_NUMERIC, 100,
@@ -684,6 +803,12 @@ void blank3d_systems_update(Blank3DSystems *systems,
     GWP89_FireInput input;
     int result;
     if (!systems) return;
+
+    /* Contact Trigger is part of the systems frame now.  With no spatial
+       provider installed CT89 is a cheap no-op; once the host binds one,
+       touch/proximity pickups begin working without a second update loop. */
+    (void)ct89_step(&systems->contact_triggers, (unsigned long)dt_ms);
+
     memset(&input, 0, sizeof(input));
     input.actor_id = B3D_PLAYER_ACTOR_ID;
     input.actor_kind = B3D_PLAYER_KIND;
@@ -908,6 +1033,16 @@ int blank3d_systems_weapon_id(const Blank3DSystems *systems)
     return user ? user->weapon_id : 0;
 }
 
+int blank3d_systems_ammo_id(const Blank3DSystems *systems)
+{
+    const GWP89_UserState *user;
+    const GWP89_WeaponProfile *profile;
+    user = b3d_player_user(systems);
+    if (!user) return 0;
+    profile = gwp89_get_weapon(&systems->weapons, user->weapon_slot);
+    return profile ? profile->ammo_id : 0;
+}
+
 const char *blank3d_systems_weapon_name(const Blank3DSystems *systems)
 {
     const GWP89_UserState *user;
@@ -943,6 +1078,308 @@ int blank3d_systems_inventory_count(const Blank3DSystems *systems, int item_id)
 {
     if (!systems || item_id < 0 || item_id > 65535) return 0;
     return (int)gkinv_count_item(&systems->inventory, (gkinv_u16)item_id);
+}
+
+static int b3d_ammo_capacity(const Blank3DSystems *systems, int ammo_id)
+{
+    int i;
+    int capacity;
+    const Blank3DWeaponCatalogEntry *entry;
+    if (!systems || ammo_id <= 0) return 0;
+    capacity = 0;
+    for (i = 0; i < B3D_WLOAD_MAX_WEAPONS; ++i) {
+        entry = &systems->weapon_catalog.entries[i];
+        if (!entry->used || entry->ammo_id != ammo_id) continue;
+        if (entry->ammo_capacity > capacity) capacity = entry->ammo_capacity;
+    }
+    return capacity;
+}
+
+int blank3d_systems_grant_weapon(Blank3DSystems *systems, int actor_id,
+                                 int weapon_id, int amount, int auto_equip)
+{
+    const Blank3DWeaponCatalogEntry *entry;
+    int current;
+    int maximum;
+    int result;
+    if (!systems || actor_id != B3D_PLAYER_ACTOR_ID ||
+        weapon_id <= 0 || amount <= 0)
+        return 0;
+    entry = blank3d_weapon_catalog_find_id(&systems->weapon_catalog, weapon_id);
+    if (!entry) return 0;
+    current = (int)gkinv_count_item(&systems->inventory,
+                                    b3d_weapon_item_id(weapon_id));
+    maximum = entry->max_owned > 0 ? entry->max_owned : 1;
+    if (current > maximum || amount > maximum - current) return 0;
+    if (amount > 65535) return 0;
+    result = gkinv_add_item(&systems->item_db, &systems->inventory,
+                            b3d_weapon_item_id(weapon_id),
+                            (gkinv_u16)amount, 0);
+    if (result != GKINV_OK) return 0;
+    if (auto_equip) {
+        result = blank3d_systems_equip_id(systems, weapon_id);
+        if (result != GWP89_OK) {
+            (void)gkinv_remove_item(&systems->item_db, &systems->inventory,
+                                    b3d_weapon_item_id(weapon_id),
+                                    (gkinv_u16)amount);
+            return 0;
+        }
+        systems->current_weapon_id = weapon_id;
+    }
+    return 1;
+}
+
+int blank3d_systems_grant_ammo(Blank3DSystems *systems, int actor_id,
+                               int ammo_id, int amount)
+{
+    int current;
+    int capacity;
+    int result;
+    if (!systems || actor_id != B3D_PLAYER_ACTOR_ID ||
+        ammo_id <= 0 || amount <= 0 || amount > 65535)
+        return 0;
+    capacity = b3d_ammo_capacity(systems, ammo_id);
+    if (capacity <= 0) return 0;
+    current = (int)gkinv_count_item(&systems->inventory,
+                                    b3d_ammo_item_id(ammo_id));
+    if (current > capacity || amount > capacity - current) return 0;
+    result = gkinv_add_item(&systems->item_db, &systems->inventory,
+                            b3d_ammo_item_id(ammo_id),
+                            (gkinv_u16)amount, 0);
+    return result == GKINV_OK ? 1 : 0;
+}
+
+CT89_Context *blank3d_systems_contact_triggers(Blank3DSystems *systems)
+{
+    return systems ? &systems->contact_triggers : 0;
+}
+
+PBB_ItemWorld *blank3d_systems_item_world(Blank3DSystems *systems)
+{
+    return systems ? &systems->item_world : 0;
+}
+
+PBBCTW89_Bridge *blank3d_systems_item_contact_bridge(Blank3DSystems *systems)
+{
+    return systems ? &systems->item_contact_bridge : 0;
+}
+
+int blank3d_systems_player_item_actor(const Blank3DSystems *systems)
+{
+    return systems ? systems->player_item_actor_id : PBB_ITEM_INVALID_ID;
+}
+
+int blank3d_systems_bind_item_actor(Blank3DSystems *systems,
+                                    CT89_Subject subject,
+                                    int host_actor_id,
+                                    unsigned long class_mask,
+                                    unsigned long team_mask,
+                                    unsigned long touch_mask,
+                                    unsigned long interact_mask)
+{
+    int actor_id;
+    if (!systems || subject == CT89_SUBJECT_INVALID) return PBB_ITEM_INVALID_ID;
+    actor_id = pbb_item_actor_create(&systems->item_world,
+                                     class_mask, team_mask,
+                                     0L, 0L,
+                                     PBB_FIXED_HALF, PBB_FIXED_HALF);
+    if (actor_id == PBB_ITEM_INVALID_ID) return actor_id;
+    (void)pbb_item_actor_set_masks(&systems->item_world, actor_id,
+                                   touch_mask, interact_mask);
+    if (pbbctw89_bind_actor(&systems->item_contact_bridge,
+                            subject, actor_id, host_actor_id) != PBBCTW89_OK) {
+        (void)pbb_item_actor_destroy(&systems->item_world, actor_id);
+        return PBB_ITEM_INVALID_ID;
+    }
+    return actor_id;
+}
+
+int blank3d_systems_activate_item_trigger(Blank3DSystems *systems,
+                                           CT89_Trigger trigger,
+                                           CT89_Subject activator_subject)
+{
+    if (!systems || trigger == CT89_TRIGGER_INVALID ||
+        activator_subject == CT89_SUBJECT_INVALID)
+        return CT89_ACTION_UNHANDLED;
+    return ct89_activate(&systems->contact_triggers, trigger,
+                         activator_subject);
+}
+
+static int b3d_define_pickup(Blank3DSystems *systems,
+                             const char *name,
+                             int pickup_kind,
+                             int resource_id,
+                             int amount,
+                             int auto_equip,
+                             int interact_required,
+                             CT89_Subject owner_subject,
+                             int sensor_mode,
+                             CT89_FX radius_fx,
+                             unsigned long contact_category_mask,
+                             int consume_policy,
+                             int *out_item_id,
+                             CT89_Trigger *out_trigger)
+{
+    int def_id;
+    int item_id;
+    int effect_id;
+    int consume_effect_id;
+    int rule_id;
+    int hook;
+    int action_id;
+    unsigned long flags;
+    unsigned long hook_mask;
+    CT89_Trigger trigger;
+    if (!systems || !name || amount <= 0 ||
+        owner_subject == CT89_SUBJECT_INVALID)
+        return 0;
+    if ((pickup_kind == PBBCTW89_PICKUP_WEAPON ||
+         pickup_kind == PBBCTW89_PICKUP_AMMO) && resource_id <= 0)
+        return 0;
+    if (pickup_kind != PBBCTW89_PICKUP_WEAPON &&
+        pickup_kind != PBBCTW89_PICKUP_AMMO &&
+        pickup_kind != B3D_SYSTEMS_PICKUP_KIND_HEALTH)
+        return 0;
+
+    def_id = pbb_item_def_create(&systems->item_world, name);
+    if (def_id == PBB_ITEM_INVALID_ID) return 0;
+    flags = PBB_ITEMF_ACTIVE | PBB_ITEMF_VISIBLE;
+    if (interact_required) flags |= PBB_ITEMF_INTERACTABLE;
+    else flags |= PBB_ITEMF_TOUCHABLE;
+    (void)pbb_item_def_set_defaults(&systems->item_world, def_id,
+                                    flags, amount,
+                                    PBB_FIXED_HALF, PBB_FIXED_HALF);
+    (void)pbb_item_def_set_category(&systems->item_world, def_id,
+                                    PBB_ITEM_CATEGORY_PICKUP);
+    hook = interact_required ? PBB_ITEM_HOOK_INTERACT : PBB_ITEM_HOOK_TOUCH;
+
+    if (pickup_kind == B3D_SYSTEMS_PICKUP_KIND_HEALTH) {
+        rule_id = pbb_item_rule_add(&systems->item_world,
+                                    PBB_RULE_CALL_CUSTOM,
+                                    B3D_PBB_RULE_HEALTH_BELOW_MAX,
+                                    B3D_PLAYER_HEALTH_MAX, 0, 0);
+        if (rule_id < 0) return 0;
+        (void)pbb_item_def_set_rule_block(&systems->item_world,
+                                          def_id, hook, rule_id, 1);
+        effect_id = pbb_item_effect_add(&systems->item_world,
+                                        PBB_EFFECT_CALL_CUSTOM,
+                                        B3D_PBB_EFFECT_HEAL_FROM_ITEM_AMOUNT,
+                                        B3D_PLAYER_HEALTH_MAX,
+                                        0, 0, 0L, 0L);
+        if (effect_id < 0) return 0;
+        consume_effect_id = pbb_item_effect_add(&systems->item_world,
+                                                PBB_EFFECT_CONSUME_ITEM,
+                                                0, 0, 0, 0, 0L, 0L);
+        if (consume_effect_id != effect_id + 1) return 0;
+        (void)pbb_item_def_set_effect_block(&systems->item_world,
+                                            def_id, hook, effect_id, 2);
+    } else {
+        effect_id = pbb_item_effect_add(&systems->item_world,
+                                        PBB_EFFECT_CONSUME_ITEM,
+                                        0, 0, 0, 0, 0L, 0L);
+        if (effect_id < 0) return 0;
+        (void)pbb_item_def_set_effect_block(&systems->item_world,
+                                            def_id, hook, effect_id, 1);
+    }
+
+    item_id = pbb_item_spawn(&systems->item_world, def_id, 0L, 0L, amount);
+    if (item_id == PBB_ITEM_INVALID_ID) return 0;
+
+    hook_mask = interact_required ? PBBCTW89_HOOK_INTERACT : PBBCTW89_HOOK_TOUCH;
+    if (pickup_kind == PBBCTW89_PICKUP_WEAPON) {
+        if (pbbctw89_bind_weapon_pickup(&systems->item_contact_bridge,
+                                        item_id, resource_id, amount,
+                                        auto_equip, hook_mask) != PBBCTW89_OK) {
+            (void)pbb_item_destroy(&systems->item_world, item_id);
+            return 0;
+        }
+    } else if (pickup_kind == PBBCTW89_PICKUP_AMMO) {
+        if (pbbctw89_bind_ammo_pickup(&systems->item_contact_bridge,
+                                      item_id, resource_id, amount,
+                                      hook_mask) != PBBCTW89_OK) {
+            (void)pbb_item_destroy(&systems->item_world, item_id);
+            return 0;
+        }
+    }
+
+    action_id = interact_required ? PBBCTW89_ACTION_INTERACT
+                                  : PBBCTW89_ACTION_TOUCH;
+    trigger = pbbctw89_create_item_trigger(&systems->item_contact_bridge,
+                                           owner_subject, item_id,
+                                           sensor_mode, radius_fx,
+                                           contact_category_mask,
+                                           action_id, consume_policy);
+    if (trigger == CT89_TRIGGER_INVALID) {
+        if (pickup_kind == PBBCTW89_PICKUP_WEAPON ||
+            pickup_kind == PBBCTW89_PICKUP_AMMO)
+            (void)pbbctw89_clear_pickup_binding(&systems->item_contact_bridge,
+                                                item_id);
+        (void)pbb_item_destroy(&systems->item_world, item_id);
+        return 0;
+    }
+    if (out_item_id) *out_item_id = item_id;
+    if (out_trigger) *out_trigger = trigger;
+    return 1;
+}
+
+int blank3d_systems_define_weapon_pickup(Blank3DSystems *systems,
+                                         const char *name,
+                                         int weapon_id,
+                                         int amount,
+                                         int auto_equip,
+                                         int interact_required,
+                                         CT89_Subject owner_subject,
+                                         int sensor_mode,
+                                         CT89_FX radius_fx,
+                                         unsigned long contact_category_mask,
+                                         int consume_policy,
+                                         int *out_item_id,
+                                         CT89_Trigger *out_trigger)
+{
+    return b3d_define_pickup(systems, name, PBBCTW89_PICKUP_WEAPON,
+                             weapon_id, amount, auto_equip,
+                             interact_required, owner_subject,
+                             sensor_mode, radius_fx, contact_category_mask,
+                             consume_policy, out_item_id, out_trigger);
+}
+
+int blank3d_systems_define_ammo_pickup(Blank3DSystems *systems,
+                                       const char *name,
+                                       int ammo_id,
+                                       int amount,
+                                       int interact_required,
+                                       CT89_Subject owner_subject,
+                                       int sensor_mode,
+                                       CT89_FX radius_fx,
+                                       unsigned long contact_category_mask,
+                                       int consume_policy,
+                                       int *out_item_id,
+                                       CT89_Trigger *out_trigger)
+{
+    return b3d_define_pickup(systems, name, PBBCTW89_PICKUP_AMMO,
+                             ammo_id, amount, 0,
+                             interact_required, owner_subject,
+                             sensor_mode, radius_fx, contact_category_mask,
+                             consume_policy, out_item_id, out_trigger);
+}
+
+int blank3d_systems_define_health_pickup(Blank3DSystems *systems,
+                                         const char *name,
+                                         int amount,
+                                         int interact_required,
+                                         CT89_Subject owner_subject,
+                                         int sensor_mode,
+                                         CT89_FX radius_fx,
+                                         unsigned long contact_category_mask,
+                                         int consume_policy,
+                                         int *out_item_id,
+                                         CT89_Trigger *out_trigger)
+{
+    return b3d_define_pickup(systems, name, B3D_SYSTEMS_PICKUP_KIND_HEALTH,
+                             0, amount, 0,
+                             interact_required, owner_subject,
+                             sensor_mode, radius_fx, contact_category_mask,
+                             consume_policy, out_item_id, out_trigger);
 }
 
 int blank3d_systems_set_multiplier_q16(Blank3DSystems *systems, int numeric_key,

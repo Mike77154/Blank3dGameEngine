@@ -1,0 +1,30 @@
+Blank3D ID14 Flamethrower QA
+============================
+
+PASS: expandiblefire89 strict C89 vendor unit test (-Werror)
+PASS: real weapons.ini loads 14 weapons
+PASS: weapon 14 uses ammo 13 / projectile 14 / mesh 13
+PASS: weapon 14 is automatic at 45 ms cadence
+PASS: Satellaborner89 OFF for weapon 14
+PASS: Telesearcher89 OFF for weapon 14
+PASS: expandiblefire89 ON for weapon 14
+PASS: INI start/end/growth/kill parameters parsed as fixed point
+PASS: collision-growth flag ON
+PASS: projectile visual expandible_fire is unlit + additive
+PASS: mesh 13 builds as intentionally tiny low-poly procedural cube
+PASS: real INI -> expandiblefire89 composition test
+PASS: start scale shrinks both mesh and collision envelope
+PASS: full-growth scale expands both mesh and collision envelope
+PASS: kill at 6.25 travelled world units
+PASS: Uzi pickup regression
+PASS: generic health pickup regression
+PASS: Satellaborner89 + Telesearcher89 composition regression
+PASS: weapon-module regression
+PASS: complete active-source syntax-check
+PASS: active integration allocator audit
+PASS: expandiblefire89 source/header/test contains no allocator or FP scalar tokens
+
+Environment note:
+No MinGW Win32 linker/runtime is available here, so final blank3d.exe execution
+must be rebuilt/tested in the user's MSYS2 MinGW32 environment. The complete
+active source set passes the Win32/OpenGL declaration syntax shim.

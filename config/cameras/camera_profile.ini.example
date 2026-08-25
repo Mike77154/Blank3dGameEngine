@@ -1,0 +1,47 @@
+; Copy this file to config/cameras/my_camera.ini.
+; Every enabled *.ini in that directory becomes a selectable camera.
+[profile]
+id=my_camera
+name=My Camera
+order=40
+enabled=true
+rig=orbit
+view_style=third_person
+aim=camera_muzzle
+
+[render]
+player_body=true
+player_weapon=true
+
+[rig]
+pivot_x=0.0
+pivot_y=5.0
+pivot_z=0.0
+look_x=0.0
+look_y=0.0
+look_z=0.0
+distance=10.0
+min_distance=0.5
+max_distance=64.0
+offset_right=0.0
+offset_up=0.0
+offset_forward=0.0
+
+[look]
+pitch_min=-70.0
+pitch_max=70.0
+mouse_sensitivity=0.18
+
+[lens]
+fov=70.0
+near=0.1
+far=200.0
+
+[smoothing]
+position=0.50
+rotation=0.60
+fov=0.60
+
+[collision]
+enabled=true
+radius=0.30

@@ -1,0 +1,19 @@
+Monika FontCore build proof
+===========================
+
+Command run in this package root:
+
+  make clean
+  make proof-brotli
+
+Observed proof_output.txt:
+
+Monika FontCore proof
+font: vendor/monika_woff2_c89_decoder/tests/tiny.ttf
+kind: SFNT/TrueType glyf
+features: 0x00000003
+checks: ttf=1 woff2=1 woff1=1 gmyy=1 mugen=1
+png: proof_fontcore.png
+
+PNG validation:
+proof_fontcore.png: PNG image data, 640 x 260, 8-bit grayscale, non-interlaced

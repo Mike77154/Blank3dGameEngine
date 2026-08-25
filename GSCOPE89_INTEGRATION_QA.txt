@@ -1,0 +1,19 @@
+GSCOPE89 v0.4 BLANK3D INTEGRATION QA
+====================================
+PASS  vendor gscope89 strict C89 build (-Werror)
+PASS  vendor gscope89 demo_split
+PASS  frozen golden master: 192 reticles, 0 visual byte failures
+PASS  frozen golden master: 192 reticles, 0 command byte failures
+PASS  192 INI reticles: 192 presets, 5388 draw commands, 0 failures
+PASS  verify_pack192: IDs/names/vector geometry/selector valid
+PASS  provider_bundle_smoke: animation provider ABI 2 observed + fallback
+PASS  strict external provider mode fails closed when provider is absent
+PASS  gscopeanim89 animation smoke: FIRE expands then settles to identity
+PASS  Blank3D RE5 PSG-1 recipe resolves re5_psg1_game_scope
+PASS  Blank3D recipe loads reticle_default animation set
+PASS  Blank3D AIM_ENTER drives fade/settle from INI
+PASS  Blank3D FIRE drives reticle scale from INI
+PASS  Blank3D host animation provider receives the animated shape batch
+PASS  Blank3D weapon INI/module regressions
+PASS  existing gcrosshair89 ABI 2 animation runtime regression
+PASS  full active Blank3D C89 syntax-check

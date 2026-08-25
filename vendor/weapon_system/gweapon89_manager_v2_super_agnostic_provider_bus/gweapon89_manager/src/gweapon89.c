@@ -341,6 +341,7 @@ void gwp89_profile_defaults(GWP89_WeaponProfile *p)
     p->fire_mode = GWP89_FIRE_SEMI;
     p->clip_size = 15;
     p->ammo_per_shot = 1;
+    p->infinite_ammo = 0;
     p->pellet_count = 1;
     p->burst_count = 3;
     p->allow_dry_fire_event = 1;
@@ -1247,6 +1248,7 @@ int gwp89_begin_reload(GWP89_Manager *m, int actor_id)
     p = gwp89_get_weapon(m, u->weapon_slot);
     if (!p) return GWP89_NOT_FOUND;
     if (!gwp89_resolve_flag(m, actor_id, p, GWP89_FLAG_CAN_RELOAD, 1)) return GWP89_CANCELLED;
+    if (gwp89_resolve_flag(m, actor_id, p, GWP89_FLAG_INFINITE_AMMO, p->infinite_ammo)) return GWP89_OK;
     clip_size = gwp89_resolve_numeric_int(m, actor_id, p, GWP89_NUM_CLIP_SIZE, p->clip_size);
     clip = gwp89_query_clip(m, actor_id, p->weapon_id);
     if (clip_size <= 0 || clip >= clip_size) return GWP89_OK;
@@ -1739,6 +1741,7 @@ int gwp89_try_fire(GWP89_Manager *m, const GWP89_FireInput *input)
     int fire_mode;
     int burst_count;
     int use_clip;
+    int infinite_ammo;
     int r;
     int emit_visuals;
     int emit_projectile;
@@ -1783,22 +1786,25 @@ int gwp89_try_fire(GWP89_Manager *m, const GWP89_FireInput *input)
     if (cost <= 0) cost = 1;
     clip_size = gwp89_resolve_numeric_int(m, u->actor_id, p, GWP89_NUM_CLIP_SIZE, p->clip_size);
     use_clip = gwp89_resolve_flag(m, u->actor_id, p, GWP89_FLAG_USE_INTERNAL_CLIP, clip_size > 0);
+    infinite_ammo = gwp89_resolve_flag(m, u->actor_id, p, GWP89_FLAG_INFINITE_AMMO, p->infinite_ammo);
     clip = gwp89_query_clip(m, u->actor_id, p->weapon_id);
-    ammo_ok = use_clip ? (clip >= cost) : (gwp89_query_ammo(m, u->actor_id, p->ammo_id, p->weapon_id) >= cost);
+    ammo_ok = infinite_ammo ? 1 : (use_clip ? (clip >= cost) : (gwp89_query_ammo(m, u->actor_id, p->ammo_id, p->weapon_id) >= cost));
     if (!ammo_ok) {
         gwp89_emit_dry_fire(m, u, p, fire_input);
         return GWP89_NO_AMMO;
     }
-    if (use_clip) {
-        gwp89_set_clip(m, u->actor_id, p->weapon_id, clip - cost);
-    } else if (gwp89_consume_ammo(m, u, p, cost) != GWP89_OK) {
-        gwp89_emit_dry_fire(m, u, p, fire_input);
-        return GWP89_NO_AMMO;
+    if (!infinite_ammo) {
+        if (use_clip) {
+            gwp89_set_clip(m, u->actor_id, p->weapon_id, clip - cost);
+        } else if (gwp89_consume_ammo(m, u, p, cost) != GWP89_OK) {
+            gwp89_emit_dry_fire(m, u, p, fire_input);
+            return GWP89_NO_AMMO;
+        }
     }
     u->clip_ammo = gwp89_query_clip(m, u->actor_id, p->weapon_id);
     u->cooldown_ms_left = (unsigned short)gwp89_resolve_numeric_int(m, u->actor_id, p, GWP89_NUM_COOLDOWN_MS, p->cooldown_ms);
     if (fire_mode == GWP89_FIRE_BURST && u->burst_left > 0) u->burst_left--;
-    gwp89_emit_ammo_changed(m, u, p);
+    if (!infinite_ammo) gwp89_emit_ammo_changed(m, u, p);
 
     count = gwp89_resolve_numeric_int(m, u->actor_id, p, GWP89_NUM_PELLET_COUNT, p->pellet_count);
     if (count < 1) count = 1;
@@ -1933,6 +1939,7 @@ static void gwp89_apply_profile_kv(GWP89_WeaponProfile *p, const char *key, cons
     else if (gwp89_streq_id(key, "fire_mode") || gwp89_streq_id(key, "trigger") || gwp89_streq_id(key, "shot_mode")) p->fire_mode = gwp89_fire_mode_from_name(v);
     else if (gwp89_streq_id(key, "clip_size") || gwp89_streq_id(key, "clip") || gwp89_streq_id(key, "capacity") || gwp89_streq_id(key, "magazine_capacity") || gwp89_streq_id(key, "cartucho_capacidad") || gwp89_streq_id(key, "capacidad")) p->clip_size = gwp89_parse_int(v, p->clip_size);
     else if (gwp89_streq_id(key, "ammo_per_shot") || gwp89_streq_id(key, "cost") || gwp89_streq_id(key, "balas_por_tiro") || gwp89_streq_id(key, "ammo_cost")) p->ammo_per_shot = gwp89_parse_int(v, p->ammo_per_shot);
+    else if (gwp89_streq_id(key, "infinite_ammo") || gwp89_streq_id(key, "ammo_infinite") || gwp89_streq_id(key, "infinite")) p->infinite_ammo = gwp89_parse_int(v, p->infinite_ammo) ? 1 : 0;
     else if (gwp89_streq_id(key, "pellets") || gwp89_streq_id(key, "projectile_count")) p->pellet_count = gwp89_parse_int(v, p->pellet_count);
     else if (gwp89_streq_id(key, "burst_count")) p->burst_count = gwp89_parse_int(v, p->burst_count);
     else if (gwp89_streq_id(key, "dry_fire") || gwp89_streq_id(key, "allow_dry_fire_event")) p->allow_dry_fire_event = gwp89_parse_int(v, p->allow_dry_fire_event);

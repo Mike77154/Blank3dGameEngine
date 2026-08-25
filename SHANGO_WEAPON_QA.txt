@@ -1,0 +1,43 @@
+ShangoWeapon QA — Blank3D
+=========================
+
+Weapon profile
+- weapon_id: 12
+- ammo_id: 11 (shango_cells)
+- projectile_mesh_id: 11
+- trigger: charge_release
+- Satellaborner89: enabled, spawn offset Y +12
+- Telesearcher89: enabled, same target, gain 1.0
+- projectile_visual: shango_press
+
+Visual recipe
+- procedural 24-segment energy cylinder from Giffany Shapes3D
+- cylinder local axis remapped to projectile +Z
+- unlit, two-pass additive glow
+- 180 ms radial bloom
+- 520 ms axial crush
+- radial scale 0.30 -> 2.35 -> 1.05
+- axial scale 6.50 -> 0.28
+- projectile speed 14.5 units/s so the crush is visible before impact
+
+Architecture
+- No weapon-id==12 special case in the visual recipe parser.
+- projectile_visual=shango_press can be reused by another INI weapon.
+- Satellaborner89 owns only target-relative spawn resolution.
+- Telesearcher89 owns only projectile steering.
+- Bullet pool, collision, damage and draw lifecycle remain in the host Weapon System.
+
+Checks run
+- make test-weapon-ini: PASS
+- make test-projectile-meshes: PASS
+- make test-satellaborner-vendor: PASS
+- make test-telesearcher-vendor: PASS
+- make test-sattele-stack: PASS
+- make syntax-check: PASS
+- strict vendor tests include C89/pedantic/-Wall/-Wextra/-Werror
+- changed C/H code adds no malloc/calloc/realloc/free and no float/double declarations
+
+Runtime note
+This environment does not provide a MinGW Win32 cross-compiler, so no new
+blank3d.exe is included. Rebuild with the project's normal MinGW32 flow before
+running the ShangoWeapon branch.

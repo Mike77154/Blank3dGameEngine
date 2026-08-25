@@ -1,0 +1,29 @@
+Phase 69 validation summary
+===========================
+
+Implemented:
+- locked-corpora fetch/verify flow with SHA-256 lockfile emission
+- frozen-manifest export from lockfile data
+- local PNG/TIFF differential validation using Pillow + tifffile + ImageMagick identify (when available)
+- new phase 69 public benchmark runner that writes:
+  - phase69_corpus_lock.json
+  - phase69_frozen_manifest.json
+  - phase69_public.csv
+  - phase69_public.md
+  - phase69_png_tiff_validation.json
+  - phase69_run_metadata.json
+- offline locked smoke corpus under bench/corpora/local_phase69
+
+Validated in this environment:
+- cmake configure/build: OK
+- full build: OK
+- targeted ctest: 7/7 OK
+- Werror configure/build: OK
+- Werror phase69 test: OK
+- phase69 runner on locked offline corpus: OK
+- PNG/TIFF differential validation on local smoke corpus: 0 failures
+
+Important honesty note:
+- The phase 69 machinery is wired for real external corpora and lockfile generation, but this container cannot fetch the external benchmark archives over the network.
+- Because of that, the external-source manifests were implemented and documented, while the executed reproducible run in this bundle uses the offline locked smoke corpus.
+- The generated benchmark summary in this environment linked against the local system zlib runtime reported by the bench itself (1.3.1), even though the current official zlib release referenced in roadmap/docs is 1.3.2.

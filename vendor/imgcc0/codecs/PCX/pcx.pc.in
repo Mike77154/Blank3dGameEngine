@@ -1,0 +1,9 @@
+prefix=@PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: pcx
+Description: Hardened PCX encoder/decoder library
+Version: @VERSION@
+Libs: -L${libdir} -lpcx
+Cflags: -I${includedir}

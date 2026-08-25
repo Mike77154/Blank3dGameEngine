@@ -1,0 +1,26 @@
+PNG before/after regression:
+  successful PNG output comparisons: 66/66 BYTE_IDENTICAL
+  malformed PNG error comparisons: 10/10 SAME_ERROR
+  total PNG comparisons: 76/76 MATCH
+
+APNG full-frame before/after regression:
+  valid animations: 3/3 BYTE_IDENTICAL frame dump
+  malformed inputs: 4/4 SAME_ERROR
+
+Original functional suite migrated to fixed89 API:
+  38/38 tests: ALL_TESTS_OK
+  ASan + UBSan: ALL_TESTS_OK after allocator-alignment fix
+
+Sanitized-only smoke:
+  encoder -> Adam7+gAMA PNG -> decoder: ROUNDTRIP_OK
+  repeated decode/release x200: arena bytes_used returned to 0 after each iteration
+
+Export audit:
+  original globals: 143
+  sanitized globals: 161
+  missing original globals: 0
+
+Compiler gate used on codec-owned sources:
+  gcc -std=c89 -pedantic -Wall -Wextra -Werror -O2
+
+Note: Q16.16 authoring of real-valued metadata may change encoded chunk bytes slightly; decoded pixel/frame equivalence remains byte-identical in the test matrix.

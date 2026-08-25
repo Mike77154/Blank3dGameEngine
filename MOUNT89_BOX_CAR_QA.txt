@@ -1,0 +1,61 @@
+Blank3D + 3d_mounting_system89 box-car QA
+=========================================
+
+Input vendor:
+  3d_mounting_system89 v0.1.0
+
+Vendored at:
+  vendor/3d_mounting_system89/
+
+Prototype:
+  white procedural box car
+  RPY: mount_car pos 5 0.6 6 speed 16 run 19
+  M: mount/dismount
+  player speed: 7 u/s
+  car speed: 16 u/s
+  car run: 19 u/s
+
+Checks performed:
+
+1. Original mount89 standalone tests
+   mount89: all tests passed
+
+2. Blank3D adapter composition
+   make test-mount-vehicle
+   mount89 box-car integration: PASS
+
+   - far mount rejected
+   - near mount accepted
+   - guest snapped to driver seat
+   - host drive exceeds player speed
+   - guest follows host
+   - dismount clears relationship and returns player to floor
+
+3. Real RPYL parser/runtime path
+   make test-languages
+   Blank3D vendored DDSL2 + FPIL + RPYL test: OK
+
+   test_languages explicitly requires:
+     mount_car pos 5 0.6 6 speed 16 run 19
+   to arrive as 8 intact RPY arguments.
+
+4. Full source-set compile check
+   make syntax-check
+   PASS
+
+5. C89/core restrictions on new integration and mount vendor source
+   allocator grep: no malloc/calloc/realloc/free calls
+   float/double grep: no float/double tokens in integration/vendor core source
+
+Runtime design:
+  - player Object/Actor ownership is unchanged
+  - car is the mount host transform
+  - mount89 is attachment authority
+  - mounted player gloco is suspended
+  - existing movement verbs are redirected to car
+  - mount89_update writes rider world transform
+  - V stays camera cycle; M is the prototype mount key
+
+Deliberate limits:
+  No vehicle physics, wheels, suspension or car collision solver yet.
+  This branch tests mounting + input handoff + host/guest transform following.

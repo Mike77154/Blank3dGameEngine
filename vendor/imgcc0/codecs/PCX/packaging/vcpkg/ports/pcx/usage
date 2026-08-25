@@ -1,0 +1,4 @@
+PCX is available via CMake config and pkg-config.
+
+  find_package(pcx CONFIG REQUIRED)
+  target_link_libraries(app PRIVATE pcx::pcx)

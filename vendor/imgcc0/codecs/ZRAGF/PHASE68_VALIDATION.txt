@@ -1,0 +1,25 @@
+phase 68 validation
+===================
+
+implemented
+-----------
+- versioned external corpus manifests under bench/corpora/
+- manifest-aware fetch helper: tools/fetch_phase68_corpora.py
+- manifest-aware benchmark runner: tools/run_phase68_public.py
+- optional miniz integration in bench/bench_phase68_public.c and CMake
+- local smoke manifest + files for offline CTest coverage
+
+validated locally
+-----------------
+- release configure/build: ok
+- release targeted tests: ok
+- release runner smoke on local manifest: ok
+- Werror configure/build: ok
+- Werror targeted tests: ok
+
+notes
+-----
+- public benchmark currently links against local zlib runtime 1.3.1 in this container.
+- official zlib upstream current release is 1.3.2 (see docs/source references).
+- optional miniz comparator wiring was added, but this environment did not provide miniz headers/sources,
+  so the miniz path is compiled as unavailable rather than validated live.

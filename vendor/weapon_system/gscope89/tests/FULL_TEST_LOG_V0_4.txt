@@ -1,0 +1,50 @@
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Igscopebundle89/include -Igscopeprovider89/include -Igscopeini89/include -Igscopeanim89/include -Imodules/gscopepaint89/include -Imodules/gscopevector89/include -Imodules/gscoperaster89/include -Imodules/gscopebars89/include -Imodules/gscopepresets89/include -Igsniperhud89/include -Igtelescopiczoom89/include -Iinclude \
+	gscopeini89/src/gscopeini89.c \
+	gscopeanim89/src/gscopeanim89.c \
+	modules/gscopepaint89/src/gscopepaint89.c \
+	modules/gscopevector89/src/gscopevector89.c \
+	modules/gscoperaster89/src/gscoperaster89.c \
+	modules/gscopebars89/src/gscopebars89.c \
+	modules/gscopepresets89/src/gscopepresets89.c \
+	gsniperhud89/src/gsniperhud89.c \
+	gtelescopiczoom89/src/gtelescopiczoom89.c \
+	gscopeprovider89/src/gscopeprovider89.c \
+	gscopebundle89/src/gscopebundle89.c \
+	tests/provider_bundle_smoke.c -o tests/provider_bundle_smoke
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Igscopebundle89/include -Igscopeprovider89/include -Igscopeini89/include -Igscopeanim89/include -Imodules/gscopepaint89/include -Imodules/gscopevector89/include -Imodules/gscoperaster89/include -Imodules/gscopebars89/include -Imodules/gscopepresets89/include -Igsniperhud89/include -Igtelescopiczoom89/include -Iinclude \
+	gscopeini89/src/gscopeini89.c \
+	gscopeanim89/src/gscopeanim89.c \
+	modules/gscopepaint89/src/gscopepaint89.c \
+	modules/gscopevector89/src/gscopevector89.c \
+	modules/gscopepresets89/src/gscopepresets89.c \
+	tests/animation_smoke.c -o tests/animation_smoke
+mkdir -p tests/golden/out_legacy tests/golden/out_ini
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Itests/golden/legacy \
+	tests/golden/legacy/gscopepresets89_legacy.c \
+	tests/golden/golden_preview_runtime.c tests/golden/golden_preview_main.c \
+	-o tests/golden/golden_legacy
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -DGOLDEN_RECIPE_BUILD \
+	-Imodules/gscopepresets89/include -Imodules/gscopepresets89/deps \
+	modules/gscopepresets89/src/gscopepresets89.c \
+	tests/golden/golden_preview_runtime.c tests/golden/golden_preview_main.c \
+	-o tests/golden/golden_ini
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude tests/golden/golden_compare.c -o tests/golden/golden_compare
+./tests/golden/golden_legacy tests/golden/out_legacy
+./tests/golden/golden_ini tests/golden/out_ini config/reticles/catalog.ini
+./tests/golden/golden_compare tests/golden/out_legacy tests/golden/out_ini | tee tests/GOLDEN_MASTER_V0_4.txt
+golden_presets=192 visual_byte_failures=0 command_byte_failures=0
+visual_corpus_fnv_old=12459162832947896641 visual_corpus_fnv_ini=12459162832947896641
+./demo_split >/dev/null
+make -C modules/gscopepresets89 test
+make[1]: Entering directory '/mnt/data/gscope89_recipe_ini_v0_4/modules/gscopepresets89'
+cc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude -Ideps -I../gscopevector89/include -I../gscopepaint89/include ../gscopepaint89/src/gscopepaint89.c ../gscopevector89/src/gscopevector89.c src/gscopepresets89.c tests/verify_pack192.c -o tests/verify_pack192
+cd ../.. && modules/gscopepresets89/test_all_presets
+presets=192 commands=5388 painter_glyphs=0 sprites=0 failures=0
+cd ../.. && modules/gscopepresets89/tests/verify_pack192
+verified 192 INI presets; IDs, names, vector geometry and selector are valid
+make[1]: Leaving directory '/mnt/data/gscope89_recipe_ini_v0_4/modules/gscopepresets89'
+./tests/provider_bundle_smoke
+preset=svd_pso1_dragunov shapes=22 primitive_provider_seen=44 paint_provider_seen=214 animation_provider_seen=1 sink=214 zoom_mode=1 fov=5483
+strict_external_missing=blocked err=1
+./tests/animation_smoke
+clips=1 channels=2 fire_scale_peak=1114 settled=1000 failures=0

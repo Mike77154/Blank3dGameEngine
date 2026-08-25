@@ -1,0 +1,14 @@
+Blank3D firearm shared muzzle-flash catalog QA
+
+PASS weapon INI registry: 15 profiles loaded
+PASS shared progressive JPEG assigned to pistol/machine_gun/shotgun/magnum/sniper/gatling/uzi
+PASS additive blend + view billboard + glow + dynamic light enabled on all seven
+PASS automatic muzzle lifetime: machine_gun 42ms < 75ms cooldown
+PASS automatic muzzle lifetime: gatling 30ms < 35ms cooldown
+PASS automatic muzzle lifetime: uzi 40ms < ~91ms cooldown
+PASS pistol native progressive JPEG decode/lifecycle/light regression
+PASS muzzle image pipeline regression
+PASS casing VPhysics regression
+PASS universal actor weapon assembly after presentation catalog count update 10 -> 15
+PASS mechanical weapon muzzle socket regression
+PASS whole-engine syntax check

@@ -1,0 +1,169 @@
+{
+  "manifest_version": 2,
+  "name": "phase70-public-external-corpora",
+  "description": "Phase 70 external corpus source manifest with cache-first materialization for real downloaded corpora.",
+  "datasets": [
+    {
+      "id": "canterbury-cantrbry",
+      "kind": "archive",
+      "family": "mixed",
+      "version": "cantrbry-2001",
+      "archive": {
+        "format": "zip",
+        "urls": [
+          "https://corpus.canterbury.ac.nz/resources/cantrbry.zip",
+          "http://corpus.canterbury.ac.nz/resources/cantrbry.zip"
+        ],
+        "expected_sha256": null,
+        "cache_names": [
+          "cantrbry.zip"
+        ],
+        "expected_size": null
+      },
+      "members": [
+        {
+          "member_suffix": "alice29.txt",
+          "output": "alice29.txt",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "cp.html",
+          "output": "cp.html",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "lcet10.txt",
+          "output": "lcet10.txt",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "plrabn12.txt",
+          "output": "plrabn12.txt",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "sum",
+          "output": "sum",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "kennedy.xls",
+          "output": "kennedy.xls",
+          "expected_sha256": null,
+          "expected_size": null
+        }
+      ],
+      "provenance": {
+        "homepage": "https://corpus.canterbury.ac.nz/descriptions/",
+        "note": "The Canterbury Corpus descriptions page states the full set is available as cantrbry.tar.gz or cantrbry.zip."
+      }
+    },
+    {
+      "id": "libtiff-pics-3.8.0",
+      "kind": "archive",
+      "family": "tiff",
+      "version": "pics-3.8.0",
+      "archive": {
+        "format": "tar.gz",
+        "urls": [
+          "https://download.osgeo.org/libtiff/pics-3.8.0.tar.gz"
+        ],
+        "expected_sha256": null,
+        "cache_names": [
+          "pics-3.8.0.tar.gz"
+        ],
+        "expected_size": null
+      },
+      "members": [
+        {
+          "member_suffix": "images/32bpp-None.tiff",
+          "output": "32bpp-None.tiff",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "images/32bpp-None-jpeg.tiff",
+          "output": "32bpp-None-jpeg.tiff",
+          "expected_sha256": null,
+          "expected_size": null
+        },
+        {
+          "member_suffix": "images/deflate-last-strip-extra-data.tiff",
+          "output": "deflate-last-strip-extra-data.tiff",
+          "expected_sha256": null,
+          "expected_size": null
+        }
+      ],
+      "provenance": {
+        "homepage": "https://libtiff.gitlab.io/libtiff/images.html",
+        "note": "LibTIFF documentation points at pics-3.8.0.tar.gz as the latest archive of test images."
+      }
+    },
+    {
+      "id": "pngsuite-2011",
+      "kind": "files",
+      "family": "png",
+      "version": "PngSuite-2011-official / PngSuite-2017jul19-mirror",
+      "files": [
+        {
+          "output": "basn0g01.png",
+          "urls": [
+            "https://www.schaik.com/pngsuite/basn0g01.png",
+            "https://raw.githubusercontent.com/lunapaint/pngsuite/main/png/basn0g01.png"
+          ],
+          "expected_sha256": null,
+          "expected_size": null,
+          "cache_names": [
+            "basn0g01.png"
+          ]
+        },
+        {
+          "output": "basn2c08.png",
+          "urls": [
+            "https://www.schaik.com/pngsuite/basn2c08.png",
+            "https://raw.githubusercontent.com/lunapaint/pngsuite/main/png/basn2c08.png"
+          ],
+          "expected_sha256": null,
+          "expected_size": null,
+          "cache_names": [
+            "basn2c08.png"
+          ]
+        },
+        {
+          "output": "basn6a16.png",
+          "urls": [
+            "https://www.schaik.com/pngsuite/basn6a16.png",
+            "https://raw.githubusercontent.com/lunapaint/pngsuite/main/png/basn6a16.png"
+          ],
+          "expected_sha256": null,
+          "expected_size": null,
+          "cache_names": [
+            "basn6a16.png"
+          ]
+        },
+        {
+          "output": "tp1n3p08.png",
+          "urls": [
+            "https://www.schaik.com/pngsuite/tp1n3p08.png",
+            "https://raw.githubusercontent.com/lunapaint/pngsuite/main/png/tp1n3p08.png"
+          ],
+          "expected_sha256": null,
+          "expected_size": null,
+          "cache_names": [
+            "tp1n3p08.png"
+          ]
+        }
+      ],
+      "provenance": {
+        "homepage": "https://www.schaik.com/pngsuite/",
+        "mirror": "https://github.com/lunapaint/pngsuite",
+        "note": "The official PngSuite site provides the PNG test suite; the GitHub mirror states it contains the original png images from PngSuite-2017jul19."
+      }
+    }
+  ]
+}

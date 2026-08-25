@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "phase69-local-locked-smoke",
+  "description": "Offline locked corpus manifest used by phase 69 reproducibility and PNG/TIFF validation tests.",
+  "datasets": [
+    {
+      "id": "local-phase69",
+      "kind": "existing",
+      "family": "mixed",
+      "version": "phase69-local-v1",
+      "root": "local_phase69",
+      "files": [
+        {
+          "path": "alpha.txt",
+          "expected_sha256": "11ce73616d8ca01bdf55ccfcb0526fece90c0cf94593e43364ee70df641cbdbf",
+          "expected_size": 45
+        },
+        {
+          "path": "binary.bin",
+          "expected_sha256": "fa0aee61a053432dc0346f68728b23d05c089e03765ddb97c8c8abc9620b906e",
+          "expected_size": 257
+        },
+        {
+          "path": "sprite_rgba.png",
+          "expected_sha256": "a2f658b2b0c5e7198265112325f0af41300f0ad34d8f117e5f0fbd0f1c17aaae",
+          "expected_size": 102
+        },
+        {
+          "path": "strip_gray.tiff",
+          "expected_sha256": "283b7d1047b04d28cba50429b2cbd1345d6dc910b3dee46bef450851942e606e",
+          "expected_size": 528
+        }
+      ]
+    }
+  ]
+}

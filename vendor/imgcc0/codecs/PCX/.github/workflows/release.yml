@@ -1,0 +1,56 @@
+name: release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: release
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y make gcc clang python3 pkg-config cmake binutils
+      - name: Derive release metadata
+        run: |
+          echo "PROJECT=pcx" >> "$GITHUB_ENV"
+          echo "VERSION=$(cat VERSION)" >> "$GITHUB_ENV"
+          echo "PLATFORM_TAG=$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m)" >> "$GITHUB_ENV"
+          echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct || date +%s)" >> "$GITHUB_ENV"
+      - name: Build release bundle
+        run: |
+          make release-package
+          make verify-release
+          make verify-provenance
+      - name: Upload release bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ env.PROJECT }}-${{ env.VERSION }}-release
+          path: dist/
+      - name: Attest build provenance for release bundle
+        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f # v3.2.0
+        with:
+          subject-path: dist/${{ env.PROJECT }}-${{ env.VERSION }}-${{ env.PLATFORM_TAG }}.tar.gz
+      - name: Attest binary SBOM
+        uses: actions/attest-sbom@bd218ad0dbcb3e146bd073d1d9c6d78e08aa8a0b # v2.4.0
+        with:
+          subject-path: dist/${{ env.PROJECT }}-${{ env.VERSION }}-${{ env.PLATFORM_TAG }}.tar.gz
+          sbom-path: dist/${{ env.PROJECT }}-${{ env.VERSION }}-binary.cdx.json

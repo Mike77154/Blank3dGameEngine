@@ -1,22 +1,34 @@
-# Universal DDSL2 input syntax. Key names come from polls/key_pc rather than
-# a hand-written engine table. Alternate keys request the same action once.
-If key_hold W then move_forward
-If key_hold Up then move_forward
-If key_hold S then move_back
-If key_hold Down then move_back
-If key_hold A then strafe_left
+# Universal DDSL2 input syntax. Key identity comes from input_keys89 rather
+# than a hand-written engine/platform table. The movement actions below intentionally use
+# the arrow keys only; WASD is free for user/game bindings.
+
+If key_hold Up then walk_forward
+If key_hold Shift and key_hold Up then run_forward
+If key_hold Down then walk_back
+If key_hold Shift and key_hold Down then run_backward
 If key_hold Left then strafe_left
-If key_hold D then strafe_right
 If key_hold Right then strafe_right
 If key_hold Q then turn_left
 If key_hold E then turn_right
 
+# walk/run are mutually exclusive without hardcoding locomotion policy.
+# invariantSpecialoperations_89 recognizes this declaration shape before
+# ordinary DDSL2 compilation. SpecOp=Viceversa generates the reverse rule.
+
+If walk_forward TRUE then run_forward FALSE
+Apply SpecOp=Viceversa
+
+If walk_back TRUE then run_backward FALSE
+Apply SpecOp=Viceversa
+
 # Edges and continuous controls can coexist.
+
 If key_pressed J then jump
 If key_hold F then move_up
 If key_hold G then move_down
 If key_hold MouseLeft then shoot
 
 # Generic named-list cycling. The list implementation lives outside DDSL2.
+
 If key_press M then list_cyclenext=active_weapon
 If key_press N then list_cycleprev=active_weapon

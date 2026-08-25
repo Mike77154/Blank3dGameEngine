@@ -1,0 +1,8 @@
+Suggested seÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿeds for fuzzing pcx_load()/pcx_load_indexed()/pcx_inspect_memory().
+- valid_indexed8_palette.pcx: baseline valid 8bpp with VGA palette trailer
+- malform0x0C appears inside image data, no real EOF trailer
+- valid_mono_round3.pcx: tiny monochrome valid sample
+- valid_rgb24_round3.pcx: small 24-bit planar sample
+- invalid_reserved_round3.pcx: non-zero reserved byte (useful for strict-mode paths)
+- tiny_truncated_header_round3.pcx: tiny malformed header seed
+Dictionary: ../pcx.dict

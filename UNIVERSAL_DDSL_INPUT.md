@@ -1,7 +1,7 @@
 # Blank3D v3.12.0 — input universal para DDSL2
 
 Blank3D integra ahora el catálogo y las capas de input proporcionadas en
-`input_hook`, `input_scanner`, `polls` y `scanemu` para que los scripts DDSL2
+`input_keys89`, `polls89`, `input_hook89`, `input_scanner89` y `scanemu89` para que los scripts DDSL2
 puedan declarar controles mediante nombres de tecla, sin mantener una tabla
 manual dentro del engine.
 
@@ -32,7 +32,7 @@ se conserva la forma histórica `key-w` para scripts antiguos.
 
 ## Nombres de controles
 
-Los nombres vienen de `vendor/polls89/key_pc.*`, basado en usages USB HID:
+Los nombres y aliases canónicos vienen de `vendor/input_keys89`, usando identidad USB HID. `polls89/key_pc` se conserva como ABI legacy y cruza al vocabulario canónico mediante un bridge explícito:
 
 - `A` a `Z`, `0` a `9`.
 - `Up`, `Down`, `Left`, `Right`.
@@ -49,13 +49,16 @@ La resolución compacta acepta variantes como `page_up`, `Page-Up` y `PageUp`.
 ## Flujo
 
 ```text
-backend de plataforma
+input_keys89       nombre / alias -> identidad HID canónica
         |
         v
-    input_hook       estado físico normalizado HID
+     polls89         adquisición nativa Win/Linux/macOS
         |
         v
-  input_scanner      hold / pressed / released / repeat / tap
+  input_hook89       snapshot/captura física normalizada HID
+        |
+        v
+input_scanner89      hold / pressed / released / repeat / tap
         |
         +------> scanemu89 Q16 para captura y rebinding
         |
@@ -86,10 +89,12 @@ Si W y Up están abajo simultáneamente, el host reúne ambas solicitudes y apli
 
 ## Backends
 
-El runner Win32 actual activa `input_hook_backend_win32_async`. Los fuentes
-vendorizados incluyen además SDL2, X11, Linux evdev, Allegro 5 y Event Tap para
-macOS. Al portar el runner se cambia el backend físico; la sintaxis DDSL2 y los
-nombres de controles permanecen iguales.
+El runner selecciona en `blank3d_input_platform.*` un provider `polls89` nativo
+para Windows, Linux o macOS y lo adapta a `input_hook89`. El core
+`blank3d_input.*` solo ve `ihk_backend` y no posee un backend Win32.
+`input_hook89` conserva además sus providers directos (SDL2, X11, evdev,
+Win32 async/LL hook, Allegro y EventTap) para hosts que quieran inyectarlos.
+Al cambiar de provider/SO, la sintaxis DDSL2 y la identidad de teclas no cambian.
 
 ## Restricciones
 

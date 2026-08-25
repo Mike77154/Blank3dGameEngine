@@ -1,0 +1,15 @@
+{
+  "name": "release",
+  "intended_protections": {
+    "required_reviewers": "configure in GitHub UI for the release environment",
+    "wait_timer_minutes": 0,
+    "deployment_branch_policy": {
+      "protected_branches": true,
+      "custom_branch_policies": false
+    },
+    "notes": [
+      "The release workflow references this environment so secrets are gated until approval.",
+      "If the repository is private, availability of required reviewers and custom rules depends on your GitHub plan."
+    ]
+  }
+}

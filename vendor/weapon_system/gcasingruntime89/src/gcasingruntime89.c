@@ -1,0 +1,4 @@
+#include "gcasingruntime89.h"
+#include <string.h>
+void gcasingruntime89_init(gcr89_runtime*r,const gcr89_providers*p){if(!r)return;memset(r,0,sizeof(*r));if(p)r->providers=*p;}
+int gcasingruntime89_spawn(gcr89_runtime*r,const gcr89_request*q,gcr89_handle*out){gcr89_handle h;if(!r||!q||!r->providers.world_spawn){if(r)r->rejected++;return 0;}memset(&h,0,sizeof(h));h.slot=-1;if(!r->providers.world_spawn(r->providers.user,q,&h)){r->rejected++;return 0;}if(r->providers.physics_spawn)r->providers.physics_spawn(r->providers.user,q,&h);if(r->providers.render_spawn)r->providers.render_spawn(r->providers.user,q,&h);if(r->providers.audio_spawn)r->providers.audio_spawn(r->providers.user,q,&h);if(r->providers.world_publish)r->providers.world_publish(r->providers.user,q,&h);r->spawned++;if(out)*out=h;return 1;}

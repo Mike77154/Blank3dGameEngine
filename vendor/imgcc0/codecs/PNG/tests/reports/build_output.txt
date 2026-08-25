@@ -1,0 +1,1 @@
+built libtiny_png_c89.a (link consumers with -lz)

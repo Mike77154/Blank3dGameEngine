@@ -1,0 +1,44 @@
+Blank3D MinGW32 response-file QA
+================================
+
+Observed failing log
+--------------------
+imgcc0 static archive completed: YES
+failure point: final root blank3d.exe GCC invocation
+reported failure: gcc: Argument list too long / Makefile Error 127
+
+Response-file implementation
+----------------------------
+release target: PASS (.blank3d_release.rsp)
+debug target: PASS (.blank3d_debug.rsp)
+vphysics demo target: PASS (.blank3d_vphysics_demo.rsp)
+syntax-check target: PASS (.blank3d_syntax.rsp)
+clean removes response files: PASS
+audit-link-response89: PASS
+
+Practical response-file gate
+----------------------------
+release response payload: 33,386 bytes / 806 whitespace tokens
+process invocation seen by fake compiler: one argument, @.blank3d_release.rsp
+fake release target completed: PASS
+
+Whole-engine syntax gate
+------------------------
+command seen by compiler: gcc @.blank3d_syntax.rsp
+syntax response payload: 33,418 bytes / 799 whitespace tokens
+result: PASS
+
+Regression gates
+----------------
+HOWM89 core: PASS
+GenWinConfigC89 <-> HOWM89 adapter: PASS
+WindowsWindow89 source/C89 gate: PASS
+Display Sextet89: PASS
+Primitive2DDatabase89 full catalog: PASS (720 shapes, 57 submodules, 16,321 commands)
+whole-engine syntax-check: PASS
+
+Scope
+-----
+No engine source code, vendor implementation, codecs, HOWM89 API, window
+provider API, or Primitive2D catalog data was changed for this fix.
+Only the root build transport was changed, plus this documentation/QA.

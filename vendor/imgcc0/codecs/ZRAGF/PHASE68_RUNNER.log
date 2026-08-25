@@ -1,0 +1,4 @@
+phase68 public bench rows=36 csv=bench/results/phase68/phase68_public.csv summary=bench/results/phase68/phase68_public.md
+running: build68/zragf_bench_phase68_public --csv bench/results/phase68/phase68_public.csv --summary bench/results/phase68/phase68_public.md --repeat 3 --warmup 1 --quick --no-builtins bench/corpora/local_smoke/alpha.txt bench/corpora/local_smoke/binary.bin bench/corpora/local_smoke/sprite.png bench/corpora/local_smoke/strip.tiff
+csv   : bench/results/phase68/phase68_public.csv
+summary: bench/results/phase68/phase68_public.md

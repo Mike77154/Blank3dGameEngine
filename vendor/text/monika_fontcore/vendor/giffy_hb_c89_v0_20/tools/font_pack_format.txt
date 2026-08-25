@@ -1,0 +1,22 @@
+giffy_hb_c89 static font pack format v0.14
+
+Runtime tables are plain C arrays. The runtime never owns or allocates them.
+
+Core tables:
+- ghb_cmap_pair[]: Unicode scalar -> glyph id
+- ghb_advance_pair[]: glyph id -> advance 26.6
+- ghb_glyph_class[]: base/mark/ligature/join flags
+- ghb_single_sub[]: GSUB single substitutions
+- ghb_ligature[]: GSUB ligatures
+- ghb_kern_pair[]: GPOS-like pair advances
+- ghb_mark_anchor[] / ghb_mark_mark_anchor[]: mark positioning
+- ghb_context_class_range[] / ghb_context_class_sub[]: compact contextual GSUB
+- ghb_context_pair_adjust[]: compact contextual GPOS pair adjustment
+- ghb_script_lang[]: script/lang inventory
+- ghb_var_axis[] / ghb_var_region[] / ghb_hvar_item_delta[]: static variation data
+
+v0.14 additions:
+- trace stages can be filtered with ghb_buffer_set_trace_stage_mask()
+- trace ring can be copied by stage with ghb_buffer_copy_trace_ring_stage()
+- HVAR diagnostics are available via ghb_font_get_hvar_diagnostics()
+- generated headers include v0.14 notes from the packer

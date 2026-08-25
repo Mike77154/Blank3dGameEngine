@@ -1,0 +1,8 @@
+rm -f src/*.o generate_all custom_provider generated/*.obj generated/*.mtl
+cc -O2 -Wall -Wextra -Werror -pedantic -std=c89 -Iinclude -c src/katana89.c -o src/katana89.o
+cc -O2 -Wall -Wextra -Werror -pedantic -std=c89 -Iinclude -c src/katana89_obj.c -o src/katana89_obj.o
+cc -O2 -Wall -Wextra -Werror -pedantic -std=c89 -Iinclude examples/generate_all.c src/katana89.o src/katana89_obj.o -o generate_all
+cc -O2 -Wall -Wextra -Werror -pedantic -std=c89 -Iinclude examples/custom_provider.c src/katana89.o -o custom_provider
+katana89: 33 presets OK, checksum=9643019805957368833
+vertices=940 triangles=1280
+protocol check: PASS

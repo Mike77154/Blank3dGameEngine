@@ -1,0 +1,56 @@
+Blank3D gvehicle89/gvehpos89/Mount89 integration QA
+===================================================
+
+Authority split
+---------------
+gvehicle89 : vehicle simulation
+ gvehpos89 : possession / seats / driver
+ Mount89   : spatial host/mount-point/guest relation
+ GAttach   : NOT used for vehicle occupancy
+
+Verified commands/tests
+-----------------------
+PASS  make test-mount-vehicle
+      -> gvehpos89 -> mount89 -> gvehicle89 stack: PASS
+      -> vehicle parked-suspension stability: PASS
+      -> Blank3D forward-axis bridge: PASS
+      -> gvehicle89 reverse gear 0 bridge: PASS
+PASS  make test-languages
+      -> startup RPY vehicle command parsed
+PASS  make test-uzi-pickup
+PASS  make test-health-pickup
+PASS  make test-special-reload
+PASS  make test-sattele-stack
+PASS  make test-flamethrower-stack
+PASS  make -C vendor/gvehicle89 all
+PASS  vendor/gvehicle89/demo_vehicle89
+      -> gvehicle89 demo ok: warthog89
+PASS  vendor/gvehicle89/demo_multi_vehicle89
+      -> active=3 profiles=23
+PASS  make -C vendor/gvehpos89 check
+PASS  make syntax-check
+
+Source policy audit
+-------------------
+No malloc/calloc/realloc/free calls found in:
+  vendor/gvehicle89
+  vendor/gvehpos89
+  src/blank3d_mount_vehicle.c/.h
+
+No executable float/double usage found in that boundary.  Grep hits are
+README/build-report comments saying float/double are not used.
+
+Prototype scene
+---------------
+RPY:
+  vehicle warthog89 pos 5 2.5 6 speed 16 run 19
+
+M mounts/dismounts the driver.
+The white box is a placeholder visual only.
+Movement is produced by gvehicle89, not direct car Transform translation.
+
+Known limitations
+-----------------
+1. Vehicle world provider currently models flat dry ground at y=0.
+2. Full Blank3D collision/world terrain provider and real vehicle meshes are
+   intentionally left for the next integration stage.

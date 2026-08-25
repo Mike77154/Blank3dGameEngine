@@ -1,0 +1,53 @@
+GProj2D89 1.0.1 validation report
+==================================
+
+Requested code change
+---------------------
+PASS - shotgun hull is emitted by gp2d_add_box as a four-point rectangle
+PASS - shotgun hull default fill is red (214, 42, 42, 255)
+PASS - shotgun base is emitted by gp2d_add_box as a four-point rectangle
+PASS - shotgun base default fill is yellow (255, 211, 48, 255)
+PASS - buckshot and slug profiles share the modified shell generator
+PASS - primer remains an independent role/path
+PASS - outline and recolor controls remain active
+
+Compiler checks
+---------------
+PASS - GCC strict C89: -std=c89 -Wall -Wextra -pedantic -Werror
+PASS - GCC 32-bit core object: -m32
+PASS - Clang strict C89
+PASS - core object has no undefined external symbols
+
+Runtime tests
+-------------
+PASS - all nine profiles are exposed by the catalog
+PASS - every projectile profile generates paths and points
+PASS - every supported shell generates paths and points
+PASS - every complete icon validates
+PASS - shotgun block geometry and default colors are asserted
+PASS - outline enable/disable works
+PASS - fill override works
+PASS - role recolor API works
+PASS - caller capacity errors are bounded and reported
+PASS - Q16.16 multiplication regression test
+
+Static restrictions audit
+-------------------------
+PASS - no dynamic allocator calls in include/src
+PASS - no floating numeric types in include/src
+PASS - no C++ line comments in include/src
+
+Preview generation
+------------------
+PASS - SVG generated from the actual modified library API
+PASS - 118 vector paths
+PASS - 1302 points
+PASS - PNG rasterized at 1600 x 1080
+
+Measured artifacts
+------------------
+Optimized 64-bit GCC core object: 38,832 bytes
+Optimized 32-bit GCC core object: 25,708 bytes
+Optimized 64-bit Clang core object: 33,880 bytes
+Preview PNG: 141,013 bytes
+Preview SVG: 43,620 bytes

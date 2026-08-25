@@ -1,0 +1,62 @@
+Blank3D v3.27.3 - GLOCO89 locomotion provider integration QA
+Date: 2026-08-15
+
+STRICT / ARCHITECTURE
+- GLOCO vendor strict C89 engine-ready test: PASS
+- Blank3D GLOCO provider-stack test: PASS
+- Full syntax-check: PASS
+- Win32 input syntax-check: PASS
+- Engine allocator audit: PASS
+- New GLOCO objects nm audit: no allocator/libm symbols
+
+CRITICAL REGRESSION (clean-tree replay)
+- runtime spine: PASS
+- runtime object spine: PASS
+- GFO variable authoring: PASS
+- variables bridge: PASS
+- MovementBaseVerbs vendor: PASS
+- GAutomotion vendor: PASS
+- MotionAttack: PASS
+- VerticalMotion: PASS
+- VPhysics provider: PASS
+- perception/T0 stack: PASS
+- attachment stack: PASS
+- mechanical weapon / Mechanimer path: PASS
+- actor equipment: PASS
+- faction bridge: PASS
+- weapon runtime vendors: PASS
+
+GLOCO-SPECIFIC
+- configurable 64 actor/profile capacity: PASS
+- Thing/Actor -> internal GLOCO slot binding: PASS
+- per-binding profile isolation: PASS
+- player/enemy INI profiles: PASS
+- NumSys stamina authority through StatsProvider: PASS
+- VarRuntime locomotion.* live profile provider: PASS
+- live state readback: PASS
+- player locomotion FlagStore publication: PASS
+- MovementBaseVerbs -> GLOCO: PASS
+- GAutomotion desired position + speed override -> GLOCO: PASS
+- MotionAttack suspension: PASS
+- HARD_STOP rising-edge event: PASS
+- host Transform remains final authority: PASS
+- Win32-safe Q12 collision fraction scaling: PASS
+
+MEMORY (64-bit QA host, compile profile used by Blank3D)
+- sizeof(GLOCO_Actor): 144 bytes
+- sizeof(GLOCO_Profile): 296 bytes
+- sizeof(GLOCO_Context): 28,376 bytes
+- sizeof(Blank3DGlocoBinding): 128 bytes
+- sizeof(Blank3DGloco): 36,840 bytes
+- sizeof(Blank3DSystems), NS_MAX_VALUES=128: 133,488 bytes
+- sizeof(Blank3DSystems), comparison NS_MAX_VALUES=32: 119,664 bytes
+- NumSys capacity increase: 13,824 bytes
+- approximate new fixed runtime state from GLOCO + NumSys expansion: 50,664 bytes
+
+PRESERVATION AUDIT against blank3d_v3_27_3_var_authoring_spine.zip
+- pre-existing vendor files: 3,277
+- missing pre-existing vendor files: 0
+- changed pre-existing vendor files: 0
+- new vendor files: 18
+- new vendor root: vendor/gloco89 only
+- packaged .o/.a/.exe/.obj/.dll/.so artifacts after final clean: 0

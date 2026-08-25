@@ -1,0 +1,15 @@
+Test project /tmp/zragf66/build_rel
+    Start 1: zragf_test_native
+1/5 Test #1: zragf_test_native ......................   Passed    0.02 sec
+    Start 2: zragf_test_wrappers
+2/5 Test #2: zragf_test_wrappers ....................   Passed    0.02 sec
+    Start 6: zragf_test_phase64_alloc_workspace
+3/5 Test #6: zragf_test_phase64_alloc_workspace .....   Passed    0.02 sec
+    Start 7: zragf_test_phase65_wrapper_workspace
+4/5 Test #7: zragf_test_phase65_wrapper_workspace ...   Passed    0.02 sec
+    Start 8: zragf_test_phase66_c89_smoke
+5/5 Test #8: zragf_test_phase66_c89_smoke ...........   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.12 sec

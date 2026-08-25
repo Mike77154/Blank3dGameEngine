@@ -1,0 +1,36 @@
+Blank3D muzzle/casing regression QA
+===================================
+
+Muzzle finite lifecycle
+  core + glow while active ................ PASS
+  no packets after expiry ................. PASS
+  no triangles after expiry ............... PASS
+  no vertices after expiry ................ PASS
+
+Muzzle illumination
+  recipe parses light enable .............. PASS
+  finite 72 ms light pulse ................ PASS
+  peak sample emitted ..................... PASS
+  quadratic decay ......................... PASS
+  light expires ........................... PASS
+
+Casing physics
+  shared VPhysics body spawn .............. PASS
+  ejection impulse/tumble ................. PASS
+  gravity/downward travel ................. PASS
+  floor rebound ........................... PASS
+  angular damping ......................... PASS
+  sleep/settle ............................ PASS
+  draw pose matrix ........................ PASS
+
+Render-state isolation
+  SpritePlane clears frame emit buffer .... FIXED
+  additive blend restored ................. FIXED
+  depth writes restored ................... FIXED
+  lighting restored ....................... FIXED
+  frame starts with GL_LIGHT1 disabled .... FIXED
+
+Build gates
+  C89 whole-engine syntax ................. PASS
+  Win32 sprite syntax gate ................ PASS
+  native MinGW32 executable ............... NOT RUN IN CONTAINER

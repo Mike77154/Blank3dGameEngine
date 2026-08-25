@@ -1,0 +1,19 @@
+input_keys89 QA gates
+=====================
+
+Standalone:
+  make -C vendor/input_keys89 clean all test audit
+
+Blank3D integration:
+  make test-input-stack
+  make syntax-check
+
+Coverage includes:
+  W -> HID 0x1A
+  top-row 1 -> HID 0x1E
+  Up / ArrowUp / CursorUp -> HID 0x52
+  PageUp / page_up -> HID 0x4B
+  LeftShift -> HID 0xE1
+  F24 -> HID 0x73
+  keypad aliases
+  caller-buffer name round trips

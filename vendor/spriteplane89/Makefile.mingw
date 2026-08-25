@@ -1,0 +1,17 @@
+CC ?= gcc
+CFLAGS = -std=gnu89 -Wall -Wextra -pedantic -Iinclude
+AR ?= ar
+
+all: spriteplane89_demo
+
+libspriteplane89.a: src/spriteplane89.o
+	$(AR) rcs libspriteplane89.a src/spriteplane89.o
+
+src/spriteplane89.o: src/spriteplane89.c include/spriteplane89.h
+	$(CC) $(CFLAGS) -c src/spriteplane89.c -o src/spriteplane89.o
+
+spriteplane89_demo: libspriteplane89.a demo/demo_spriteplane89.c
+	$(CC) $(CFLAGS) demo/demo_spriteplane89.c libspriteplane89.a -o spriteplane89_demo
+
+clean:
+	rm -f src/*.o *.a spriteplane89_demo spriteplane89_demo.exe out/*.obj

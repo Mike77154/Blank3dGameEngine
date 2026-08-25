@@ -3,6 +3,7 @@
 #include "blank3d_projectile_mesh.h"
 #include "gbulletmesh89.h"
 #include "rocketmeshes.h"
+#include "ghandgrenade3d89.h"
 
 #define B3D_GBM_SCRATCH_VERTICES 512
 #define B3D_GBM_SCRATCH_TRIANGLES 1024
@@ -242,6 +243,87 @@ static int b3d_convert_rocket(g3d_mesh *destination,
     return 1;
 }
 
+
+#define B3D_GHG_VERTEX_CAPACITY 512
+#define B3D_GHG_TRIANGLE_CAPACITY 768
+static GHG3D_Vertex b3d_ghg_vertices[B3D_GHG_VERTEX_CAPACITY];
+static GHG3D_Triangle b3d_ghg_triangles[B3D_GHG_TRIANGLE_CAPACITY];
+
+static int b3d_convert_hand_grenade(g3d_mesh *destination,
+                                    g3d_vertex *vertices,
+                                    unsigned short vertex_capacity,
+                                    g3d_index *indices,
+                                    unsigned short index_capacity,
+                                    int preset)
+{
+    GHG3D_Desc desc;
+    GHG3D_Result result;
+    unsigned long i;
+    unsigned long index_count;
+    g3d_color color;
+    ghg3d_desc_default(&desc, preset);
+    desc.lod = GHG3D_LOD_GAME;
+    desc.parts_mask = GHG3D_PARTMASK_ALL;
+    if (ghg3d_build(&desc, b3d_ghg_vertices, B3D_GHG_VERTEX_CAPACITY,
+                    b3d_ghg_triangles, B3D_GHG_TRIANGLE_CAPACITY,
+                    &result) != GHG3D_OK) return 0;
+    index_count = result.triangle_count * 3UL;
+    if (result.vertex_count > vertex_capacity || index_count > index_capacity)
+        return 0;
+    if (g3d_mesh_init(destination, vertices, vertex_capacity,
+                      indices, index_capacity) != G3D_OK) return 0;
+    for (i = 0UL; i < result.vertex_count; ++i) {
+        b3d_zero_vertex(&vertices[i]);
+        /* Provider is Q24.8 millimetres. Convert to Q16 world units and
+           normalize the grenade height to roughly one world unit. */
+        vertices[i].position.x = (g3d_fx)(b3d_ghg_vertices[i].x * 5L);
+        vertices[i].position.y = (g3d_fx)(b3d_ghg_vertices[i].z * 5L);
+        vertices[i].position.z = (g3d_fx)(b3d_ghg_vertices[i].y * 5L);
+        if (b3d_ghg_vertices[i].part == GHG3D_PART_SAFETY)
+            color = g3d_color_rgba(176U, 178U, 170U, 255U);
+        else if (b3d_ghg_vertices[i].part == GHG3D_PART_HOLDER)
+            color = g3d_color_rgba(67U, 72U, 61U, 255U);
+        else
+            color = g3d_color_rgba(82U, 101U, 63U, 255U);
+        vertices[i].color = color;
+    }
+    for (i = 0UL; i < result.triangle_count; ++i) {
+        indices[i * 3UL] = b3d_ghg_triangles[i].a;
+        indices[i * 3UL + 1UL] = b3d_ghg_triangles[i].b;
+        indices[i * 3UL + 2UL] = b3d_ghg_triangles[i].c;
+    }
+    destination->vertex_count = (unsigned short)result.vertex_count;
+    destination->index_count = (unsigned short)index_count;
+    destination->primitive = G3D_PRIMITIVE_TRIANGLES;
+    destination->error = G3D_OK;
+    b3d_compute_mesh_normals(destination);
+    return 1;
+}
+
+static int b3d_make_energy_bolt(g3d_mesh *mesh,
+                                g3d_vertex *vertices,
+                                unsigned short vertex_capacity,
+                                g3d_index *indices,
+                                unsigned short index_capacity,
+                                g3d_fx radius, g3d_fx length,
+                                g3d_color color)
+{
+    unsigned short i;
+    g3d_fx old_y;
+    if (g3d_mesh_init(mesh, vertices, vertex_capacity,
+                      indices, index_capacity) != G3D_OK) return 0;
+    if (g3d_make_cylinder(mesh, radius, length, 16U, color) != G3D_OK) return 0;
+    for (i = 0U; i < mesh->vertex_count; ++i) {
+        old_y = mesh->vertices[i].position.y;
+        mesh->vertices[i].position.y = mesh->vertices[i].position.z;
+        mesh->vertices[i].position.z = old_y;
+        old_y = mesh->vertices[i].normal.y;
+        mesh->vertices[i].normal.y = mesh->vertices[i].normal.z;
+        mesh->vertices[i].normal.z = old_y;
+    }
+    return 1;
+}
+
 int blank3d_projectile_mesh_build(int mesh_id,
                                   g3d_mesh *mesh,
                                   g3d_vertex *vertices,
@@ -290,6 +372,67 @@ int blank3d_projectile_mesh_build(int mesh_id,
                                   12U, 8U,
                                   g3d_color_rgba(102U, 94U, 84U, 255U))
                == G3D_OK;
+    case 10:
+        return b3d_convert_hand_grenade(mesh, vertices, vertex_capacity,
+                                        indices, index_capacity,
+                                        GHG3D_PRESET_PINEAPPLE_CLASSIC);
+    case 11:
+        {
+            unsigned short i;
+            g3d_fx old_y;
+            if (g3d_mesh_init(mesh, vertices, vertex_capacity,
+                              indices, index_capacity) != G3D_OK) return 0;
+            if (g3d_make_cylinder(mesh, g3d_fx_from_ratio(1L, 2L),
+                                  g3d_fx_from_int(1L), 24U,
+                                  g3d_color_rgba(120U, 225U, 255U, 150U))
+                    != G3D_OK) return 0;
+            g3d_mesh_gradient_y(mesh, -G3D_FX_HALF, G3D_FX_HALF,
+                g3d_color_rgba(54U, 174U, 255U, 110U),
+                g3d_color_rgba(255U, 255U, 255U, 210U));
+            /* Shapes3D cylinders are local Y-up. Projectiles standardize
+               their travel axis to local +Z, so rotate Y into Z without
+               runtime trig or floating point. */
+            for (i = 0U; i < mesh->vertex_count; ++i) {
+                old_y = mesh->vertices[i].position.y;
+                mesh->vertices[i].position.y = mesh->vertices[i].position.z;
+                mesh->vertices[i].position.z = old_y;
+                old_y = mesh->vertices[i].normal.y;
+                mesh->vertices[i].normal.y = mesh->vertices[i].normal.z;
+                mesh->vertices[i].normal.z = old_y;
+            }
+            return 1;
+        }
+    case 12:
+        return b3d_convert_rocket(mesh, vertices, vertex_capacity,
+                                  indices, index_capacity,
+                                  RMESH_RPG7_PG7VR);
+    case 13:
+        if (g3d_mesh_init(mesh, vertices, vertex_capacity,
+                          indices, index_capacity) != G3D_OK) return 0;
+        return g3d_make_box(mesh,
+                            G3D_FX_ONE, G3D_FX_ONE, G3D_FX_ONE,
+                            g3d_color_rgba(255U, 146U, 42U, 178U))
+               == G3D_OK;
+    case 14:
+        return b3d_make_energy_bolt(mesh, vertices, vertex_capacity, indices,
+                                    index_capacity, g3d_fx_from_ratio(1L, 5L),
+                                    g3d_fx_from_ratio(4L, 5L),
+                                    g3d_color_rgba(120U, 220U, 255U, 255U));
+    case 15:
+        return b3d_make_energy_bolt(mesh, vertices, vertex_capacity, indices,
+                                    index_capacity, g3d_fx_from_ratio(3L, 10L),
+                                    G3D_FX_ONE,
+                                    g3d_color_rgba(100U, 200U, 255U, 245U));
+    case 16:
+        return b3d_make_energy_bolt(mesh, vertices, vertex_capacity, indices,
+                                    index_capacity, g3d_fx_from_ratio(2L, 5L),
+                                    g3d_fx_from_ratio(6L, 5L),
+                                    g3d_color_rgba(80U, 170U, 255U, 235U));
+    case 17:
+        return b3d_make_energy_bolt(mesh, vertices, vertex_capacity, indices,
+                                    index_capacity, g3d_fx_from_ratio(1L, 2L),
+                                    g3d_fx_from_ratio(3L, 2L),
+                                    g3d_color_rgba(235U, 250U, 255U, 230U));
     default:
         break;
     }
@@ -308,6 +451,14 @@ const char *blank3d_projectile_mesh_name(int mesh_id)
     case 7: return "rocketmeshes:survival_rpg7_cone";
     case 8: return "gbulletmesh89:machinegun_projectile_alias_for_gatling";
     case 9: return "giffany_shapes3d:slingshot_stone_primitive";
+    case 10: return "ghandgrenade3d89:pineapple_classic_hand_grenade";
+    case 11: return "giffany_shapes3d:shango_energy_cylinder";
+    case 12: return "rocketmeshes:rpg7_pg7vr_homing";
+    case 13: return "giffany_shapes3d:expandible_fire_cube";
+    case 14: return "giffany_shapes3d:buster_lemon";
+    case 15: return "giffany_shapes3d:buster_charge_1";
+    case 16: return "giffany_shapes3d:buster_charge_2";
+    case 17: return "giffany_shapes3d:buster_charge_3";
     default: return "projectile_mesh:invalid";
     }
 }

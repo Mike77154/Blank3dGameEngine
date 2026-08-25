@@ -1,0 +1,14 @@
+#include "p2d89_internal.h"
+
+static const P2D89_ShapeInfo shapes[] = {
+    { P2D89_SHAPE_ALMOND, "almond", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+    { P2D89_SHAPE_LENS, "lens", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+    { P2D89_SHAPE_VESICA_PISCIS, "vesica_piscis", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+    { P2D89_SHAPE_CRESCENT, "crescent", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED|P2D89_FLAG_CONCAVE, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+    { P2D89_SHAPE_TEARDROP, "teardrop", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+    { P2D89_SHAPE_EGG, "egg", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+    { P2D89_SHAPE_HEART, "heart", "curves", "organic", P2D89_MODULE_CURVES, P2D89_FLAG_CLOSED|P2D89_FLAG_CURVED|P2D89_FLAG_CONCAVE, P2D89_FILL_NONZERO, P2D89_CAP_BUTT, P2D89_JOIN_ROUND },
+};
+
+static int p2d89_emit_curves_organic(P2D89_ShapeId id,const P2D89_Provider *p){if(id==P2D89_SHAPE_ALMOND)return p2d89_i_lens(8192,p);if(id==P2D89_SHAPE_LENS)return p2d89_i_lens(12288,p);if(id==P2D89_SHAPE_VESICA_PISCIS)return p2d89_i_lens(14336,p);if(id==P2D89_SHAPE_CRESCENT){if(!p2d89_i_move(p,8192,-14336))return 0;if(!p2d89_i_cubic(p,-8192,-18432,-16384,-8192,-14336,4096))return 0;if(!p2d89_i_cubic(p,-12288,14336,0,18432,10240,10240))return 0;if(!p2d89_i_cubic(p,2048,8192,0,0,2048,-8192))return 0;if(!p2d89_i_cubic(p,4096,-12288,6144,-14336,8192,-14336))return 0;return p2d89_i_close(p);}if(id==P2D89_SHAPE_TEARDROP){if(!p2d89_i_move(p,0,-16384))return 0;if(!p2d89_i_cubic(p,12288,-4096,16384,4096,0,16384))return 0;if(!p2d89_i_cubic(p,-16384,4096,-12288,-4096,0,-16384))return 0;return p2d89_i_close(p);}if(id==P2D89_SHAPE_EGG){if(!p2d89_i_move(p,0,-16384))return 0;if(!p2d89_i_cubic(p,13312,-12288,16384,2048,12288,10240))return 0;if(!p2d89_i_cubic(p,8192,18432,-8192,18432,-12288,10240))return 0;if(!p2d89_i_cubic(p,-16384,2048,-13312,-12288,0,-16384))return 0;return p2d89_i_close(p);}if(id==P2D89_SHAPE_HEART){if(!p2d89_i_move(p,0,14336))return 0;if(!p2d89_i_cubic(p,-2048,10240,-16384,2048,-14336,-7168))return 0;if(!p2d89_i_cubic(p,-12288,-16384,-2048,-14336,0,-8192))return 0;if(!p2d89_i_cubic(p,2048,-14336,12288,-16384,14336,-7168))return 0;if(!p2d89_i_cubic(p,16384,2048,2048,10240,0,14336))return 0;return p2d89_i_close(p);}return 0;}
+const P2D89_Submodule p2d89_submodule_curves_organic = { { P2D89_MODULE_CURVES, "curves", "organic", (unsigned int)(sizeof(shapes)/sizeof(shapes[0])) }, shapes, p2d89_emit_curves_organic };

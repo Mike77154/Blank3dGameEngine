@@ -1,0 +1,10 @@
+Generic semantic calls:
+  player sprite_play hero:run
+  player image_index 1
+  player image_speed 0.5
+  player sprite_flip_x
+  player sprite_hide
+
+Any DSL can map its syntax to sv89_execute().
+The optional DDSL2 adapter registers sprite_show, sprite_hide, sprite_play,
+sprite_stop, sprite_frame and sprite_speed as registry functions.

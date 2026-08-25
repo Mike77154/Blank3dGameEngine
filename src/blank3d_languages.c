@@ -1,5 +1,8 @@
 #include "blank3d_languages.h"
 #include "blank3d_ddsl_input.h"
+#include "invariantSpecialoperations_89.h"
+#include "invariantSpecialoperations_89_ddsl2.h"
+#include "invariantSpecialoperations_89_flags89.h"
 
 #include "compiler/compiler.h"
 #include "VM/vm.h"
@@ -15,6 +18,9 @@
 #define B3D_LANG_SOURCE_CAP 32768U
 #define B3D_LANG_PREPROCESSED_CAP 49152U
 #define B3D_DDSL_ARENA_CAP 196608U
+#define B3D_DDSL_INVARIANT_RULE_CAP 128
+#define B3D_DDSL_INVARIANT_FLAG_CAP 128
+#define B3D_DDSL_INVARIANT_POOL_CAP 8192
 #define B3D_RPYL_CONTEXT_CAP 65536U
 #define B3D_RPYL_WORK_CAP 262144U
 #define B3D_FPIL_MAX_SCRIPTS 16U
@@ -22,8 +28,11 @@
 
 static Blank3DLanguageHost b3d_host;
 static char b3d_status[192];
+static unsigned long b3d_gameverb_owner;
+static void *b3d_gameverb_subject;
 
 static char b3d_ddsl_raw_source[2][B3D_LANG_SOURCE_CAP];
+static char b3d_ddsl_invariant_source[2][B3D_LANG_PREPROCESSED_CAP];
 static char b3d_ddsl_source[2][B3D_LANG_PREPROCESSED_CAP];
 static Blank3DDdslInputRegistry b3d_ddsl_inputs[2];
 static unsigned char b3d_ddsl_memory[2][B3D_DDSL_ARENA_CAP];
@@ -32,6 +41,15 @@ static ddsl_bc_program *b3d_ddsl_program[2];
 static int b3d_ddsl_active = -1;
 static ddsl_store b3d_ddsl_store;
 static ddsl_vm b3d_ddsl_vm;
+
+static iso89_rule b3d_ddsl_invariant_rules[2][B3D_DDSL_INVARIANT_RULE_CAP];
+static iso89_context b3d_ddsl_invariants[2];
+static iso89_ddsl2_symbols b3d_ddsl_invariant_symbols[2];
+static FlagStore b3d_ddsl_invariant_store;
+static FlagStoreEntry b3d_ddsl_invariant_entries[B3D_DDSL_INVARIANT_FLAG_CAP];
+static char b3d_ddsl_invariant_pool[B3D_DDSL_INVARIANT_POOL_CAP];
+static iso89_flags89_binding b3d_ddsl_invariant_binding;
+static iso89_provider b3d_ddsl_invariant_provider;
 
 typedef struct B3DFpilSlotTag {
     int used;
@@ -72,19 +90,118 @@ static int b3d_read_file(const char *path, char *buffer, unsigned int capacity)
     return 1;
 }
 
+static int b3d_ddsl_invariant_capture(const char *key, ddsl_value value)
+{
+    iso89_subject subject;
+    iso89_value scalar;
+    iso89_ddsl2_symbols *symbols;
+    iso89_context *ctx;
+    if (b3d_ddsl_active < 0 || !key) return 0;
+    symbols = &b3d_ddsl_invariant_symbols[b3d_ddsl_active];
+    subject = iso89_ddsl2_find_subject(symbols, key);
+    if (subject == ISO89_SUBJECT_NONE) return 0;
+    if (value.kind == DDSL_VAL_BOOL) scalar = value.boolean ? 1L : 0L;
+    else if (value.kind == DDSL_VAL_NUM) scalar = value.num != 0 ? 1L : 0L;
+    else return 0;
+    ctx = &b3d_ddsl_invariants[b3d_ddsl_active];
+    if (!iso89_apply_event(ctx, &b3d_ddsl_invariant_provider,
+                           subject, scalar)) return -1;
+    return 1;
+}
+
+static unsigned long b3d_resolve_gameverb_owner(void *entity)
+{
+    if (b3d_host.gameverb_owner)
+        return b3d_host.gameverb_owner(b3d_host.user, entity);
+    return b3d_gameverb_owner;
+}
+
+static int b3d_gameverb_action(const char *name, void *entity,
+                               long value_q16, const char *value_text,
+                               int has_value)
+{
+    gverb89_call call;
+    int result;
+    if (!b3d_host.gameverbs || !name) return GVERB89_UNHANDLED;
+    memset(&call, 0, sizeof(call));
+    call.owner = b3d_resolve_gameverb_owner(entity);
+    call.subject = entity ? entity : b3d_gameverb_subject;
+    call.name = name;
+    call.value_q16 = value_q16;
+    call.value_text = value_text ? value_text : "";
+    call.has_value = has_value;
+    result = gverb89_perform(b3d_host.gameverbs, &call);
+    return result;
+}
+
+static int b3d_gameverb_condition(const char *name, void *entity,
+                                  long value_q16, const char *value_text,
+                                  int has_value, int *truth)
+{
+    gverb89_call call;
+    gverb89_result out;
+    int result;
+    if (truth) *truth = 0;
+    if (!b3d_host.gameverbs || !name) return GVERB89_UNHANDLED;
+    memset(&call, 0, sizeof(call));
+    memset(&out, 0, sizeof(out));
+    call.owner = b3d_resolve_gameverb_owner(entity);
+    call.subject = entity ? entity : b3d_gameverb_subject;
+    call.name = name;
+    call.value_q16 = value_q16;
+    call.value_text = value_text ? value_text : "";
+    call.has_value = has_value;
+    result = gverb89_query(b3d_host.gameverbs, &call, &out);
+    if (result == GVERB89_HANDLED && truth) *truth = out.truth != 0;
+    return result;
+}
+
 static int b3d_ddsl_emit(void *user, const char *key, ddsl_value value)
 {
     char text[128];
     long fixed_value;
+    int invariant_result;
     (void)user;
+    invariant_result = b3d_ddsl_invariant_capture(key, value);
+    if (invariant_result > 0) return 1;
+    if (invariant_result < 0) return 0;
     text[0] = '\0';
     ddsl_value_to_cstr(value, text, (int)sizeof(text));
     fixed_value = 0L;
     if (value.kind == DDSL_VAL_NUM) fixed_value = (long)value.num;
     else if (value.kind == DDSL_VAL_BOOL)
         fixed_value = value.boolean ? DDSL_FIXED_ONE : DDSL_FIXED_ZERO;
+    /* A false DDSL assignment is state, not an action invocation. */
+    if (fixed_value != 0L &&
+        b3d_gameverb_action(key, b3d_gameverb_subject, fixed_value, text, 1)
+            == GVERB89_HANDLED)
+        return 1;
     if (b3d_host.ddsl_action)
         b3d_host.ddsl_action(b3d_host.user, key, fixed_value, text);
+    return 1;
+}
+
+static int b3d_ddsl_flush_invariants(void)
+{
+    iso89_ddsl2_symbols *symbols;
+    int i;
+    if (b3d_ddsl_active < 0) return 1;
+    symbols = &b3d_ddsl_invariant_symbols[b3d_ddsl_active];
+    for (i = 0; i < symbols->count; ++i) {
+        FlagsValue value;
+        int active;
+        active = 0;
+        if (flagstore_get(&b3d_ddsl_invariant_store,
+                          symbols->names[i], &value)) {
+            if (value.type == FLAGS_VAL_BOOL || value.type == FLAGS_VAL_INT)
+                active = value.as.i != 0L;
+            else if (value.type == FLAGS_VAL_FX)
+                active = value.as.fx != 0L;
+        }
+        if (active && b3d_host.ddsl_action)
+            b3d_host.ddsl_action(b3d_host.user, symbols->names[i],
+                                 DDSL_FIXED_ONE, "true");
+    }
     return 1;
 }
 
@@ -115,11 +232,26 @@ void blank3d_languages_init(const Blank3DLanguageHost *host)
     memset(&b3d_host, 0, sizeof(b3d_host));
     if (host) b3d_host = *host;
     b3d_status[0] = '\0';
+    b3d_gameverb_owner = 0UL;
+    b3d_gameverb_subject = 0;
     b3d_ddsl_active = -1;
     b3d_ddsl_program[0] = 0;
     b3d_ddsl_program[1] = 0;
     blank3d_ddsl_input_registry_init(&b3d_ddsl_inputs[0]);
     blank3d_ddsl_input_registry_init(&b3d_ddsl_inputs[1]);
+    iso89_context_init(&b3d_ddsl_invariants[0],
+                       b3d_ddsl_invariant_rules[0],
+                       B3D_DDSL_INVARIANT_RULE_CAP);
+    iso89_context_init(&b3d_ddsl_invariants[1],
+                       b3d_ddsl_invariant_rules[1],
+                       B3D_DDSL_INVARIANT_RULE_CAP);
+    iso89_ddsl2_symbols_init(&b3d_ddsl_invariant_symbols[0]);
+    iso89_ddsl2_symbols_init(&b3d_ddsl_invariant_symbols[1]);
+    flagstore_init(&b3d_ddsl_invariant_store,
+                   b3d_ddsl_invariant_entries,
+                   B3D_DDSL_INVARIANT_FLAG_CAP,
+                   b3d_ddsl_invariant_pool,
+                   B3D_DDSL_INVARIANT_POOL_CAP);
     ddsl_store_init(&b3d_ddsl_store);
     ddsl_vm_init(&b3d_ddsl_vm, &b3d_ddsl_store);
     ddsl_vm_set_emit(&b3d_ddsl_vm, b3d_ddsl_emit, 0);
@@ -147,20 +279,68 @@ void blank3d_languages_init(const Blank3DLanguageHost *host)
     b3d_lang_status("DDSL2 + FPIL + RPYL vendor runtimes initialized");
 }
 
-int blank3d_languages_reload_ddsl2(const char *path)
+void blank3d_languages_set_subject(unsigned long owner, void *entity)
+{
+    b3d_gameverb_owner = owner;
+    b3d_gameverb_subject = entity;
+}
+
+static int b3d_ddsl_load_sources(int target, const char *path,
+                                 const char *extra_path)
+{
+    size_t used;
+    FILE *file;
+    size_t count;
+    int extra;
+    if (!b3d_read_file(path, b3d_ddsl_raw_source[target], B3D_LANG_SOURCE_CAP))
+        return 0;
+    if (!extra_path || extra_path[0] == '\0') return 1;
+    used = strlen(b3d_ddsl_raw_source[target]);
+    if (used + 2U >= (size_t)B3D_LANG_SOURCE_CAP) return 0;
+    b3d_ddsl_raw_source[target][used++] = '\n';
+    b3d_ddsl_raw_source[target][used] = '\0';
+    file = fopen(extra_path, "rb");
+    if (!file) return 0;
+    count = fread(b3d_ddsl_raw_source[target] + used, 1U,
+                  (size_t)B3D_LANG_SOURCE_CAP - used - 1U, file);
+    extra = fgetc(file);
+    fclose(file);
+    if (extra != EOF) return 0;
+    b3d_ddsl_raw_source[target][used + count] = '\0';
+    return 1;
+}
+
+static int b3d_languages_reload_ddsl2_sources(const char *path,
+                                               const char *extra_path)
 {
     int target;
     ddsl_error error;
     ddsl_bc_program *program;
     target = b3d_ddsl_active == 0 ? 1 : 0;
-    if (!b3d_read_file(path, b3d_ddsl_raw_source[target], B3D_LANG_SOURCE_CAP)) {
-        b3d_lang_status("DDSL2: could not read script");
+    if (!b3d_ddsl_load_sources(target, path, extra_path)) {
+        b3d_lang_status("DDSL2: could not read script source(s)");
         return 0;
+    }
+    {
+        char invariant_error[160];
+        if (!iso89_ddsl2_preprocess(
+                b3d_ddsl_raw_source[target],
+                b3d_ddsl_invariant_source[target],
+                B3D_LANG_PREPROCESSED_CAP,
+                &b3d_ddsl_invariants[target],
+                &b3d_ddsl_invariant_symbols[target],
+                invariant_error, (unsigned int)sizeof(invariant_error))) {
+            char message[192];
+            sprintf(message, "DDSL2 invariant syntax: %.145s",
+                    invariant_error);
+            b3d_lang_status(message);
+            return 0;
+        }
     }
     {
         char input_error[160];
         if (!blank3d_ddsl_input_preprocess(
-                b3d_ddsl_raw_source[target], b3d_ddsl_source[target],
+                b3d_ddsl_invariant_source[target], b3d_ddsl_source[target],
                 B3D_LANG_PREPROCESSED_CAP, &b3d_ddsl_inputs[target],
                 input_error, (unsigned int)sizeof(input_error))) {
             char message[192];
@@ -183,8 +363,20 @@ int blank3d_languages_reload_ddsl2(const char *path)
     }
     b3d_ddsl_program[target] = program;
     b3d_ddsl_active = target;
-    b3d_lang_status("DDSL2 compiled to vendor bytecode");
+    b3d_lang_status(extra_path ? "DDSL2 player + vehicle scripts compiled"
+                               : "DDSL2 compiled to vendor bytecode");
     return 1;
+}
+
+int blank3d_languages_reload_ddsl2(const char *path)
+{
+    return b3d_languages_reload_ddsl2_sources(path, 0);
+}
+
+int blank3d_languages_reload_ddsl2_pair(const char *path,
+                                        const char *extra_path)
+{
+    return b3d_languages_reload_ddsl2_sources(path, extra_path);
 }
 
 int blank3d_languages_tick_ddsl2(void)
@@ -194,6 +386,13 @@ int blank3d_languages_tick_ddsl2(void)
     Blank3DDdslInputRegistry *inputs;
     if (b3d_ddsl_active < 0 || !b3d_ddsl_program[b3d_ddsl_active]) return 0;
     inputs = &b3d_ddsl_inputs[b3d_ddsl_active];
+    flagstore_clear(&b3d_ddsl_invariant_store);
+    iso89_flags89_binding_init(
+        &b3d_ddsl_invariant_binding, &b3d_ddsl_invariant_store,
+        b3d_ddsl_invariant_symbols[b3d_ddsl_active].name_ptrs,
+        b3d_ddsl_invariant_symbols[b3d_ddsl_active].count);
+    iso89_flags89_make_provider(&b3d_ddsl_invariant_binding,
+                                &b3d_ddsl_invariant_provider);
     for (i = 0; i < inputs->count; ++i) {
         int active;
         active = b3d_ddsl_query_input(inputs->refs[i].state,
@@ -202,11 +401,31 @@ int blank3d_languages_tick_ddsl2(void)
                                  inputs->refs[i].store_name,
                                  active ? DDSL_FIXED_ONE : DDSL_FIXED_ZERO);
     }
+    if (b3d_host.gameverbs) {
+        int gv_count;
+        int gv_index;
+        gv_count = gverb89_count(b3d_host.gameverbs, GVERB89_KIND_CONDITION);
+        for (gv_index = 0; gv_index < gv_count; ++gv_index) {
+            const char *gv_name;
+            int truth;
+            gv_name = gverb89_name_at(b3d_host.gameverbs,
+                                   GVERB89_KIND_CONDITION, gv_index);
+            if (gv_name &&
+                b3d_gameverb_condition(gv_name, b3d_gameverb_subject,
+                                       0L, "", 0, &truth) == GVERB89_HANDLED)
+                (void)ddsl_store_set_num(&b3d_ddsl_store, gv_name,
+                    truth ? DDSL_FIXED_ONE : DDSL_FIXED_ZERO);
+        }
+    }
     if (!ddsl_vm_run(&b3d_ddsl_vm,
                      b3d_ddsl_program[b3d_ddsl_active], &error)) {
         char message[192];
         sprintf(message, "DDSL2 VM error: %.160s", error.message);
         b3d_lang_status(message);
+        return 0;
+    }
+    if (!b3d_ddsl_flush_invariants()) {
+        b3d_lang_status("DDSL2 invariant flush failed");
         return 0;
     }
     return 1;
@@ -237,6 +456,14 @@ static int b3d_fpi_eval(void *entity, int condition_id,
     int has_value;
     name = b3d_fpil_active ? fpi_get_cond_name(b3d_fpil_active, condition_id) : 0;
     b3d_fpi_value(value, &fixed_value, &text, &has_value);
+    {
+        int truth;
+        int gv_result;
+        gv_result = b3d_gameverb_condition(name ? name : "", entity,
+                                           fixed_value, text, has_value, &truth);
+        if (gv_result == GVERB89_HANDLED) return truth;
+        if (gv_result == GVERB89_ERROR) return 0;
+    }
     if (!b3d_host.fpil_condition) return 0;
     return b3d_host.fpil_condition(b3d_host.user, entity,
                                    name ? name : "",
@@ -252,6 +479,9 @@ static void b3d_fpi_exec(void *entity, int action_id,
     int has_value;
     name = b3d_fpil_active ? fpi_get_act_name(b3d_fpil_active, action_id) : 0;
     b3d_fpi_value(value, &fixed_value, &text, &has_value);
+    if (b3d_gameverb_action(name ? name : "", entity,
+                            fixed_value, text, has_value) == GVERB89_HANDLED)
+        return;
     if (b3d_host.fpil_action)
         b3d_host.fpil_action(b3d_host.user, entity,
                              name ? name : "",
@@ -375,6 +605,26 @@ static void b3d_rpyl_dispatch(const char *name,
         b3d_host.rpyl_command(b3d_host.user, name, args, argc);
 }
 
+static void b3d_rpyl_gameverb(RpylContext *ctx, const char **args, int argc)
+{
+    gverb89_call call;
+    int result;
+    (void)ctx;
+    if (!args || argc < 1 || !args[0] || !args[0][0]) return;
+    if (b3d_host.gameverbs) {
+        memset(&call, 0, sizeof(call));
+        call.owner = b3d_resolve_gameverb_owner(b3d_gameverb_subject);
+        call.subject = b3d_gameverb_subject;
+        call.name = args[0];
+        call.argv = argc > 1 ? &args[1] : 0;
+        call.argc = argc > 1 ? argc - 1 : 0;
+        result = gverb89_perform(b3d_host.gameverbs, &call);
+        if (result == GVERB89_HANDLED || result == GVERB89_ERROR) return;
+    }
+    b3d_rpyl_dispatch(args[0], argc > 1 ? &args[1] : 0,
+                      argc > 1 ? argc - 1 : 0);
+}
+
 static void b3d_rpyl_scene(RpylContext *ctx, const char **args, int argc)
 { (void)ctx; b3d_rpyl_dispatch("scene", args, argc); }
 static void b3d_rpyl_window(RpylContext *ctx, const char **args, int argc)
@@ -389,6 +639,30 @@ static void b3d_rpyl_movement(RpylContext *ctx, const char **args, int argc)
 { (void)ctx; b3d_rpyl_dispatch("movement", args, argc); }
 static void b3d_rpyl_weapon(RpylContext *ctx, const char **args, int argc)
 { (void)ctx; b3d_rpyl_dispatch("weapon", args, argc); }
+static void b3d_rpyl_pickup(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("pickup", args, argc); }
+static void b3d_rpyl_weapon_pickup(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("weapon_pickup", args, argc); }
+static void b3d_rpyl_ammo_pickup(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("ammo_pickup", args, argc); }
+static void b3d_rpyl_image_asset(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("image_asset", args, argc); }
+static void b3d_rpyl_spriteplane(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("spriteplane", args, argc); }
+static void b3d_rpyl_skybox(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("skybox", args, argc); }
+static void b3d_rpyl_skybox_recipe(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("skybox_recipe", args, argc); }
+static void b3d_rpyl_skybox_recipe_path(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("skybox_recipe_path", args, argc); }
+static void b3d_rpyl_skybox_reload(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("skybox_reload", args, argc); }
+static void b3d_rpyl_vehicle(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("vehicle", args, argc); }
+static void b3d_rpyl_vehicle_ini(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("vehicle_ini", args, argc); }
+static void b3d_rpyl_mount_car(RpylContext *ctx, const char **args, int argc)
+{ (void)ctx; b3d_rpyl_dispatch("mount_car", args, argc); }
 static void b3d_rpyl_enemy(RpylContext *ctx, const char **args, int argc)
 { (void)ctx; b3d_rpyl_dispatch("enemy", args, argc); }
 static void b3d_rpyl_zombie(RpylContext *ctx, const char **args, int argc)
@@ -429,6 +703,8 @@ static void b3d_rpyl_pegasus_enemy(RpylContext *ctx,
 
 static void b3d_rpyl_register_commands(void)
 {
+    rpyl_register_command(b3d_rpyl, "verb", b3d_rpyl_gameverb);
+    rpyl_register_command(b3d_rpyl, "gameverb", b3d_rpyl_gameverb);
     rpyl_register_command(b3d_rpyl, "scene", b3d_rpyl_scene);
     rpyl_register_command(b3d_rpyl, "window", b3d_rpyl_window);
     rpyl_register_command(b3d_rpyl, "camera", b3d_rpyl_camera);
@@ -436,6 +712,18 @@ static void b3d_rpyl_register_commands(void)
     rpyl_register_command(b3d_rpyl, "player", b3d_rpyl_player);
     rpyl_register_command(b3d_rpyl, "movement", b3d_rpyl_movement);
     rpyl_register_command(b3d_rpyl, "weapon", b3d_rpyl_weapon);
+    rpyl_register_command(b3d_rpyl, "pickup", b3d_rpyl_pickup);
+    rpyl_register_command(b3d_rpyl, "weapon_pickup", b3d_rpyl_weapon_pickup);
+    rpyl_register_command(b3d_rpyl, "ammo_pickup", b3d_rpyl_ammo_pickup);
+    rpyl_register_command(b3d_rpyl, "image_asset", b3d_rpyl_image_asset);
+    rpyl_register_command(b3d_rpyl, "spriteplane", b3d_rpyl_spriteplane);
+    rpyl_register_command(b3d_rpyl, "skybox", b3d_rpyl_skybox);
+    rpyl_register_command(b3d_rpyl, "skybox_recipe", b3d_rpyl_skybox_recipe);
+    rpyl_register_command(b3d_rpyl, "skybox_recipe_path", b3d_rpyl_skybox_recipe_path);
+    rpyl_register_command(b3d_rpyl, "skybox_reload", b3d_rpyl_skybox_reload);
+    rpyl_register_command(b3d_rpyl, "vehicle", b3d_rpyl_vehicle);
+    rpyl_register_command(b3d_rpyl, "vehicle_ini", b3d_rpyl_vehicle_ini);
+    rpyl_register_command(b3d_rpyl, "mount_car", b3d_rpyl_mount_car);
     rpyl_register_command(b3d_rpyl, "enemy", b3d_rpyl_enemy);
     rpyl_register_command(b3d_rpyl, "zombie", b3d_rpyl_zombie);
     rpyl_register_command(b3d_rpyl, "gunner_enemy", b3d_rpyl_gunner_enemy);

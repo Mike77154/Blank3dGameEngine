@@ -1,0 +1,23 @@
+gcrosshair_base89 validation — INI recipe refactor
+
+- 192 stock preset IDs remain 0..191, unchanged.
+- The compiled GCB89_PresetDef and GCB89_ShapeDef tables were removed.
+- The compiled asset filename table was moved to recipes/assets/assets.ini.
+- Root chain validated: recipes/gcrosshair.ini -> lists/base192.ini -> 192 preset INIs.
+- Preset composition validated through recursive [include] fragments.
+- State composition validated through inherit=normal + local overrides.
+- Old compiled implementation and new INI implementation were dumped field by
+  field for all 192 presets. The two 192-line dumps compare IDENTICAL.
+- 192/192 stock presets remain GC89_DRAW_VECTOR.
+- 57 stock presets use non-cross ABI2 vector shapes.
+- ABI3 outline defaults remain disabled, width 0, opaque black fallback.
+- Assets retain all 42 stable IDs and paths, now loaded from INI.
+- Explicit root loading and lazy default loading both pass.
+- Example mod root appends preset ID 192 and reports 193 loaded presets.
+- Builds with: -std=c89 -pedantic -Wall -Wextra -Werror
+- No malloc/realloc/calloc/free calls in base loader/source/header.
+- No float/double types in base loader/source/header.
+- Linux GCC unit tests pass.
+- Core89 and Params89 regression tests pass unchanged against the shared ABI3 header.
+- MinGW cross-compiler was not available in this environment; existing Win32
+  mingw32-make batch entry point is retained and now builds the recipe loader too.

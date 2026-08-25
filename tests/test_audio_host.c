@@ -1,3 +1,4 @@
+#include "blank3d_weapon_host_io.h"
 #include <stdio.h>
 #include <string.h>
 #include "blank3d_audio.h"
@@ -11,21 +12,23 @@ int main(void)
 {
     GWP89_Manager weapon_manager;
     char weapon_status[160];
-    static const int capacities[9] = {
-        0, 15, 30, 8, 6, 5, 1, 1, 300
+    static const int capacities[11] = {
+        0, 15, 30, 8, 6, 5, 1, 1, 300, 1, 1
     };
-    static const int profiles[9] = {
+    static const int profiles[11] = {
         0,
-        WSOUNDDNA89_PROFILE_SERVICE_PISTOL,
+        WSOUNDDNA89_PROFILE_SMG,
         WSOUNDDNA89_PROFILE_SMG,
         WSOUNDDNA89_PROFILE_SHOTGUN,
         WSOUNDDNA89_PROFILE_MAGNUM,
         WSOUNDDNA89_PROFILE_SNIPER,
         WSOUNDDNA89_PROFILE_LAUNCHER,
         WSOUNDDNA89_PROFILE_LAUNCHER,
-        WSOUNDDNA89_PROFILE_HEAVY
+        WSOUNDDNA89_PROFILE_HEAVY,
+        0,
+        0
     };
-    static const int actions[9] = {
+    static const int actions[11] = {
         0,
         WSOUNDACTION89_PISTOL,
         WSOUNDACTION89_MACHINE,
@@ -34,13 +37,16 @@ int main(void)
         WSOUNDACTION89_RIFLE,
         WSOUNDACTION89_PUMP_SHOTGUN,
         WSOUNDACTION89_RIFLE,
-        WSOUNDACTION89_MACHINE
+        WSOUNDACTION89_MACHINE,
+        0,
+        0
     };
     int weapon;
     gwp89_init(&weapon_manager);
+    (void)blank3d_weapon_host_io_bind(&weapon_manager);
     if (blank3d_weapon_ini_load_manifest(&weapon_manager,
             "config/weapons/weapons.ini", weapon_status,
-            sizeof(weapon_status)) != 9) {
+            sizeof(weapon_status)) != 15) {
         fprintf(stderr, "audio weapon INI load failed: %s\n", weapon_status);
         return 12;
     }
@@ -87,7 +93,8 @@ int main(void)
                                       capacities[weapon]);
         blank3d_audio_dry_fire(&audio, weapon);
     }
-    /* Slingshot is intentionally outside the firearm mechanism recipes. */
+    /* Slingshot and hand grenade are intentionally outside the firearm
+       mechanism recipes. They should not perturb the active synth profile. */
     {
         int profile_before;
         unsigned int failures_before;
@@ -97,6 +104,10 @@ int main(void)
         blank3d_audio_casing(&audio, 9);
         if ((int)audio.synth.world.dna.profile.id != profile_before) return 10;
         if (audio.dispatch_failures != failures_before) return 11;
+        blank3d_audio_fire_sync(&audio, 10, 1, 1);
+        blank3d_audio_casing(&audio, 10);
+        if ((int)audio.synth.world.dna.profile.id != profile_before) return 13;
+        if (audio.dispatch_failures != failures_before) return 14;
     }
     blank3d_audio_explosion(&audio, 6, 80);
     blank3d_audio_explosion(&audio, 7, 100);
@@ -108,11 +119,11 @@ int main(void)
     if (audio.dispatch_failures != 0U) {
         fprintf(stderr, "audio dispatch failures=%u status=%s\n",
                 audio.dispatch_failures, blank3d_audio_status(&audio));
-        return 3;
+        return 15;
     }
-    if (strstr(blank3d_audio_status(&audio), "online") == 0) return 4;
+    if (strstr(blank3d_audio_status(&audio), "online") == 0) return 16;
     blank3d_audio_shutdown(&audio);
-    if (audio.initialized) return 5;
+    if (audio.initialized) return 17;
     puts("Blank3D synchronized weapon mechanism test: OK");
     return 0;
 }

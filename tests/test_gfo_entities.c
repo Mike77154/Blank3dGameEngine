@@ -35,8 +35,11 @@ static void invoke(void *u, unsigned long id, void *native, const char *name,
 int main(void)
 {
     static Blank3DObjects objects;
+    static Blank3DClassSystem classes;
     Blank3DObjectHost host;
     unsigned int slot;
+    unsigned int cache_a;
+    unsigned int cache_b;
     memset(&host, 0, sizeof(host));
     host.run_ddsl2 = run_ddsl2;
     host.run_fpil = run_fpil;
@@ -44,7 +47,25 @@ int main(void)
     host.draw_script = draw_script;
     host.handle = handler;
     host.invoke = invoke;
-    blank3d_objects_init(&objects, &host);
+    if (!blank3d_classes_init(&classes, 0)) return 19;
+    blank3d_objects_init(&objects, &host, &classes);
+
+    /* One GFO ObjectDefinition must serve multiple runtime Things. */
+    if (!blank3d_objects_spawn_ex(&objects, "config/entities/player.ini",
+                                  11UL, 101UL, 0, &cache_a)) return 20;
+    if (!blank3d_objects_spawn_ex(&objects, "config/entities/player.ini",
+                                  12UL, 102UL, 0, &cache_b)) return 21;
+    if (objects.definition_count != 1U) return 22;
+    if (blank3d_objects_get(&objects, cache_a)->definition_slot !=
+        blank3d_objects_get(&objects, cache_b)->definition_slot) return 23;
+    if (blank3d_objects_definition(&objects,
+            blank3d_objects_get(&objects, cache_a)->definition_slot)->ref_count != 2U)
+        return 24;
+    if (sizeof(Blank3DObjectEntity) > 1024U) return 25;
+    blank3d_objects_kill(&objects, cache_a);
+    blank3d_objects_kill(&objects, cache_b);
+    blank3d_objects_clear_instances(&objects);
+
     if (!blank3d_objects_spawn(&objects, "config/entities/player.ini", 1UL, 0, &slot)) {
         puts(blank3d_objects_status(&objects));
         return 1;

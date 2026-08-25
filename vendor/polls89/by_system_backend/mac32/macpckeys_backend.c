@@ -1,9 +1,9 @@
-#include <stdlib.h>
 
 #include <Carbon/Carbon.h>
 #include <ApplicationServices/ApplicationServices.h>
 
 #include "macpckeys_backend.h"
+#include "polls_input_keys89.h"
 
 /* ============================================================
    key_pc_code -> CGKeyCode (kVK_*)
@@ -153,33 +153,9 @@ static int key_pc_to_cgkey(key_pc_code key)
 
 static int ensure_capacity(macpckeys_backend *kb, int required)
 {
-    key_pc_code *new_ptr;
-    int new_cap;
-    int i;
-
     if (!kb) return -1;
-    if (required <= 0) return 0;
-
-    if (kb->button_keys && kb->button_capacity >= required) {
-        return 0;
-    }
-
-    new_cap = kb->button_capacity;
-    if (new_cap < 8) new_cap = 8;
-    while (new_cap < required) {
-        new_cap *= 2;
-        if (new_cap < 0) return -1;
-    }
-
-    new_ptr = (key_pc_code*)realloc(kb->button_keys, (size_t)new_cap * sizeof(key_pc_code));
-    if (!new_ptr) return -1;
-
-    for (i = kb->button_capacity; i < new_cap; ++i) {
-        new_ptr[i] = KEY_PC_NONE;
-    }
-
-    kb->button_keys = new_ptr;
-    kb->button_capacity = new_cap;
+    if (required < 0 || required > MACPCKEYS_MAX_BUTTONS) return -1;
+    kb->button_capacity = MACPCKEYS_MAX_BUTTONS;
     return 0;
 }
 
@@ -191,8 +167,6 @@ static int macpckeys_button_state(void *user_data, int button_index)
 
     if (!kb) return 0;
     if (button_index < 0 || button_index >= kb->button_capacity) return 0;
-    if (!kb->button_keys) return 0;
-
     key = kb->button_keys[button_index];
     if (key == KEY_PC_NONE) return 0;
 
@@ -208,8 +182,12 @@ void macpckeys_backend_init(macpckeys_backend *kb)
 
     key_pc_init(&kb->key_ctx);
 
-    kb->button_keys = NULL;
-    kb->button_capacity = 0;
+    {
+        int i;
+        for (i = 0; i < MACPCKEYS_MAX_BUTTONS; ++i)
+            kb->button_keys[i] = KEY_PC_NONE;
+    }
+    kb->button_capacity = MACPCKEYS_MAX_BUTTONS;
 
     kb->scanner.scanner = NULL;
     kb->scanner.max_buttons = 0;
@@ -225,11 +203,7 @@ void macpckeys_backend_shutdown(macpckeys_backend *kb)
 {
     if (!kb) return;
 
-    if (kb->button_keys) {
-        free(kb->button_keys);
-        kb->button_keys = NULL;
-    }
-    kb->button_capacity = 0;
+    kb->button_capacity = MACPCKEYS_MAX_BUTTONS;
 
     kb->scanner_attached = 0;
 }
@@ -306,4 +280,27 @@ int macpckeys_button_released(const macpckeys_backend *kb, int button_index)
     if (!kb->scanner_attached) return 0;
     if (!kb->scanner.released) return 0;
     return kb->scanner.released(kb->scanner.scanner, button_index);
+}
+
+int macpckeys_input_key_down(const macpckeys_backend *kb, input_key89 key)
+{
+    key_pc_code legacy;
+    int code;
+    (void)kb;
+    legacy = polls_key_pc_from_input_key89(key);
+    if (legacy == KEY_PC_NONE) return 0;
+    code = key_pc_to_cgkey(legacy);
+    if (code < 0) return 0;
+    return CGEventSourceKeyState(kCGEventSourceStateCombinedSessionState,
+                                 (CGKeyCode)code) ? 1 : 0;
+}
+
+int macpckeys_bind_input_key89(macpckeys_backend *kb,
+                               int button_index,
+                               input_key89 key)
+{
+    key_pc_code legacy;
+    legacy = polls_key_pc_from_input_key89(key);
+    if (key != INPUT_KEY89_NONE && legacy == KEY_PC_NONE) return -1;
+    return macpckeys_bind_button(kb, button_index, legacy);
 }

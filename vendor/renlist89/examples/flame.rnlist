@@ -1,0 +1,14 @@
+# Recipe-like metadata plus a Ren'Py/ATL-flavored frame list.
+image flame burn:
+    source sequence
+    billboard view
+    blend add
+    glow 1
+    dynamic_light 1
+    fps 30
+
+    "fire_001"
+    "fire_002"
+    frame "fire_003" for 45
+    "fire_004"
+    repeat

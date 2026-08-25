@@ -1,0 +1,20 @@
+{
+  "phase": 69,
+  "manifest": "/mnt/data/ZRAGF_work/sanitized/bench/corpora/phase69_local_locked_manifest.json",
+  "corpus_root": "/mnt/data/ZRAGF_work/sanitized/bench/corpora",
+  "lockfile": "/mnt/data/ZRAGF_work/sanitized/tests/_phase69_locked_out/phase69_corpus_lock.json",
+  "frozen_manifest": "/mnt/data/ZRAGF_work/sanitized/tests/_phase69_locked_out/phase69_frozen_manifest.json",
+  "csv": "/mnt/data/ZRAGF_work/sanitized/tests/_phase69_locked_out/phase69_public.csv",
+  "summary": "/mnt/data/ZRAGF_work/sanitized/tests/_phase69_locked_out/phase69_public.md",
+  "validation_json": "/mnt/data/ZRAGF_work/sanitized/tests/_phase69_locked_out/phase69_png_tiff_validation.json",
+  "repeat": 3,
+  "warmup": 1,
+  "quick": true,
+  "hashes": {
+    "phase69_corpus_lock.json": "8cd511aa17671702cdfda5fc049bacff837fece603db82ab8b75e9084470d3b4",
+    "phase69_frozen_manifest.json": "786611181c06b85818e559934ab6299dae1128e3b04776e470d8709b138f555f",
+    "phase69_public.csv": "15b93c1e488f9edbee6e97b5ea9fda4993e55c58a4effc4e35be9d9a0a03d871",
+    "phase69_public.md": "21b3fb58afe9def4586eae32c941878e7e3197ac1a3ccbf0c47c516e636da206",
+    "phase69_png_tiff_validation.json": "5b30ba7825526e08991eb563b599f133d074a8a808879fe9863a2ee906920155"
+  }
+}

@@ -1,0 +1,39 @@
+[  0%] Building C object CMakeFiles/zragflib.dir/zragf_bitio.c.o
+[  7%] Building C object CMakeFiles/zragflib.dir/zragflib_internal.c.o
+[ 15%] Building C object CMakeFiles/zragflib.dir/zragf_compress.c.o
+[ 15%] Building C object CMakeFiles/zragflib.dir/zragf_decompress.c.o
+[ 23%] Building C object CMakeFiles/zragflib.dir/zragf_deflate_rfc1951.c.o
+[ 23%] Building C object CMakeFiles/zragflib.dir/zragf_frame.c.o
+[ 23%] Building C object CMakeFiles/zragflib.dir/zragf_huff.c.o
+[ 30%] Building C object CMakeFiles/zragflib.dir/zragf_lz.c.o
+[ 30%] Building C object CMakeFiles/zragflib.dir/zragf_stream.c.o
+[ 30%] Building C object CMakeFiles/zragflib.dir/zragf_api.c.o
+[ 38%] Building C object CMakeFiles/zragflib.dir/zragf_workspace.c.o
+[ 38%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_blocks.c.o
+[ 46%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_core.c.o
+[ 46%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_cost.c.o
+[ 46%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_emit.c.o
+[ 53%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_fixed.c.o
+[ 53%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_hash.c.o
+[ 61%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_huffman.c.o
+[ 61%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_huffman_shared.c.o
+[ 61%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_lazy.c.o
+[ 69%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_matcher.c.o
+[ 69%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_plan.c.o
+[ 76%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_rle.c.o
+[ 76%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_stream.c.o
+[ 76%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_tokens.c.o
+[ 84%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_core.c.o
+[ 84%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_huffman.c.o
+[ 92%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_shared.c.o
+[ 92%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_stream.c.o
+[100%] Linking C static library libzragflib.a
+[100%] Built target zragflib
+[ 92%] Built target zragflib
+[100%] Building C object CMakeFiles/zragf_test_phase66_c89_smoke.dir/tests/test_phase66_c89_smoke.c.o
+[100%] Linking C executable zragf_test_phase66_c89_smoke
+[100%] Built target zragf_test_phase66_c89_smoke
+[100%] Built target zragflib
+[100%] Building C object CMakeFiles/zragf_example_c89_simple.dir/examples/example_c89_simple.c.o
+[100%] Linking C executable zragf_example_c89_simple
+[100%] Built target zragf_example_c89_simple

@@ -1,0 +1,11 @@
+# Rename this file to CODEOWNERS and replace the placeholders with real GitHub usernames or teams.
+# Critical automation and release files should require explicit review.
+.github/workflows/ @your-org/your-release-team
+scripts/ @your-org/your-release-team
+Makefile @your-org/your-build-team
+CMakeLists.txt @your-org/your-build-team
+exports/ @your-org/your-build-team
+*.h @your-org/your-codec-team
+*.c @your-org/your-codec-team
+bmp/ @your-org/your-codec-team
+

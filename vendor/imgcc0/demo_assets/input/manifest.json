@@ -1,0 +1,17 @@
+{
+  "ok": [
+    "sample.bmp",
+    "sample.jpg",
+    "sample.png",
+    "sample.tga",
+    "sample.pcx",
+    "sample.qoi",
+    "sample.webp",
+    "sample.tiff",
+    "sample.dds",
+    "sample.gif",
+    "sample.apng.png",
+    "sample_anim.webp"
+  ],
+  "failed": {}
+}

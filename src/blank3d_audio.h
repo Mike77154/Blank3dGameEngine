@@ -6,6 +6,7 @@
 #include <mmsystem.h>
 
 #include "weapon_synth_sound_engine89.h"
+#include "blank3d_goldie_audio89.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,6 +36,7 @@ typedef struct Blank3DAudioTag {
     gv89_s16 pcm[B3D_AUDIO_BUFFER_COUNT][B3D_AUDIO_FRAMES_PER_BUFFER * 2U];
 
     wsse89_context synth;
+    Blank3DGoldieAudio89 goldie;
     wsse89_storage storage;
     gv89_voice logical_voices[B3D_AUDIO_LOGICAL_VOICES];
     gssr89_voice report_voices[B3D_AUDIO_REPORT_VOICES];
@@ -89,6 +91,24 @@ void blank3d_audio_projectile_end(Blank3DAudio *audio, int weapon_id,
                                   gv89_u32 secondary_key);
 void blank3d_audio_explosion(Blank3DAudio *audio, int weapon_id, int strength);
 void blank3d_audio_impact(Blank3DAudio *audio, int material_id, int strength);
+
+int blank3d_audio_set_bus_gain_q15(Blank3DAudio *audio, int bus, short gain_q15);
+int blank3d_audio_set_bus_mute(Blank3DAudio *audio, int bus, int mute_on);
+int blank3d_audio_play_pcm(Blank3DAudio *audio, int bus,
+                           const goldie_audio89_pcm_view *pcm, int loop,
+                           goldie_audio89_voice_handle *out_voice);
+int blank3d_audio_decode_wav_file(const char *path,
+                                  unsigned char *file_workspace,
+                                  unsigned long file_workspace_bytes,
+                                  short *pcm_dst,
+                                  unsigned long pcm_sample_capacity,
+                                  goldie_audio89_pcm_view *out_pcm);
+int blank3d_audio_decode_mp3_file(const char *path,
+                                  short *pcm_dst,
+                                  unsigned long pcm_sample_capacity,
+                                  goldie_audio89_pcm_view *out_pcm,
+                                  char *error_text,
+                                  unsigned int error_text_capacity);
 const char *blank3d_audio_status(const Blank3DAudio *audio);
 
 #ifdef __cplusplus

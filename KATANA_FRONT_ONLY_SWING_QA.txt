@@ -1,0 +1,13 @@
+Blank3D v3.27.3 - Katana Front-Only Swing
+
+PASS: katana mount is read from config/melee/katana.ini
+PASS: complete Mecanim root is 1.90 m in front of player-local origin
+PASS: visible katana vertices remain in front of the 0.35 m body plane
+PASS: red attack OBB conservative AABB remains in front of that plane
+PASS: visual mesh and damage volume share one world transform
+PASS: giant katana dimensions are preserved
+PASS: enemy torso/head hurtboxes remain true green OBB primitives
+PASS: one-hit-per-enemy and active frame window remain intact
+PASS: C89 -Wall -Wextra -pedantic targeted test
+PASS: complete runner syntax check
+PASS: active integration allocator audit

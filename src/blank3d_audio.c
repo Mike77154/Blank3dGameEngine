@@ -298,8 +298,11 @@ static void b3d_audio_render_and_queue(Blank3DAudio *audio, int index)
     if (!audio || !audio->initialized || index < 0 || index >= B3D_AUDIO_BUFFER_COUNT)
         return;
     header = &audio->headers[index];
-    (void)wsse89_render_stereo(&audio->synth, audio->pcm[index],
-                               B3D_AUDIO_FRAMES_PER_BUFFER, 0);
+    if (!blank3d_goldie_audio89_render(&audio->goldie, audio->pcm[index],
+                                        B3D_AUDIO_FRAMES_PER_BUFFER)) {
+        memset(audio->pcm[index], 0, sizeof(audio->pcm[index]));
+        b3d_audio_set_status(audio, blank3d_goldie_audio89_status(&audio->goldie));
+    }
     header->lpData = (LPSTR)audio->pcm[index];
     header->dwBufferLength = (DWORD)(B3D_AUDIO_FRAMES_PER_BUFFER * 2U * sizeof(gv89_s16));
     header->dwBytesRecorded = 0U;
@@ -307,6 +310,18 @@ static void b3d_audio_render_and_queue(Blank3DAudio *audio, int index)
     header->dwLoops = 0U;
     if (waveOutWrite(audio->wave_out, header, sizeof(*header)) != MMSYSERR_NOERROR)
         b3d_audio_set_status(audio, "waveOutWrite failed");
+}
+
+static int b3d_audio_goldie_weapon_render(void *user,
+                                           short *dst_interleaved,
+                                           unsigned int frames)
+{
+    wsse89_context *synth;
+    if (!user || !dst_interleaved || frames == 0U) return 0;
+    synth = (wsse89_context *)user;
+    (void)wsse89_render_stereo(synth, dst_interleaved,
+                               (gv89_u32)frames, 0);
+    return 1;
 }
 
 int blank3d_audio_init(Blank3DAudio *audio, int enabled)
@@ -332,6 +347,12 @@ int blank3d_audio_init(Blank3DAudio *audio, int enabled)
         b3d_audio_set_status(audio, "weapon synth init failed");
         return 0;
     }
+    if (!blank3d_goldie_audio89_init(&audio->goldie, &audio->synth,
+                                      b3d_audio_goldie_weapon_render,
+                                      B3D_AUDIO_RATE)) {
+        b3d_audio_set_status(audio, blank3d_goldie_audio89_status(&audio->goldie));
+        return 0;
+    }
 
     memset(&audio->format, 0, sizeof(audio->format));
     audio->format.wFormatTag = WAVE_FORMAT_PCM;
@@ -346,6 +367,7 @@ int blank3d_audio_init(Blank3DAudio *audio, int enabled)
                          0U, 0U, CALLBACK_NULL);
     if (result != MMSYSERR_NOERROR) {
         b3d_audio_set_status(audio, "waveOutOpen failed");
+        blank3d_goldie_audio89_shutdown(&audio->goldie);
         return 0;
     }
     audio->initialized = 1;
@@ -361,7 +383,7 @@ int blank3d_audio_init(Blank3DAudio *audio, int enabled)
         }
         b3d_audio_render_and_queue(audio, i);
     }
-    b3d_audio_set_status(audio, "weapon synth source online: PCM16 stereo 44100 Hz");
+    b3d_audio_set_status(audio, "Goldie Matryoshka audio online: weapon synth -> SFX/Weapons -> MASTER -> WinMM");
     return 1;
 }
 
@@ -391,7 +413,54 @@ void blank3d_audio_shutdown(Blank3DAudio *audio)
         waveOutClose(audio->wave_out);
     }
     audio->wave_out = 0;
+    blank3d_goldie_audio89_shutdown(&audio->goldie);
     audio->initialized = 0;
+}
+
+int blank3d_audio_set_bus_gain_q15(Blank3DAudio *audio, int bus, short gain_q15)
+{
+    if (!audio || !audio->initialized) return 0;
+    return blank3d_goldie_audio89_set_bus_gain_q15(&audio->goldie, bus, gain_q15);
+}
+
+int blank3d_audio_set_bus_mute(Blank3DAudio *audio, int bus, int mute_on)
+{
+    if (!audio || !audio->initialized) return 0;
+    return blank3d_goldie_audio89_set_bus_mute(&audio->goldie, bus, mute_on);
+}
+
+int blank3d_audio_play_pcm(Blank3DAudio *audio, int bus,
+                           const goldie_audio89_pcm_view *pcm, int loop,
+                           goldie_audio89_voice_handle *out_voice)
+{
+    if (!audio || !audio->initialized) return 0;
+    return blank3d_goldie_audio89_play_pcm(&audio->goldie, bus, pcm, loop, out_voice);
+}
+
+int blank3d_audio_decode_wav_file(const char *path,
+                                  unsigned char *file_workspace,
+                                  unsigned long file_workspace_bytes,
+                                  short *pcm_dst,
+                                  unsigned long pcm_sample_capacity,
+                                  goldie_audio89_pcm_view *out_pcm)
+{
+    return goldie_audio89_decode_wav_file(path, file_workspace,
+                                          file_workspace_bytes, pcm_dst,
+                                          pcm_sample_capacity, out_pcm)
+           == GOLDIE_AUDIO89_OK ? 1 : 0;
+}
+
+int blank3d_audio_decode_mp3_file(const char *path,
+                                  short *pcm_dst,
+                                  unsigned long pcm_sample_capacity,
+                                  goldie_audio89_pcm_view *out_pcm,
+                                  char *error_text,
+                                  unsigned int error_text_capacity)
+{
+    return goldie_audio89_decode_mp3_file(path, pcm_dst,
+                                          pcm_sample_capacity, out_pcm,
+                                          error_text, error_text_capacity)
+           == GOLDIE_AUDIO89_OK ? 1 : 0;
 }
 
 void blank3d_audio_fire_sync(Blank3DAudio *audio, int weapon_id,

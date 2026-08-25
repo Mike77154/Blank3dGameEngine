@@ -1,0 +1,7 @@
+Suggested seeds for fuzzing bmp_parse_memory()/bmp_decode_to_rgba32()/bmp_get_embedded_payload().
+- valid_rgb24.bmp: baseline BIG_BR sample
+- payload_png.bmp: BI_PNG embedded payload sample
+- invalid_topdown_rle6.bmp: negative height with compressed RLE8 should be rejected
+- payload_jpeg_round3.bmp: BI_JPEG embedded payload sampl%
+- invalid_reserved_round3.bmp: reserved file-header fields should be rejected
+- invalid_payload_png_bpp_mp.dict

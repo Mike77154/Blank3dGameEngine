@@ -1,0 +1,34 @@
+Source archive: hwnd_window.zip
+SHA-256: a1c1cb62179abdc6cbb1c5fc8a4fcc571ef5c3f60a530d47be67ca6ea3e30e63
+
+Original files:
+CMakeLists.txt
+by_system_backend/linux32/CMakeLists.txt
+by_system_backend/linux32/linux32stub.c
+by_system_backend/linux32/linux32stub.h
+by_system_backend/linux64/CMakeLists.txt
+by_system_backend/linux64/hwnd_linux64_backend.c
+by_system_backend/linux64/hwnd_linux64_backend.h
+by_system_backend/linux64/linux64stub.c
+by_system_backend/linux64/linux64stub.h
+by_system_backend/macos32/CMakeLists.txt
+by_system_backend/macos32/macos32stub.c
+by_system_backend/macos32/macos32stub.h
+by_system_backend/macos64/CMakeLists.txt
+by_system_backend/macos64/hwnd_window_macos64_backend.c
+by_system_backend/macos64/hwnd_window_macos64_backend.h
+by_system_backend/macos64/macos64stub.c
+by_system_backend/macos64/macos64stub.h
+by_system_backend/win32/CMakeLists.txt
+by_system_backend/win32/hwnd_win32_backend.c
+by_system_backend/win32/hwnd_win32_backend.h
+by_system_backend/win64/CMakeLists.txt
+by_system_backend/win64/hwnd_win64_backend.c
+by_system_backend/win64/hwnd_win64_backend.h
+hwnd_core.c
+hwnd_core.h
+
+Backend capability preservation:
+- Win32 32/64 -> consolidated maintained Win32 backend
+- Linux/X11 32/64 -> consolidated maintained X11 backend
+- macOS 32/64 historical split -> consolidated maintained Cocoa backend

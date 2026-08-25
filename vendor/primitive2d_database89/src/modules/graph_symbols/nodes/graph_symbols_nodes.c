@@ -1,0 +1,167 @@
+#include "p2d89_internal.h"
+static const P2D89_ShapeInfo shapes[]={
+ {P2D89_SHAPE_GRAPH_NODE_CIRCLE,"graph_node_circle","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_DOUBLECIRCLE,"graph_node_doublecircle","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_ELLIPSE,"graph_node_ellipse","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_BOX,"graph_node_box","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_ROUNDED_BOX,"graph_node_rounded_box","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_DIAMOND,"graph_node_diamond","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_HOUSE,"graph_node_house","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_INVHOUSE,"graph_node_invhouse","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_TRAPEZOID,"graph_node_trapezoid","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_INVTRAPEZOID,"graph_node_invtrapezoid","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_PARALLELOGRAM,"graph_node_parallelogram","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_CYLINDER,"graph_node_cylinder","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_NOTE,"graph_node_note","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_TAB,"graph_node_tab","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_FOLDER,"graph_node_folder","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_COMPONENT,"graph_node_component","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_RECORD_2,"graph_node_record_2","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_RECORD_3,"graph_node_record_3","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_MDIAMOND,"graph_node_mdiamond","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_GRAPH_NODE_MSQUARE,"graph_node_msquare","graph_symbols","nodes",P2D89_MODULE_GRAPH_SYMBOLS,P2D89_FLAG_CLOSED|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_DIAGRAM_NODE,P2D89_FILL_EVENODD,P2D89_CAP_BUTT,P2D89_JOIN_ROUND},
+};
+static const P2D89_Command r0[]={
+ {2,12288,0,0,0,0,0}, {3,11869,3180,0,0,0,0}, {3,10642,6144,0,0,0,0}, {3,8689,8689,0,0,0,0},
+ {3,6144,10642,0,0,0,0}, {3,3180,11869,0,0,0,0}, {3,0,12288,0,0,0,0}, {3,-3180,11869,0,0,0,0},
+ {3,-6144,10642,0,0,0,0}, {3,-8689,8689,0,0,0,0}, {3,-10642,6144,0,0,0,0}, {3,-11869,3180,0,0,0,0},
+ {3,-12288,0,0,0,0,0}, {3,-11869,-3180,0,0,0,0}, {3,-10642,-6144,0,0,0,0}, {3,-8689,-8689,0,0,0,0},
+ {3,-6144,-10642,0,0,0,0}, {3,-3180,-11869,0,0,0,0}, {3,0,-12288,0,0,0,0}, {3,3180,-11869,0,0,0,0},
+ {3,6144,-10642,0,0,0,0}, {3,8689,-8689,0,0,0,0}, {3,10642,-6144,0,0,0,0}, {3,11869,-3180,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r1[]={
+ {2,12780,0,0,0,0,0}, {3,12344,3308,0,0,0,0}, {3,11067,6390,0,0,0,0}, {3,9036,9036,0,0,0,0},
+ {3,6390,11067,0,0,0,0}, {3,3308,12344,0,0,0,0}, {3,0,12780,0,0,0,0}, {3,-3308,12344,0,0,0,0},
+ {3,-6390,11067,0,0,0,0}, {3,-9036,9036,0,0,0,0}, {3,-11067,6390,0,0,0,0}, {3,-12344,3308,0,0,0,0},
+ {3,-12780,0,0,0,0,0}, {3,-12344,-3308,0,0,0,0}, {3,-11067,-6390,0,0,0,0}, {3,-9036,-9036,0,0,0,0},
+ {3,-6390,-11067,0,0,0,0}, {3,-3308,-12344,0,0,0,0}, {3,0,-12780,0,0,0,0}, {3,3308,-12344,0,0,0,0},
+ {3,6390,-11067,0,0,0,0}, {3,9036,-9036,0,0,0,0}, {3,11067,-6390,0,0,0,0}, {3,12344,-3308,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,10158,0,0,0,0,0}, {3,9747,2862,0,0,0,0}, {3,8546,5492,0,0,0,0},
+ {3,6652,7677,0,0,0,0}, {3,4220,9240,0,0,0,0}, {3,1446,10055,0,0,0,0}, {3,-1446,10055,0,0,0,0},
+ {3,-4220,9240,0,0,0,0}, {3,-6652,7677,0,0,0,0}, {3,-8546,5492,0,0,0,0}, {3,-9747,2862,0,0,0,0},
+ {3,-10158,0,0,0,0,0}, {3,-9747,-2862,0,0,0,0}, {3,-8546,-5492,0,0,0,0}, {3,-6652,-7677,0,0,0,0},
+ {3,-4220,-9240,0,0,0,0}, {3,-1446,-10055,0,0,0,0}, {3,1446,-10055,0,0,0,0}, {3,4220,-9240,0,0,0,0},
+ {3,6652,-7677,0,0,0,0}, {3,8546,-5492,0,0,0,0}, {3,9747,-2862,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r2[]={
+ {2,14746,0,0,0,0,0}, {3,14243,2544,0,0,0,0}, {3,12770,4915,0,0,0,0}, {3,10427,6951,0,0,0,0},
+ {3,7373,8513,0,0,0,0}, {3,3816,9495,0,0,0,0}, {3,0,9830,0,0,0,0}, {3,-3816,9495,0,0,0,0},
+ {3,-7373,8513,0,0,0,0}, {3,-10427,6951,0,0,0,0}, {3,-12770,4915,0,0,0,0}, {3,-14243,2544,0,0,0,0},
+ {3,-14746,0,0,0,0,0}, {3,-14243,-2544,0,0,0,0}, {3,-12770,-4915,0,0,0,0}, {3,-10427,-6951,0,0,0,0},
+ {3,-7373,-8513,0,0,0,0}, {3,-3816,-9495,0,0,0,0}, {3,0,-9830,0,0,0,0}, {3,3816,-9495,0,0,0,0},
+ {3,7373,-8513,0,0,0,0}, {3,10427,-6951,0,0,0,0}, {3,12770,-4915,0,0,0,0}, {3,14243,-2544,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r3[]={
+ {2,-13926,-9503,0,0,0,0}, {3,13926,-9503,0,0,0,0}, {3,13926,9503,0,0,0,0}, {3,-13926,9503,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r4[]={
+ {2,10977,-9503,0,0,0,0}, {3,11889,-9358,0,0,0,0}, {3,12711,-8939,0,0,0,0}, {3,13363,-8287,0,0,0,0},
+ {3,13782,-7465,0,0,0,0}, {3,13926,-6554,0,0,0,0}, {3,13926,6554,0,0,0,0}, {3,13782,7465,0,0,0,0},
+ {3,13363,8287,0,0,0,0}, {3,12711,8939,0,0,0,0}, {3,11889,9358,0,0,0,0}, {3,10977,9503,0,0,0,0},
+ {3,-10977,9503,0,0,0,0}, {3,-11889,9358,0,0,0,0}, {3,-12711,8939,0,0,0,0}, {3,-13363,8287,0,0,0,0},
+ {3,-13782,7465,0,0,0,0}, {3,-13926,6554,0,0,0,0}, {3,-13926,-6554,0,0,0,0}, {3,-13782,-7465,0,0,0,0},
+ {3,-13363,-8287,0,0,0,0}, {3,-12711,-8939,0,0,0,0}, {3,-11889,-9358,0,0,0,0}, {3,-10977,-9503,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r5[]={
+ {2,0,-11469,0,0,0,0}, {3,13926,0,0,0,0,0}, {3,0,11469,0,0,0,0}, {3,-13926,0,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r6[]={
+ {2,-13107,10650,0,0,0,0}, {3,-13107,-4096,0,0,0,0}, {3,0,-13107,0,0,0,0}, {3,13107,-4096,0,0,0,0},
+ {3,13107,10650,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r7[]={
+ {2,-13107,-10650,0,0,0,0}, {3,-13107,4096,0,0,0,0}, {3,0,13107,0,0,0,0}, {3,13107,4096,0,0,0,0},
+ {3,13107,-10650,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r8[]={
+ {2,-11469,-9830,0,0,0,0}, {3,11469,-9830,0,0,0,0}, {3,14746,9830,0,0,0,0}, {3,-14746,9830,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r9[]={
+ {2,-14746,-9830,0,0,0,0}, {3,14746,-9830,0,0,0,0}, {3,11469,9830,0,0,0,0}, {3,-11469,9830,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r10[]={
+ {2,-10650,-9830,0,0,0,0}, {3,15565,-9830,0,0,0,0}, {3,10650,9830,0,0,0,0}, {3,-15565,9830,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r11[]={
+ {2,13107,-9011,0,0,0,0}, {3,12466,-7897,0,0,0,0}, {3,10604,-6893,0,0,0,0}, {3,7704,-6095,0,0,0,0},
+ {3,4050,-5583,0,0,0,0}, {3,0,-5407,0,0,0,0}, {3,-4050,-5583,0,0,0,0}, {3,-7704,-6095,0,0,0,0},
+ {3,-10604,-6893,0,0,0,0}, {3,-12466,-7897,0,0,0,0}, {3,-13107,-9011,0,0,0,0}, {3,-12466,-10125,0,0,0,0},
+ {3,-10604,-11130,0,0,0,0}, {3,-7704,-11927,0,0,0,0}, {3,-4050,-12439,0,0,0,0}, {3,0,-12616,0,0,0,0},
+ {3,4050,-12439,0,0,0,0}, {3,7704,-11927,0,0,0,0}, {3,10604,-11130,0,0,0,0}, {3,12466,-10125,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,-13107,-9011,0,0,0,0}, {3,-13107,9011,0,0,0,0}, {2,13107,-9011,0,0,0,0},
+ {3,13107,9011,0,0,0,0}, {2,13107,9011,0,0,0,0}, {3,12908,11287,0,0,0,0}, {3,12317,13494,0,0,0,0},
+ {3,11351,15565,0,0,0,0}, {3,10041,17436,0,0,0,0}, {3,8425,19052,0,0,0,0}, {3,6554,20362,0,0,0,0},
+ {3,4483,21328,0,0,0,0}, {3,2276,21919,0,0,0,0}, {3,0,22118,0,0,0,0}, {3,-2276,21919,0,0,0,0},
+ {3,-4483,21328,0,0,0,0}, {3,-6554,20362,0,0,0,0}, {3,-8425,19052,0,0,0,0}, {3,-10041,17436,0,0,0,0},
+ {3,-11351,15565,0,0,0,0}, {3,-12317,13494,0,0,0,0}, {3,-12908,11287,0,0,0,0}, {3,-13107,9011,0,0,0,0},
+};
+static const P2D89_Command r12[]={
+ {2,-11469,-12288,0,0,0,0}, {3,6554,-12288,0,0,0,0}, {3,11469,-7373,0,0,0,0}, {3,11469,12288,0,0,0,0},
+ {3,-11469,12288,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r13[]={
+ {2,-13107,-10650,0,0,0,0}, {3,3277,-10650,0,0,0,0}, {3,5734,-13926,0,0,0,0}, {3,13107,-13926,0,0,0,0},
+ {3,13107,10650,0,0,0,0}, {3,-13107,10650,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r14[]={
+ {2,-14746,-9011,0,0,0,0}, {3,-14746,9830,0,0,0,0}, {3,14746,9830,0,0,0,0}, {3,14746,-5734,0,0,0,0},
+ {3,4096,-5734,0,0,0,0}, {3,819,-9011,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r15[]={
+ {2,-12288,-10650,0,0,0,0}, {3,12288,-10650,0,0,0,0}, {3,12288,10650,0,0,0,0}, {3,-12288,10650,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,-15565,-5734,0,0,0,0}, {3,-12288,-5734,0,0,0,0}, {2,-15565,5734,0,0,0,0},
+ {3,-12288,5734,0,0,0,0}, {2,12288,-5734,0,0,0,0}, {3,15565,-5734,0,0,0,0}, {2,12288,5734,0,0,0,0},
+ {3,15565,5734,0,0,0,0},
+};
+static const P2D89_Command r16[]={
+ {2,-14746,-9011,0,0,0,0}, {3,14746,-9011,0,0,0,0}, {3,14746,9011,0,0,0,0}, {3,-14746,9011,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,0,-9011,0,0,0,0}, {3,0,9011,0,0,0,0},
+};
+static const P2D89_Command r17[]={
+ {2,-14746,-9011,0,0,0,0}, {3,14746,-9011,0,0,0,0}, {3,14746,9011,0,0,0,0}, {3,-14746,9011,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,-4915,-9011,0,0,0,0}, {3,-4915,9011,0,0,0,0}, {2,4915,-9011,0,0,0,0},
+ {3,4915,9011,0,0,0,0},
+};
+static const P2D89_Command r18[]={
+ {2,0,-11469,0,0,0,0}, {3,13926,0,0,0,0,0}, {3,0,11469,0,0,0,0}, {3,-13926,0,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,-7373,-5734,0,0,0,0}, {3,7373,5734,0,0,0,0}, {2,-7373,5734,0,0,0,0},
+ {3,7373,-5734,0,0,0,0},
+};
+static const P2D89_Command r19[]={
+ {2,-11796,-11796,0,0,0,0}, {3,11796,-11796,0,0,0,0}, {3,11796,11796,0,0,0,0}, {3,-11796,11796,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,-7373,-7373,0,0,0,0}, {3,-3604,-3604,0,0,0,0}, {2,7373,7373,0,0,0,0},
+ {3,3604,3604,0,0,0,0}, {2,-7373,7373,0,0,0,0}, {3,-3604,3604,0,0,0,0}, {2,7373,-7373,0,0,0,0},
+ {3,3604,-3604,0,0,0,0},
+};
+static int replay(const P2D89_Command *c,unsigned int n,const P2D89_Provider *p){unsigned int i;if(c==0||p==0||p->emit==0)return 0;for(i=0U;i<n;++i)if(!p->emit(p->user,&c[i]))return 0;return 1;}
+static int emit(P2D89_ShapeId id,const P2D89_Provider *p){switch(id){
+case P2D89_SHAPE_GRAPH_NODE_CIRCLE: return replay(r0,(unsigned int)(sizeof(r0)/sizeof(r0[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_DOUBLECIRCLE: return replay(r1,(unsigned int)(sizeof(r1)/sizeof(r1[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_ELLIPSE: return replay(r2,(unsigned int)(sizeof(r2)/sizeof(r2[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_BOX: return replay(r3,(unsigned int)(sizeof(r3)/sizeof(r3[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_ROUNDED_BOX: return replay(r4,(unsigned int)(sizeof(r4)/sizeof(r4[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_DIAMOND: return replay(r5,(unsigned int)(sizeof(r5)/sizeof(r5[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_HOUSE: return replay(r6,(unsigned int)(sizeof(r6)/sizeof(r6[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_INVHOUSE: return replay(r7,(unsigned int)(sizeof(r7)/sizeof(r7[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_TRAPEZOID: return replay(r8,(unsigned int)(sizeof(r8)/sizeof(r8[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_INVTRAPEZOID: return replay(r9,(unsigned int)(sizeof(r9)/sizeof(r9[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_PARALLELOGRAM: return replay(r10,(unsigned int)(sizeof(r10)/sizeof(r10[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_CYLINDER: return replay(r11,(unsigned int)(sizeof(r11)/sizeof(r11[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_NOTE: return replay(r12,(unsigned int)(sizeof(r12)/sizeof(r12[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_TAB: return replay(r13,(unsigned int)(sizeof(r13)/sizeof(r13[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_FOLDER: return replay(r14,(unsigned int)(sizeof(r14)/sizeof(r14[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_COMPONENT: return replay(r15,(unsigned int)(sizeof(r15)/sizeof(r15[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_RECORD_2: return replay(r16,(unsigned int)(sizeof(r16)/sizeof(r16[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_RECORD_3: return replay(r17,(unsigned int)(sizeof(r17)/sizeof(r17[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_MDIAMOND: return replay(r18,(unsigned int)(sizeof(r18)/sizeof(r18[0])),p);
+case P2D89_SHAPE_GRAPH_NODE_MSQUARE: return replay(r19,(unsigned int)(sizeof(r19)/sizeof(r19[0])),p);
+default: return 0;}}
+const P2D89_Submodule p2d89_submodule_graph_symbols_nodes={{P2D89_MODULE_GRAPH_SYMBOLS,"graph_symbols","nodes",(unsigned int)(sizeof(shapes)/sizeof(shapes[0]))},shapes,emit};

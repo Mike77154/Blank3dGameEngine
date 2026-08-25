@@ -1,0 +1,185 @@
+{
+  "phase": 70,
+  "count": 4,
+  "failures": 0,
+  "results": [
+    {
+      "path": "bench/corpora/local_phase70/sprite_rgba.png",
+      "sha256": "a2f658b2b0c5e7198265112325f0af41300f0ad34d8f117e5f0fbd0f1c17aaae",
+      "suffix": ".png",
+      "ok": true,
+      "reason": "",
+      "structural": {
+        "ok": true,
+        "width": 8,
+        "height": 8,
+        "frames": 1,
+        "chunk_count": 3,
+        "chunks": [
+          "IHDR",
+          "IDAT",
+          "IEND"
+        ]
+      },
+      "readers": {
+        "file": {
+          "ok": true,
+          "mime": "image/png"
+        },
+        "pillow": {
+          "ok": true,
+          "format": "PNG",
+          "width": 8,
+          "height": 8,
+          "frames": 1,
+          "mode": "RGBA",
+          "pixel_sha256": "1c109ec9821223eb3ae970073eb292f8f41054728e8730f668e338aa690836c5"
+        },
+        "identify": {
+          "ok": true,
+          "format": "PNG",
+          "width": 8,
+          "height": 8,
+          "frames": 1
+        }
+      }
+    },
+    {
+      "path": "bench/corpora/local_phase70/strip_gray.tiff",
+      "sha256": "283b7d1047b04d28cba50429b2cbd1345d6dc910b3dee46bef450851942e606e",
+      "suffix": ".tiff",
+      "ok": true,
+      "reason": "",
+      "structural": {
+        "ok": true,
+        "byte_order": "II",
+        "variant": "classic",
+        "first_ifd": 8
+      },
+      "readers": {
+        "file": {
+          "ok": true,
+          "mime": "image/tiff"
+        },
+        "pillow": {
+          "ok": true,
+          "format": "TIFF",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "mode": "L",
+          "pixel_sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880"
+        },
+        "tifffile": {
+          "ok": true,
+          "pages": 1,
+          "width": 16,
+          "height": 16,
+          "dtype": "uint8",
+          "shape": [
+            16,
+            16
+          ],
+          "pixel_sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880"
+        },
+        "identify": {
+          "ok": true,
+          "format": "TIFF",
+          "width": 16,
+          "height": 16,
+          "frames": 1
+        }
+      }
+    },
+    {
+      "path": "bench/corpora/local_phase70/sprite_palette.png",
+      "sha256": "5a1b510e11a1c49e54454f420e7458a2abecf38d3f2bcdd083493aed0a0345b1",
+      "suffix": ".png",
+      "ok": true,
+      "reason": "",
+      "structural": {
+        "ok": true,
+        "width": 8,
+        "height": 8,
+        "frames": 1,
+        "chunk_count": 4,
+        "chunks": [
+          "IHDR",
+          "PLTE",
+          "IDAT",
+          "IEND"
+        ]
+      },
+      "readers": {
+        "file": {
+          "ok": true,
+          "mime": "image/png"
+        },
+        "pillow": {
+          "ok": true,
+          "format": "PNG",
+          "width": 8,
+          "height": 8,
+          "frames": 1,
+          "mode": "P",
+          "pixel_sha256": "68c582db052ed12d39e87ef11c66a1488f96a4ef81de7670bc2668c642685eb2"
+        },
+        "identify": {
+          "ok": true,
+          "format": "PNG",
+          "width": 8,
+          "height": 8,
+          "frames": 1
+        }
+      }
+    },
+    {
+      "path": "bench/corpora/local_phase70/strip_rgb.tiff",
+      "sha256": "edf214b72589e6e4dabd399b95d967662dcb6e0609465a406760ea649315743f",
+      "suffix": ".tiff",
+      "ok": true,
+      "reason": "",
+      "structural": {
+        "ok": true,
+        "byte_order": "II",
+        "variant": "classic",
+        "first_ifd": 8
+      },
+      "readers": {
+        "file": {
+          "ok": true,
+          "mime": "image/tiff"
+        },
+        "pillow": {
+          "ok": true,
+          "format": "TIFF",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "mode": "RGB",
+          "pixel_sha256": "45f384555a56d8471b78e596651d3af63268c3d6af29d036d7995413ce8c5d6d"
+        },
+        "tifffile": {
+          "ok": true,
+          "pages": 1,
+          "width": 16,
+          "height": 16,
+          "dtype": "uint8",
+          "shape": [
+            16,
+            16,
+            3
+          ],
+          "pixel_sha256": "45f384555a56d8471b78e596651d3af63268c3d6af29d036d7995413ce8c5d6d"
+        },
+        "identify": {
+          "ok": true,
+          "format": "TIFF",
+          "width": 16,
+          "height": 16,
+          "frames": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 #ifndef BLANK3D_LANGUAGES_H
 #define BLANK3D_LANGUAGES_H
 
+#include "gameverbs89.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,10 +24,15 @@ typedef struct Blank3DLanguageHostTag {
                         const char *action,
                         long value_q16, const char *value_text,
                         int has_value);
+    /* Shared named verb vocabulary. Optional: DSLs remain usable without it. */
+    gverb89_registry *gameverbs;
+    unsigned long (*gameverb_owner)(void *user, void *entity);
 } Blank3DLanguageHost;
 
 void blank3d_languages_init(const Blank3DLanguageHost *host);
+void blank3d_languages_set_subject(unsigned long owner, void *entity);
 int blank3d_languages_reload_ddsl2(const char *path);
+int blank3d_languages_reload_ddsl2_pair(const char *path, const char *extra_path);
 int blank3d_languages_tick_ddsl2(void);
 int blank3d_languages_reload_fpil(const char *path);
 int blank3d_languages_tick_fpil(void *entity);

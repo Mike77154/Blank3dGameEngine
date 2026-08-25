@@ -1,0 +1,58 @@
+psd89 sanitation verification summary
+=====================================
+
+Strict build command:
+  make -B CFLAGS='-std=c89 -Wall -Wextra -pedantic -Werror -Iinclude' all
+Result:
+  PASS (all library, example, test, and corpus-runner targets built with warnings treated as errors)
+
+Regression command:
+  make test
+Result:
+  PASS
+  test_v12: ok
+  test_v13: ok
+  test_v14: ok
+  test_v15: ok
+  test_v16: ok
+  test_v17: ok
+  test_v18: ok
+  test_v20: ok
+  test_v21: ok
+  test_v22: ok
+  test_v23: ok
+  corpus_runner: completed
+
+Example programs:
+  file_roundtrip: PASS
+  layer_mask_roundtrip: PASS
+  group_roundtrip: PASS
+  advanced_roundtrip: PASS
+  fidelity_roundtrip: PASS
+  fidelity_roundtrip_v23: PASS
+
+Byte-exact generated PSD comparison:
+  28 / 28 SHA-256 hashes identical between baseline and sanitized builds.
+  See baseline_outputs.sha256 and sanitized_outputs.sha256.
+
+Differential fixed-point test:
+  200000 deterministic full-range input pairs.
+  Q16 multiply, Q16 divide, Q24 multiply output stream: byte-identical.
+  SHA-256: 16c823850373565bcb9ef23db37462a4f3566dcaa4347fb9cdd6f3e5f1573f0c
+
+Differential PSD IEEE scalar conversion test:
+  200000 deterministic finite patterns/values.
+  Baseline vs fixed/integer implementation output stream: byte-identical.
+  SHA-256: 32d3fcf307c23e21eea30126d2b52463f5c1588067eec92e1fef9b2b4f62f7b5
+
+Forbidden native construct scan over src/include/tests/examples C/H:
+  no malloc(...)
+  no calloc(...)
+  no realloc(...)
+  no free(...)
+  no native long long declarations/uses
+  no native floating scalar declarations/uses
+  no int64_t / uint64_t declarations/uses
+  no unsigned long / signed long storage types in psd89 API/core
+
+Note: PSD itself contains descriptor type names such as the literal string "long" and 8-byte wire fields. Those are format identifiers/payload widths, not native C scalar types. Eight-byte payloads are represented as two psd89_u32 halves.

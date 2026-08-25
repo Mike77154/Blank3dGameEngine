@@ -1,0 +1,14 @@
+Actor/Equipment vendor split QA
+===============================
+actor_system89 standalone: PASS
+ equipment_system89 standalone: PASS
+Blank3D actor-equipment integration: PASS
+actor weapon isolation: PASS
+faction bridge: PASS
+perception stack: PASS
+full syntax-check: PASS
+active no-heap audit: PASS
+
+Important adapter regression fixed during extraction:
+GAttach89 uses non-negative result codes including 0 for success; the Blank3D
+EquipmentSystem adapter normalizes those return codes to boolean success.

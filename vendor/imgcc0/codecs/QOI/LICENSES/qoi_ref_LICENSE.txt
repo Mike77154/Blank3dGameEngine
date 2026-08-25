@@ -1,0 +1,5 @@
+Upstream reference used in tests:
+phoboslab/qoi
+License: MIT
+
+The full upstream qoi.h license header is preserved inside tests/third_party/qoi_ref.h.

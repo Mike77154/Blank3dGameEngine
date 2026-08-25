@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #include <stddef.h> /* size_t */
+#include "input_keys89.h"
 
 /* =========================
    Tiny fixed-width types (C89-friendly)
@@ -236,6 +237,12 @@ ihk_key input_hook_key_from_name(const char *name);
    - If tmp is NULL or too small: returns "unknown".
 */
 const char *input_hook_key_name(ihk_key key, char *tmp, size_t tmp_sz);
+
+/* Canonical input_keys89 bridge.  ihk_key and input_key89 intentionally share
+ * the same (page << 8) | usage representation, but callers should use these
+ * helpers instead of assuming that representation in application code. */
+ihk_key input_hook_key_from_input_key89(input_key89 key);
+input_key89 input_hook_key_to_input_key89(ihk_key key);
 
 #ifdef __cplusplus
 }

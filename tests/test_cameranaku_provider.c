@@ -15,6 +15,7 @@ int main(void)
     Vec3 target;
     Vec3 velocity;
     Vec3 eye;
+    Vec3 ots_eye;
     Vec3 forward;
     GWP89_ProviderPacket packet;
     g3d_fix old_pitch;
@@ -89,12 +90,27 @@ int main(void)
         return fail("weapon camera provider did not handle request");
     if (!packet.camera.valid || packet.camera.camera_id != B3D_CNK_CAMERA_ID)
         return fail("weapon camera identity invalid");
-    if (packet.camera.view_style != GWP89_VIEW_OVER_SHOULDER)
-        return fail("TPS view style not exported");
+    if (packet.camera.view_style != GWP89_VIEW_THIRD_PERSON)
+        return fail("centered TPS view style not exported");
     if (packet.camera.forward.x == 0L &&
         packet.camera.forward.y == 0L &&
         packet.camera.forward.z == 0L)
         return fail("weapon camera forward missing");
+
+    blank3d_cameranaku_set_mode(&camera, B3D_CNK_CAMERA_OTS);
+    blank3d_cameranaku_update(&camera, 16);
+    blank3d_cameranaku_get_view(&camera, &ots_eye, 0, 0, 0);
+    if (ots_eye.x == eye.x && ots_eye.y == eye.y && ots_eye.z == eye.z)
+        return fail("OTS shoulder offset did not differ from centered TPS");
+    memset(&packet, 0, sizeof(packet));
+    packet.phase = GWP89_PHASE_PRE;
+    packet.service = GWP89_SERVICE_CAMERA;
+    packet.operation = GWP89_OP_GET_CAMERA;
+    packet.actor_id = 1;
+    packet.actor_kind = 1;
+    (void)blank3d_cameranaku_weapon_provider(&camera, &packet);
+    if (packet.camera.view_style != GWP89_VIEW_OVER_SHOULDER)
+        return fail("OTS view style not exported");
 
     /* NPC actors must keep their AI-authored socket/camera basis. */
     memset(&packet, 0, sizeof(packet));
@@ -126,6 +142,23 @@ int main(void)
     (void)blank3d_cameranaku_weapon_provider(&camera, &packet);
     if (packet.camera.view_style != GWP89_VIEW_FPS)
         return fail("FPS view style not exported");
+
+    if (blank3d_cameranaku_load_profiles(&camera, "config/cameras") != 3)
+        return fail("production camera INI directory did not load three profiles");
+    if (!blank3d_cameranaku_set_profile(&camera, "tps_centred"))
+        return fail("TPS INI profile selection failed");
+    if (!blank3d_cameranaku_current_profile(&camera) ||
+        blank3d_cameranaku_current_profile(&camera)->offset_right != 0)
+        return fail("TPS INI was not centered");
+    if (!blank3d_cameranaku_set_profile(&camera, "ots"))
+        return fail("OTS INI profile selection failed");
+    if (blank3d_cameranaku_current_profile(&camera)->offset_right <= 0)
+        return fail("OTS INI shoulder offset missing");
+    if (!blank3d_cameranaku_set_profile(&camera, "fps"))
+        return fail("FPS INI profile selection failed");
+    if (blank3d_cameranaku_current_profile(&camera)->rig !=
+        B3D_CAMERA_RIG_FPS)
+        return fail("FPS INI rig type incorrect");
 
     printf("Blank3D Cameranaku89 receive-provider test: OK\n");
     printf("TRS calls move=%lu scale=%lu rotate=%lu weapon=%lu\n",

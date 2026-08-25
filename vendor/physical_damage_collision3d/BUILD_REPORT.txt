@@ -1,0 +1,34 @@
+PhysicalDamageCollision3D v3.1 - FD3D protocol vendor replacement
+
+Build command:
+  make clean && make all && make run
+
+Compiler flags:
+  -std=c89 -pedantic-errors -Wall -Wextra -Werror -O2
+
+Result:
+  OK: all library objects compiled.
+  OK: all demos linked.
+  OK: all demos ran.
+
+FD3D vendor replacement:
+  include/fd3d89.h replaced with fdata3d89_protocol_patched/include/fd3d89.h
+  src/vendor/framedata/fd3d89.c replaced with fdata3d89_protocol_patched/src/fd3d89.c
+
+Protocol fixes included:
+  FD3D_FX_FROM_INT(v) now uses multiplication instead of left-shifting signed input.
+  FD3D_ArenaAlloc(arena, size, 0) now uses default long alignment.
+  FD3D_ArenaAlloc rejects non-power-of-two non-zero alignments.
+  PDC3D<->FD3D fixed-point bridge now avoids left-shifting signed negative values.
+  PDC3D public fixed-point macros now avoid left-shifting signed negative values.
+  PDC3D internal bridge conversions to grab/throw/weakspot/defense now avoid left-shifting signed negative values.
+  HB3 integer conversion and fixed division avoid left-shifting signed negative values.
+
+Demo output summary:
+  zombie bite damage/weakspot OK
+  swept blade hit OK
+  arena scratch OK
+  defense pipeline perfect parry/counter OK
+  guard+shell+counter OK
+  framedata i-frames/hitstop/stun/advantage OK
+  protocol patch negative fixed-point roundtrip OK

@@ -1,0 +1,4 @@
+BMP is available via CMake config and pkg-config.
+
+  find_package(bmp CONFIG REQUIRED)
+  target_link_libraries(app PRIVATE bmp::bmp)

@@ -1,0 +1,51 @@
+{
+  "source_presets": {
+    "pillow_tests": {
+      "kind": "github_raw",
+      "base_url": "https://raw.githubusercontent.com/python-pillow/Pillow/main/Tests/images/"
+    }
+  },
+  "cases": [
+    {
+      "id": "p-4-planes",
+      "source": "pillow_tests",
+      "relative_path": "p_4_planes.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true,
+        "indexed_ok": true,
+        "strict_ok": true
+      },
+      "tags": [
+        "4-plane",
+        "indexed"
+      ]
+    },
+    {
+      "id": "odd-stride",
+      "source": "pillow_tests",
+      "relative_path": "odd_stride.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true,
+        "strict_ok": false
+      },
+      "tags": [
+        "odd-stride",
+        "malformed-but-tolerated"
+      ]
+    },
+    {
+      "id": "pil184",
+      "source": "pillow_tests",
+      "relative_path": "pil184.pcx",
+      "expected": {
+        "inspect_ok": true,
+        "rgb_ok": true
+      },
+      "tags": [
+        "palette-fallback"
+      ]
+    }
+  ]
+}

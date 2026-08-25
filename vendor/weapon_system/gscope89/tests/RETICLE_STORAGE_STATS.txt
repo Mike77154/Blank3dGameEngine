@@ -1,0 +1,5 @@
+v0.2 reticle INI files=194 bytes=389335 serialized_shape_sections=3953
+v0.3 reticle INI files=411 bytes=328805 serialized_shape_sections=2781
+runtime reconstructed shapes remain=3953
+
+v0.3 uses more small composable files but stores fewer duplicate shape sections.

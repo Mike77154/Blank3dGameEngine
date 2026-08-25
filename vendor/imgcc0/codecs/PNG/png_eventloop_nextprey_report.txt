@@ -1,0 +1,55 @@
+png platform phase 2.13.1
+
+Build command:
+  gcc -std=c89 -Wall -Wextra -pedantic -DPNG_DEC_USE_ZLIB -O2 -I. -o test_upgrade test_upgrade.c png_*.c -lz -lm
+
+Test command:
+  ./test_upgrade
+
+Result:
+  ALL_TESTS_OK
+
+Major additions in this phase:
+  - progressive budget controls can now hard-fail with PNG_DEC_ERR_WORK_BUDGET via png_progressive_control.hard_fail_on_budget_exhaustion
+  - dedicated regression tests for every new hardened-limit error code
+  - fixed Adam7 progressive pass-to-pass predictor reset in the streaming decoder
+  - strengthened native Adam7+iCCP regression to compare full decode and incremental/poll decode on the same interlaced sample
+  - progressive PNG/APNG chunk callbacks with typed chunk metadata
+  - progressive control budgets for chunk callbacks and chunk bytes per call
+  - poll/select-style progressive state helpers:
+      png_decoder_poll()
+      png_apng_decoder_poll()
+      PNG_PROGRESSIVE_POLL_* flags
+  - stable absolute chunk offsets across internal buffer compaction
+  - zero-byte drain/finalize recovery when a yield happens immediately after IEND
+
+Notable tests added:
+  - test_progressive_poll_and_chunk_callbacks
+  - test_apng_poll_and_chunk_callbacks
+  - test_error_too_many_pixels / test_error_inflated_too_large / test_error_chunk_too_large
+  - test_error_too_many_chunks / test_error_text_too_large / test_error_frame_limit
+  - test_error_temp_memory_limit / test_error_work_budget / test_error_conversion_limit
+
+
+Differential testing additions in this round:
+  - new libpng differential harness: test_differential_libpng.c
+  - curated static-PNG allowlist: differential/corpus_static_pngs.txt
+  - local runners:
+      differential/build_local.sh
+      differential/run_local.sh
+      ci/run_all_local.sh
+  - GitHub Actions workflow:
+      .github/workflows/differential_libpng.yml
+  - compatibility checks now cover:
+      * full decode vs libpng RGBA8 output
+      * incremental feed_ex()/poll() decode vs libpng on the curated static-PNG allowlist, including Adam7
+      * encoder smoke compatibility against libpng
+      * selected metadata / unknown-chunk re-encode checks
+  - palette metadata seed refreshed so the differential corpus uses a spec-conformant indexed+iCCP sample plus a separate fuzz-only hIST palette sample
+
+Local differential result:
+  DIFF_OK
+
+Current scope notes:
+  - progressive Adam7 pixel-for-pixel differential is now enabled in the libpng gate after fixing pass-to-pass predictor reset in the streaming decoder
+  - valid_palette_meta.png is now spec-conformant (iCCP before PLTE) and participates in the libpng differential allowlist

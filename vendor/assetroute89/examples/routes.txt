@@ -1,0 +1,11 @@
+Typical roots:
+  image: game/images          recursive
+  image: game/assets/sprites  recursive
+  audio: game/audio           recursive
+  audio: game/assets/audio    recursive
+
+Auto image name examples:
+  game/images/Eileen Happy.PNG -> eileen happy
+  game/assets/sprites/X_Hero.png -> x_hero
+
+Explicit registration always wins over an auto name.

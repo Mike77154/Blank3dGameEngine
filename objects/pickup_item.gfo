@@ -1,0 +1,14 @@
+[pickup_item]
+role = world_item
+
+*create
+@initialize_from_ini
+
+*step
+run_logic()
+
+*render
+draw_mesh()
+
+*destroy
+@release_entity

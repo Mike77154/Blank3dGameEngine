@@ -1,0 +1,4 @@
+gscope89 v0.4 restriction scan
+scope: gscopeanim89 gscopeprovider89 gscopebundle89
+forbidden heap calls:
+forbidden float/double types:

@@ -1,0 +1,95 @@
+#include "p2d89_internal.h"
+static const P2D89_ShapeInfo shapes[]={
+ {P2D89_SHAPE_WEATHER_FRONT_COLD_SEGMENT,"weather_front_cold_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_FRONT_WARM_SEGMENT,"weather_front_warm_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_FRONT_STATIONARY_SEGMENT,"weather_front_stationary_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_FRONT_OCCLUDED_SEGMENT,"weather_front_occluded_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_FRONT_DRYLINE_SEGMENT,"weather_front_dryline_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_FRONT_TROUGH_SEGMENT,"weather_front_trough_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_FRONT_SQUALL_SEGMENT,"weather_front_squall_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+ {P2D89_SHAPE_WEATHER_ISOBAR_SEGMENT,"weather_isobar_segment","weather_symbols","fronts",P2D89_MODULE_WEATHER_SYMBOLS,P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH|P2D89_FLAG_REPEATABLE_TILE|P2D89_FLAG_DIRECTIONAL,P2D89_FILL_NONZERO,P2D89_CAP_ROUND,P2D89_JOIN_ROUND},
+};
+static const P2D89_Command r0[]={
+ {2,-16384,0,0,0,0,0}, {3,16384,0,0,0,0,0}, {2,-12780,0,0,0,0,0}, {3,-9830,5734,0,0,0,0},
+ {3,-6881,0,0,0,0,0}, {6,0,0,0,0,0,0}, {2,-2949,0,0,0,0,0}, {3,0,5734,0,0,0,0},
+ {3,2949,0,0,0,0,0}, {6,0,0,0,0,0,0}, {2,6881,0,0,0,0,0}, {3,9830,5734,0,0,0,0},
+ {3,12780,0,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r1[]={
+ {2,-16384,0,0,0,0,0}, {3,16384,0,0,0,0,0}, {2,-13107,0,0,0,0,0}, {3,-12996,-848,0,0,0,0},
+ {3,-12668,-1638,0,0,0,0}, {3,-12147,-2317,0,0,0,0}, {3,-11469,-2838,0,0,0,0}, {3,-10678,-3165,0,0,0,0},
+ {3,-9830,-3277,0,0,0,0}, {3,-8982,-3165,0,0,0,0}, {3,-8192,-2838,0,0,0,0}, {3,-7513,-2317,0,0,0,0},
+ {3,-6993,-1638,0,0,0,0}, {3,-6665,-848,0,0,0,0}, {3,-6554,0,0,0,0,0}, {2,-3277,0,0,0,0,0},
+ {3,-3165,-848,0,0,0,0}, {3,-2838,-1638,0,0,0,0}, {3,-2317,-2317,0,0,0,0}, {3,-1638,-2838,0,0,0,0},
+ {3,-848,-3165,0,0,0,0}, {3,0,-3277,0,0,0,0}, {3,848,-3165,0,0,0,0}, {3,1638,-2838,0,0,0,0},
+ {3,2317,-2317,0,0,0,0}, {3,2838,-1638,0,0,0,0}, {3,3165,-848,0,0,0,0}, {3,3277,0,0,0,0,0},
+ {2,6554,0,0,0,0,0}, {3,6665,-848,0,0,0,0}, {3,6993,-1638,0,0,0,0}, {3,7513,-2317,0,0,0,0},
+ {3,8192,-2838,0,0,0,0}, {3,8982,-3165,0,0,0,0}, {3,9830,-3277,0,0,0,0}, {3,10678,-3165,0,0,0,0},
+ {3,11469,-2838,0,0,0,0}, {3,12147,-2317,0,0,0,0}, {3,12668,-1638,0,0,0,0}, {3,12996,-848,0,0,0,0},
+ {3,13107,0,0,0,0,0},
+};
+static const P2D89_Command r2[]={
+ {2,-16384,0,0,0,0,0}, {3,16384,0,0,0,0,0}, {2,-12288,0,0,0,0,0}, {3,-9011,5734,0,0,0,0},
+ {3,-5734,0,0,0,0,0}, {6,0,0,0,0,0,0}, {2,4096,0,0,0,0,0}, {3,3984,848,0,0,0,0},
+ {3,3657,1638,0,0,0,0}, {3,3136,2317,0,0,0,0}, {3,2458,2838,0,0,0,0}, {3,1667,3165,0,0,0,0},
+ {3,819,3277,0,0,0,0}, {3,-29,3165,0,0,0,0}, {3,-819,2838,0,0,0,0}, {3,-1498,2317,0,0,0,0},
+ {3,-2019,1638,0,0,0,0}, {3,-2346,848,0,0,0,0}, {3,-2458,0,0,0,0,0}, {2,5734,0,0,0,0,0},
+ {3,9011,-5734,0,0,0,0}, {3,12288,0,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r3[]={
+ {2,-16384,0,0,0,0,0}, {3,16384,0,0,0,0,0}, {2,-12288,0,0,0,0,0}, {3,-9011,5734,0,0,0,0},
+ {3,-5734,0,0,0,0,0}, {6,0,0,0,0,0,0}, {2,-3277,0,0,0,0,0}, {3,-3165,-848,0,0,0,0},
+ {3,-2838,-1638,0,0,0,0}, {3,-2317,-2317,0,0,0,0}, {3,-1638,-2838,0,0,0,0}, {3,-848,-3165,0,0,0,0},
+ {3,0,-3277,0,0,0,0}, {3,848,-3165,0,0,0,0}, {3,1638,-2838,0,0,0,0}, {3,2317,-2317,0,0,0,0},
+ {3,2838,-1638,0,0,0,0}, {3,3165,-848,0,0,0,0}, {3,3277,0,0,0,0,0}, {2,5734,0,0,0,0,0},
+ {3,9011,5734,0,0,0,0}, {3,12288,0,0,0,0,0}, {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r4[]={
+ {2,-11960,0,0,0,0,0}, {3,-12296,811,0,0,0,0}, {3,-13107,1147,0,0,0,0}, {3,-13918,811,0,0,0,0},
+ {3,-14254,0,0,0,0,0}, {3,-13918,-811,0,0,0,0}, {3,-13107,-1147,0,0,0,0}, {3,-12296,-811,0,0,0,0},
+ {6,0,0,0,0,0,0}, {2,-5407,0,0,0,0,0}, {3,-5743,811,0,0,0,0}, {3,-6554,1147,0,0,0,0},
+ {3,-7365,811,0,0,0,0}, {3,-7700,0,0,0,0,0}, {3,-7365,-811,0,0,0,0}, {3,-6554,-1147,0,0,0,0},
+ {3,-5743,-811,0,0,0,0}, {6,0,0,0,0,0,0}, {2,1147,0,0,0,0,0}, {3,811,811,0,0,0,0},
+ {3,0,1147,0,0,0,0}, {3,-811,811,0,0,0,0}, {3,-1147,0,0,0,0,0}, {3,-811,-811,0,0,0,0},
+ {3,0,-1147,0,0,0,0}, {3,811,-811,0,0,0,0}, {6,0,0,0,0,0,0}, {2,7700,0,0,0,0,0},
+ {3,7365,811,0,0,0,0}, {3,6554,1147,0,0,0,0}, {3,5743,811,0,0,0,0}, {3,5407,0,0,0,0,0},
+ {3,5743,-811,0,0,0,0}, {3,6554,-1147,0,0,0,0}, {3,7365,-811,0,0,0,0}, {6,0,0,0,0,0,0},
+ {2,14254,0,0,0,0,0}, {3,13918,811,0,0,0,0}, {3,13107,1147,0,0,0,0}, {3,12296,811,0,0,0,0},
+ {3,11960,0,0,0,0,0}, {3,12296,-811,0,0,0,0}, {3,13107,-1147,0,0,0,0}, {3,13918,-811,0,0,0,0},
+ {6,0,0,0,0,0,0},
+};
+static const P2D89_Command r5[]={
+ {2,-14746,0,0,0,0,0}, {3,-11469,0,0,0,0,0}, {2,-8192,0,0,0,0,0}, {3,-4915,0,0,0,0,0},
+ {2,-1638,0,0,0,0,0}, {3,1638,0,0,0,0,0}, {2,4915,0,0,0,0,0}, {3,8192,0,0,0,0,0},
+ {2,11469,0,0,0,0,0}, {3,14746,0,0,0,0,0},
+};
+static const P2D89_Command r6[]={
+ {2,-16384,0,0,0,0,0}, {3,16384,0,0,0,0,0}, {2,-11796,-2949,0,0,0,0}, {3,-7864,2949,0,0,0,0},
+ {2,-1966,-2949,0,0,0,0}, {3,1966,2949,0,0,0,0}, {2,7864,-2949,0,0,0,0}, {3,11796,2949,0,0,0,0},
+};
+static const P2D89_Command r7[]={
+ {2,-16384,0,0,0,0,0}, {3,-15687,349,0,0,0,0}, {3,-14990,693,0,0,0,0}, {3,-14292,1023,0,0,0,0},
+ {3,-13595,1336,0,0,0,0}, {3,-12898,1625,0,0,0,0}, {3,-12201,1884,0,0,0,0}, {3,-11504,2110,0,0,0,0},
+ {3,-10806,2299,0,0,0,0}, {3,-10109,2446,0,0,0,0}, {3,-9412,2550,0,0,0,0}, {3,-8715,2608,0,0,0,0},
+ {3,-8018,2620,0,0,0,0}, {3,-7321,2585,0,0,0,0}, {3,-6623,2504,0,0,0,0}, {3,-5926,2378,0,0,0,0},
+ {3,-5229,2210,0,0,0,0}, {3,-4532,2002,0,0,0,0}, {3,-3835,1758,0,0,0,0}, {3,-3137,1484,0,0,0,0},
+ {3,-2440,1182,0,0,0,0}, {3,-1743,860,0,0,0,0}, {3,-1046,522,0,0,0,0}, {3,-349,175,0,0,0,0},
+ {3,349,-175,0,0,0,0}, {3,1046,-522,0,0,0,0}, {3,1743,-860,0,0,0,0}, {3,2440,-1182,0,0,0,0},
+ {3,3137,-1484,0,0,0,0}, {3,3835,-1758,0,0,0,0}, {3,4532,-2002,0,0,0,0}, {3,5229,-2210,0,0,0,0},
+ {3,5926,-2378,0,0,0,0}, {3,6623,-2504,0,0,0,0}, {3,7321,-2585,0,0,0,0}, {3,8018,-2620,0,0,0,0},
+ {3,8715,-2608,0,0,0,0}, {3,9412,-2550,0,0,0,0}, {3,10109,-2446,0,0,0,0}, {3,10806,-2299,0,0,0,0},
+ {3,11504,-2110,0,0,0,0}, {3,12201,-1884,0,0,0,0}, {3,12898,-1625,0,0,0,0}, {3,13595,-1336,0,0,0,0},
+ {3,14292,-1023,0,0,0,0}, {3,14990,-693,0,0,0,0}, {3,15687,-349,0,0,0,0}, {3,16384,0,0,0,0,0},
+};
+static int replay(const P2D89_Command *c,unsigned int n,const P2D89_Provider *p){unsigned int i;if(c==0||p==0||p->emit==0)return 0;for(i=0U;i<n;++i)if(!p->emit(p->user,&c[i]))return 0;return 1;}
+static int emit(P2D89_ShapeId id,const P2D89_Provider *p){switch(id){
+case P2D89_SHAPE_WEATHER_FRONT_COLD_SEGMENT: return replay(r0,(unsigned int)(sizeof(r0)/sizeof(r0[0])),p);
+case P2D89_SHAPE_WEATHER_FRONT_WARM_SEGMENT: return replay(r1,(unsigned int)(sizeof(r1)/sizeof(r1[0])),p);
+case P2D89_SHAPE_WEATHER_FRONT_STATIONARY_SEGMENT: return replay(r2,(unsigned int)(sizeof(r2)/sizeof(r2[0])),p);
+case P2D89_SHAPE_WEATHER_FRONT_OCCLUDED_SEGMENT: return replay(r3,(unsigned int)(sizeof(r3)/sizeof(r3[0])),p);
+case P2D89_SHAPE_WEATHER_FRONT_DRYLINE_SEGMENT: return replay(r4,(unsigned int)(sizeof(r4)/sizeof(r4[0])),p);
+case P2D89_SHAPE_WEATHER_FRONT_TROUGH_SEGMENT: return replay(r5,(unsigned int)(sizeof(r5)/sizeof(r5[0])),p);
+case P2D89_SHAPE_WEATHER_FRONT_SQUALL_SEGMENT: return replay(r6,(unsigned int)(sizeof(r6)/sizeof(r6[0])),p);
+case P2D89_SHAPE_WEATHER_ISOBAR_SEGMENT: return replay(r7,(unsigned int)(sizeof(r7)/sizeof(r7[0])),p);
+default: return 0;}}
+const P2D89_Submodule p2d89_submodule_weather_symbols_fronts={{P2D89_MODULE_WEATHER_SYMBOLS,"weather_symbols","fronts",(unsigned int)(sizeof(shapes)/sizeof(shapes[0]))},shapes,emit};

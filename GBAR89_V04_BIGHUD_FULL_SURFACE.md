@@ -463,3 +463,10 @@ config/hud/gameplay.bighud
 tests/data/hud/gbar_v04_full.bighud
 tests/test_gbar_v04_bighud.c
 ```
+
+### Runtime decoded sprite provider
+
+The optional HUD sprite provider is now backed by `imgcc0` in the Win32/OpenGL host. Numeric sprite
+IDs can be registered with RPY `image_asset <id> "path"`; BigHUD sprite-clip and nine-slice nodes
+then draw decoded textures. The original vector/rectangle/triangle paths remain unchanged and the
+provider-less rectangle fallback remains available.

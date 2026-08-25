@@ -16,8 +16,17 @@ typedef struct Blank3DConfigTag {
     conf_ctx_t parser;
     int loaded;
     int audio_enabled;
+    int text_enabled;
+    char text_font_path[192];
+    int text_pixel_size;
     int start_first_person;
+    char camera_profile_dir[160];
+    char camera_start_profile[48];
     int lock_mouse;
+    int camera_draw_width;
+    int camera_draw_height;
+    int scene_screen_width;
+    int scene_screen_height;
     int initial_weapon;
     int gatling_spinup_ms;
     int slingshot_charge_ms;
@@ -39,6 +48,10 @@ typedef struct Blank3DConfigTag {
     int ammo_rockets;
     int ammo_gatling;
     int ammo_stones;
+    int ammo_hand_grenades;
+    int ammo_shango_cells;
+    int ammo_homing_rockets;
+    int ammo_fuel;
     long damage_multiplier_q16;
     long speed_multiplier_q16;
     long recoil_multiplier_q16;
@@ -49,6 +62,9 @@ typedef struct Blank3DConfigTag {
     int flag_can_fire;
     int flag_can_reload;
     int flag_active_reload;
+    int skybox_enabled;
+    char skybox_catalog[160];
+    char skybox_recipe[96];
     char status[128];
 } Blank3DConfig;
 

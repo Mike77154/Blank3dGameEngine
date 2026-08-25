@@ -1,0 +1,33 @@
+00 Edo Standard Maru            v=704 t=920
+01 Kambun Shallow               v=752 t=980
+02 Kamakura Deep Sori           v=864 t=1208
+03 Momoyama Broad               v=788 t=992
+04 Long Kissaki Ronin           v=740 t=968
+05 Compact Ko Kissaki           v=704 t=920
+06 O Kissaki War Blade          v=772 t=984
+07 Hira Zukuri Minimal          v=672 t=904
+08 Shobu Zukuri Field           v=760 t=976
+09 Unokubi Light                v=748 t=976
+10 Kiriha Archaic               v=704 t=920
+11 Kata Shinogi Asym            v=764 t=984
+12 Handachi Black Gold          v=940 t=1280
+13 Red Lacquer Daimyo           v=880 t=1216
+14 White Ito Court              v=864 t=1208
+15 Indigo Night                 v=940 t=1280
+16 Emerald Clan                 v=948 t=1280
+17 Bone and Iron                v=672 t=904
+18 Ash Wanderer                 v=664 t=832
+19 Temple Bronze                v=780 t=992
+20 Floral Mokko                 v=720 t=928
+21 Square Guard Duelist         v=740 t=968
+22 Aoi Guard Deep Curve         v=864 t=1208
+23 Octagonal Guard              v=784 t=996
+24 Shirasaya Plain              v=760 t=1060
+25 Twin Detail Bohi             v=772 t=984
+26 Heavy Wide Cutter            v=772 t=984
+27 Slim Fencing Katana          v=752 t=980
+28 Long Reach 78                v=932 t=1272
+29 Short Katana 61              v=704 t=920
+30 Shobu Long Field             v=760 t=976
+31 Unokubi Mountain             v=940 t=1280
+32 Hira Crimson                 v=864 t=1208

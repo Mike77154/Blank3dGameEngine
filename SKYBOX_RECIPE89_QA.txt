@@ -1,0 +1,31 @@
+SkyboxRecipe89 / gskybox89 recipe integration QA
+=================================================
+
+Vendor standalone:
+  recursive matryoshka include/override : PASS
+  catalog named recipe                  : PASS
+  atlas cross layout                    : PASS
+
+Blank3D bridge:
+  six independent faces                : PASS
+  PNG/JPEG progressive/BMP/TGA/PCX/TIFF: PASS
+  single shared cube atlas             : PASS
+  cross4x3 face UV routing             : PASS
+  single panorama/dome request          : PASS
+  named recipe reload                  : PASS
+  recipe disable                       : PASS
+
+Entrypoints:
+  TOML catalog + recipe only            : PASS
+  RPYL skybox_recipe                    : PASS
+  RPYL skybox_reload                    : PASS
+
+Regression gates:
+  gskybox89 vendor                      : PASS
+  gskybox89 -> imgcc0                   : PASS
+  image stack                           : PASS
+  ProjectileVisual2D89 bridge           : PASS
+  five projectile sprite modes         : PASS
+  casing VPhysics                       : PASS
+  config parser                         : PASS
+  whole-engine syntax-check             : PASS

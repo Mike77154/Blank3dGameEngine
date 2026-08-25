@@ -147,15 +147,133 @@ void bridge_gl_begin_frame(int width, int height)
     glViewport(0, 0, width, height);
     glClearColor(0.04f, 0.05f, 0.07f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    /* Frame boundary is also a render-state boundary.  Raster effects may use
+       additive blending, textures and depth-write suppression, but no effect
+       is allowed to leak those flags into next-frame world meshes. */
+    glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
+    glDepthMask(GL_TRUE);
+    glColor4ub(255U, 255U, 255U, 255U);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glDisable(GL_LIGHT1);
+    glDisable(GL_LIGHT2);
     glEnable(GL_COLOR_MATERIAL);
     light_position[0] = 2.0f;
     light_position[1] = 8.0f;
     light_position[2] = -4.0f;
     light_position[3] = 1.0f;
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+}
+
+void bridge_gl_set_muzzle_light(int enabled,
+                                g3d_fix x_q12, g3d_fix y_q12, g3d_fix z_q12,
+                                long intensity_q16, long radius_q16,
+                                unsigned char r, unsigned char g,
+                                unsigned char b)
+{
+    GLfloat position[4];
+    GLfloat diffuse[4];
+    GLfloat ambient[4];
+    GLfloat specular[4];
+    GLfloat intensity;
+    GLfloat radius;
+    GLfloat red;
+    GLfloat green;
+    GLfloat blue;
+    if (!enabled || intensity_q16 <= 0L || radius_q16 <= 0L) {
+        glDisable(GL_LIGHT1);
+        return;
+    }
+    intensity = (GLfloat)intensity_q16 / 65536.0f;
+    radius = (GLfloat)radius_q16 / 65536.0f;
+    if (radius < 0.25f) radius = 0.25f;
+    if (intensity > 4.0f) intensity = 4.0f;
+    red = (GLfloat)r / 255.0f;
+    green = (GLfloat)g / 255.0f;
+    blue = (GLfloat)b / 255.0f;
+    position[0] = bridge_q20_to_gl(x_q12);
+    position[1] = bridge_q20_to_gl(y_q12);
+    position[2] = bridge_q20_to_gl(z_q12);
+    position[3] = 1.0f;
+    diffuse[0] = red * intensity;
+    diffuse[1] = green * intensity;
+    diffuse[2] = blue * intensity;
+    diffuse[3] = 1.0f;
+    ambient[0] = red * intensity * 0.055f;
+    ambient[1] = green * intensity * 0.055f;
+    ambient[2] = blue * intensity * 0.055f;
+    ambient[3] = 1.0f;
+    specular[0] = red * intensity;
+    specular[1] = green * intensity;
+    specular[2] = blue * intensity;
+    specular[3] = 1.0f;
+    glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT1, GL_POSITION, position);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0f);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 2.0f / radius);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 4.0f / (radius * radius));
+}
+
+
+void bridge_gl_set_flamethrower_light(int enabled,
+                                      g3d_fix x_q12,
+                                      g3d_fix y_q12,
+                                      g3d_fix z_q12,
+                                      long intensity_q16,
+                                      long radius_q16,
+                                      unsigned char r,
+                                      unsigned char g,
+                                      unsigned char b)
+{
+    GLfloat position[4];
+    GLfloat diffuse[4];
+    GLfloat ambient[4];
+    GLfloat specular[4];
+    GLfloat intensity;
+    GLfloat radius;
+    GLfloat red;
+    GLfloat green;
+    GLfloat blue;
+    if (!enabled || intensity_q16 <= 0L || radius_q16 <= 0L) {
+        glDisable(GL_LIGHT2);
+        return;
+    }
+    intensity = (GLfloat)intensity_q16 / 65536.0f;
+    radius = (GLfloat)radius_q16 / 65536.0f;
+    if (radius < 0.25f) radius = 0.25f;
+    if (intensity > 3.25f) intensity = 3.25f;
+    red = (GLfloat)r / 255.0f;
+    green = (GLfloat)g / 255.0f;
+    blue = (GLfloat)b / 255.0f;
+    position[0] = bridge_q20_to_gl(x_q12);
+    position[1] = bridge_q20_to_gl(y_q12);
+    position[2] = bridge_q20_to_gl(z_q12);
+    position[3] = 1.0f;
+    diffuse[0] = red * intensity;
+    diffuse[1] = green * intensity;
+    diffuse[2] = blue * intensity;
+    diffuse[3] = 1.0f;
+    ambient[0] = red * intensity * 0.045f;
+    ambient[1] = green * intensity * 0.045f;
+    ambient[2] = blue * intensity * 0.045f;
+    ambient[3] = 1.0f;
+    specular[0] = red * intensity * 0.65f;
+    specular[1] = green * intensity * 0.65f;
+    specular[2] = blue * intensity * 0.65f;
+    specular[3] = 1.0f;
+    glEnable(GL_LIGHT2);
+    glLightfv(GL_LIGHT2, GL_POSITION, position);
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT2, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT2, GL_SPECULAR, specular);
+    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.0f);
+    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 1.65f / radius);
+    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 3.25f / (radius * radius));
 }
 
 void bridge_gl_draw_grid(int half_extent)

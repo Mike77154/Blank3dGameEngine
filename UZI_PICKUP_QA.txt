@@ -1,0 +1,50 @@
+UZI / SMG PICKUP QA
+====================
+
+Content identity
+----------------
+weapon id                 11
+ammo id                   10
+starting weapon 11        absent
+starting ammo 10          absent
+weapon pickup position    4, 0, 4
+ammo pickup position      7, 0, 4
+ammo pickup amount        64
+weapon mesh parts         2 rectangular boxes
+ammo mesh parts           2 rectangular boxes
+shared GFO type           pickup_item
+
+Verified commands
+-----------------
+make test-uzi-pickup
+  PASS: weapon 11 absent before contact
+  PASS: weapon recipe loads exactly two mesh parts
+  PASS: ammo recipe loads exactly two mesh parts
+  PASS: no grant while player is outside radius
+  PASS: touching Uzi grants weapon 11
+  PASS: touching Uzi auto-equips weapon 11
+  PASS: consumed Uzi PBB item leaves world
+  PASS: touching ammo grants 64 of ammo item 110 (ammo id 10)
+  PASS: consumed ammo PBB item leaves world
+  PASS: both pickup INIs compile/spawn through shared pickup_item.gfo
+
+make test-item-contact-weapon
+  PASS: CT89 -> PBB -> weapon provider bridge regression
+
+make test-item-contact-blank3d
+  PASS: Blank3D host inventory/weapon transaction regression
+
+make test-languages
+  PASS: startup.rpy parses/runs through vendored RPYL command registry
+
+make syntax-check
+  PASS: full Blank3D source set including monika_blank3d.c and
+        blank3d_pickups.c passes C89 syntax check using project Win32 stubs
+
+Static constraints
+------------------
+src/blank3d_pickups.[ch]: no malloc/realloc/free
+src/blank3d_pickups.[ch]: no float/double
+fixed storage: 16 pickup instances, 4 recipe parts per pickup
+Object definitions raised from 8 to 16 to leave room for pickup INIs
+inventory item-definition storage raised from 17 to 32 for expanded catalog

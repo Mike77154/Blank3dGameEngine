@@ -1,0 +1,22 @@
+GLOCO89 ground sweep regression QA
+==================================
+
+Root cause reproduced with real Collision:
+  floor sweep hit=1 fraction=0 normal=(0,-4096,0)
+
+Fixed behavior:
+  make test-gloco-provider-stack   PASS
+  make test-gloco-ground-sweep     PASS (floor passes, vertical wall blocks)
+  make test-collision              PASS
+  make test-vphysics-provider      PASS
+  make test-movementbaseverbs-vendor PASS
+  make test-input-stack            PASS
+  make syntax-check                PASS
+  make syntax-check-input-win32    PASS
+  make audit                       PASS
+
+Vendor preservation audit against the previous GLOCO locomotion package:
+  missing vendor files: 0
+  modified vendor files: 0
+
+Final package contains no prebuilt .o/.a/.exe/.obj/.dll/.so artifacts.

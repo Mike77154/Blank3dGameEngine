@@ -1,0 +1,14 @@
+timeclocker validation notes
+
+Checked locally with:
+
+    gcc -std=c89 -pedantic -Wall -Wextra -Werror -Iinclude src/timeclocker.c tests/test_timeclocker.c -o build/test_timeclocker
+    ./build/test_timeclocker
+
+Result:
+
+    exit code 0
+
+Also checked example_game_loop.c with the same C89 flags.
+
+Library source uses no dynamic allocation, no stdio.h, no float/double, no stdint.h/stdbool.h, no C99 comments, and no inline keyword.

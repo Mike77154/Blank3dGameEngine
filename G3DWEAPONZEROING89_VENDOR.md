@@ -3,7 +3,7 @@
 The crosshair/muzzle zeroing solver now lives in:
 
 ```
-vendor/g3dweaponzeroing89/
+vendor/weapon_system/g3dweaponzeroing89/
 ├── include/g3dweaponzeroing89.h
 └── src/g3dweaponzeroing89.c
 ```
@@ -42,3 +42,6 @@ gravity and diagnostic flags.
 The vendor has no dependency on CamaraNaku or Blank3D state. It currently uses
 Gamlib3D's fixed-point vector primitives as its math backend and performs no
 allocation.
+
+
+As of the Weapon Launch extraction, this solver is grouped under `vendor/weapon_system/` and is consumed by `gweaponlaunch89`.

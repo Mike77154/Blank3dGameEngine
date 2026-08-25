@@ -1,0 +1,11 @@
+gscope89 recipe/provider v0.3 validation
+
+PASS: root make test with -std=c89 -pedantic -Wall -Wextra -Werror
+PASS: 192/192 reticle INI recipes loaded
+PASS: 3953 runtime vector shapes reconstructed
+PASS: 5388 renderer commands emitted; failures=0
+PASS: all 192 formal presets contain recipe includes
+PASS: 21 shared geometry fragments reused by 54 presets
+PASS: parity hash 15957882094601755844 equals legacy C tables
+PASS: provider bundle smoke (primitive fallback + paint fallback + zoom provider)
+PASS: new provider/recipe code restriction scan: no malloc/realloc/calloc/free/float/double

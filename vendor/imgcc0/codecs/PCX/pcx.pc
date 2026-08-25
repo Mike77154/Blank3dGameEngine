@@ -1,0 +1,9 @@
+prefix=/usr
+libdir=/usr/lib
+includedir=/usr/include
+
+Name: pcx
+Description: Hardened PCX encoder/decoder library
+Version: 1.16.0
+Libs: -L${libdir} -lpcx
+Cflags: -I${includedir}

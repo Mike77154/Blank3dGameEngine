@@ -1,0 +1,8 @@
+GMSpritestrip89 protocol target
+- C89 only
+- no malloc
+- no realloc
+- no free
+- no heap ownership
+- provider-based IO/rendering
+- vendored SpriteAsset89 v0.1.2 dependency

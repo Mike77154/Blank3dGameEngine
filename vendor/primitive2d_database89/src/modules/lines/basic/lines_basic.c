@@ -1,0 +1,20 @@
+#include "p2d89_internal.h"
+
+static const P2D89_ShapeInfo shapes[] = {
+    { P2D89_SHAPE_LINE, "line", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_HLINE, "hline", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_SYMMETRIC_X, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_VLINE, "vline", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_SYMMETRIC_Y, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_DIAGONAL_FWD, "diagonal_fwd", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_DIAGONAL_BACK, "diagonal_back", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_ZIGZAG, "zigzag", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_HALF_LINE_LEFT, "half_line_left", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_HALF_LINE_RIGHT, "half_line_right", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_HALF_LINE_UP, "half_line_up", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_HALF_LINE_DOWN, "half_line_down", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_STEP_LINE, "step_line", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_SAWTOOTH, "sawtooth", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+    { P2D89_SHAPE_BROKEN_LINE, "broken_line", "lines", "basic", P2D89_MODULE_LINES, P2D89_FLAG_STROKE_ONLY|P2D89_FLAG_MULTI_SUBPATH, P2D89_FILL_NONZERO, P2D89_CAP_ROUND, P2D89_JOIN_MITER },
+};
+
+static int p2d89_emit_lines_basic(P2D89_ShapeId id,const P2D89_Provider *p){static const p2d89_q14 zig[]={-16384,8192,-8192,-8192,0,8192,8192,-8192,16384,8192};static const p2d89_q14 step[]={-16384,8192,-8192,8192,-8192,0,0,0,0,-8192,8192,-8192,8192,-16384,16384,-16384};static const p2d89_q14 saw[]={-16384,8192,-12288,-8192,-8192,8192,-4096,-8192,0,8192,4096,-8192,8192,8192,12288,-8192,16384,8192};if(id==P2D89_SHAPE_LINE||id==P2D89_SHAPE_HLINE){if(!p2d89_i_move(p,-16384,0))return 0;return p2d89_i_line(p,16384,0);}if(id==P2D89_SHAPE_VLINE){if(!p2d89_i_move(p,0,-16384))return 0;return p2d89_i_line(p,0,16384);}if(id==P2D89_SHAPE_DIAGONAL_FWD){if(!p2d89_i_move(p,-16384,16384))return 0;return p2d89_i_line(p,16384,-16384);}if(id==P2D89_SHAPE_DIAGONAL_BACK){if(!p2d89_i_move(p,-16384,-16384))return 0;return p2d89_i_line(p,16384,16384);}if(id==P2D89_SHAPE_ZIGZAG)return p2d89_i_poly(zig,5U,0,p);if(id==P2D89_SHAPE_STEP_LINE)return p2d89_i_poly(step,8U,0,p);if(id==P2D89_SHAPE_SAWTOOTH)return p2d89_i_poly(saw,9U,0,p);if(id==P2D89_SHAPE_HALF_LINE_LEFT){if(!p2d89_i_move(p,0,0))return 0;return p2d89_i_line(p,-16384,0);}if(id==P2D89_SHAPE_HALF_LINE_RIGHT){if(!p2d89_i_move(p,0,0))return 0;return p2d89_i_line(p,16384,0);}if(id==P2D89_SHAPE_HALF_LINE_UP){if(!p2d89_i_move(p,0,0))return 0;return p2d89_i_line(p,0,-16384);}if(id==P2D89_SHAPE_HALF_LINE_DOWN){if(!p2d89_i_move(p,0,0))return 0;return p2d89_i_line(p,0,16384);}if(id==P2D89_SHAPE_BROKEN_LINE){if(!p2d89_i_move(p,-16384,0))return 0;if(!p2d89_i_line(p,-8192,0))return 0;if(!p2d89_i_move(p,-4096,0))return 0;if(!p2d89_i_line(p,4096,0))return 0;if(!p2d89_i_move(p,8192,0))return 0;return p2d89_i_line(p,16384,0);}return 0;}
+const P2D89_Submodule p2d89_submodule_lines_basic = { { P2D89_MODULE_LINES, "lines", "basic", (unsigned int)(sizeof(shapes)/sizeof(shapes[0])) }, shapes, p2d89_emit_lines_basic };

@@ -1,0 +1,12 @@
+Host strict build:
+gtelescopiczoom89: PASS
+gsway89: PASS
+gsniperhud89: PASS
+gaimquery89: PASS
+
+32-bit object compile:
+gtelescopiczoom89 -m32: PASS
+gsway89 -m32: PASS
+gsniperhud89 -m32: PASS
+gaimquery89 -m32: PASS
+MinGW32 compiler not installed; GCC -m32 object checks passed.

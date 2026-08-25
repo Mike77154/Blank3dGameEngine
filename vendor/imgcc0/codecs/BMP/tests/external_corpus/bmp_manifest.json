@@ -1,0 +1,145 @@
+{
+  "source_presets": {
+    "bmpsuite": {
+      "kind": "github_raw",
+      "base_url": "https://raw.githubusercontent.com/jsummers/bmpsuite/master/bmpsuite/"
+    }
+  },
+  "cases": [
+    {
+      "id": "pal2",
+      "source": "bmpsuite",
+      "relative_path": "q/pal2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "2bpp",
+        "indexed"
+      ]
+    },
+    {
+      "id": "pal8os2",
+      "source": "bmpsuite",
+      "relative_path": "g/pal8os2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "good",
+        "os2-v1"
+      ]
+    },
+    {
+      "id": "pal8os2v2",
+      "source": "bmpsuite",
+      "relative_path": "q/pal8os2v2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "os2-v2",
+        "64-byte-dib"
+      ]
+    },
+    {
+      "id": "pal8os2v2-16",
+      "source": "bmpsuite",
+      "relative_path": "q/pal8os2v2-16.bmp",
+      "expected": {
+        "parse_ok": false
+      },
+      "tags": [
+        "questionable",
+        "os2-v2",
+        "truncated-header"
+      ]
+    },
+    {
+      "id": "rgb32h52",
+      "source": "bmpsuite",
+      "relative_path": "q/rgb32h52.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "dib-v2",
+        "52-byte-header"
+      ]
+    },
+    {
+      "id": "rgba32h56",
+      "source": "bmpsuite",
+      "relative_path": "q/rgba32h56.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "dib-v3",
+        "56-byte-header",
+        "alpha"
+      ]
+    },
+    {
+      "id": "pal8rle",
+      "source": "bmpsuite",
+      "relative_path": "g/pal8rle.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "good",
+        "rle8"
+      ]
+    },
+    {
+      "id": "rgb24png",
+      "source": "bmpsuite",
+      "relative_path": "q/rgb24png.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "questionable",
+        "embedded-png"
+      ]
+    },
+    {
+      "id": "rgb24jpeg",
+      "source": "bmpsuite",
+      "relative_path": "q/rgb24jpeg.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "questionable",
+        "embedded-jpeg"
+      ]
+    },
+    {
+      "id": "rletopdown",
+      "source": "bmpsuite",
+      "relative_path": "b/rletopdown.bmp",
+      "expected": {
+        "parse_ok": false
+      },
+      "tags": [
+        "bad",
+        "top-down",
+        "rle-invalid"
+      ]
+    }
+  ]
+}

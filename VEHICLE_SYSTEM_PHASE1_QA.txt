@@ -1,0 +1,42 @@
+Blank3D / gvehicle89 Vehicle System split - Phase 1 QA
+Baseline: blank3d_v3_27_3_gatling_bullet_geometry89.zip
+
+Architecture split:
+  vehiclephysics89          PASS
+  carmovement89             PASS
+  motorcyclemovement89 seam PASS (delegates; not dispatched yet)
+  busmovement89 seam        PASS (delegates; not dispatched yet)
+  tankmovement89            PASS
+  watermovement89           PASS
+  airmovement89             PASS
+  rotorcraftmovement89      PASS
+  spacemovement89           PASS
+
+Strict vendor build:
+  C89 -Wall -Wextra -Werror -pedantic PASS
+  malloc/calloc/realloc/free/float/double audit on new source/header PASS
+
+Deterministic pre/post split parity:
+  demo_vehicle89.csv       byte-identical
+    SHA-256 49b063ffdb17d70af6345d8b9a93f9e48dfee3880261eaf73b8d7c963ae694fd
+  demo_multi_vehicle89.csv byte-identical
+    SHA-256 4bf3e70b482e001b3dec8b8fb8ba5922059fb8f149fd69f5fc700d6204fbb46e
+
+Blank3D regression:
+  test-vehicle-system-split PASS
+  test-mount-vehicle        PASS
+  test-gatling-geometry-stack PASS
+  test-special-reload       PASS
+  test-flamethrower-stack   PASS
+  test-sattele-stack        PASS
+  test-uzi-pickup           PASS
+  test-health-pickup        PASS
+  test-item-contact-blank3d PASS
+  syntax-check              PASS
+
+Public facade remains:
+  gveh_vehicle_init(...)
+  gveh_vehicle_step(...)
+
+Mount/occupancy remains external:
+  gvehpos89 -> Mount89 -> Vehicle Object -> gvehicle89

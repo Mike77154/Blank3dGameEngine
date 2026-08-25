@@ -1,0 +1,39 @@
+Blank3D GameVerbs89 Startup Capacity QA
+=======================================
+
+Observed user symptom
+---------------------
+MinGW32 release linked successfully, then the GUI executable exited without
+showing a window.
+
+Root cause
+----------
+GameVerbs89 fixed registry capacity was 128 entries.
+Startup registered 97 entries before the display sextet, then attempted to
+register 47 display entries, for a total requirement of 144.
+The fourth display condition exceeded the 128-slot registry.
+blank3d_display_stack89_register_verbs() returned false and WinMain returned 2
+before create_display_window() was reached. With -mwindows this exit was silent.
+
+Fix
+---
+Blank3D host build now defines GVERB89_MAX_ENTRIES=256 through LIMITS.
+GameVerbs89 remains fixed-capacity/no-heap and retains its compile-time override.
+
+Regression
+----------
+test-gameverb-runtime-capacity89:
+  prefill: 97
+  display sextet: 47
+  final registry count: 144 / 256
+  spare: 112
+  PASS
+
+test-display-sextet89: PASS
+test-howm89-vendor: PASS
+test-howm89-genwin-adapter: PASS
+test-primitive2d89-vendor: PASS
+audit-window-authority89: PASS
+audit-display-sextet89: PASS
+audit-link-response89: PASS
+syntax-check: PASS

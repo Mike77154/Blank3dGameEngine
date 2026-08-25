@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <string.h>
 
 #include <dirent.h>
@@ -9,6 +8,7 @@
 #include <linux/input.h>
 
 #include "linuxpckeys_backend.h"
+#include "polls_input_keys89.h"
 
 /* =========================================================...
    Linux backend (evdev)
@@ -444,33 +444,9 @@ static int open_keyboard_device(void)
 
 static int ensure_capacity(linuxpckeys_backend *kb, int required)
 {
-    key_pc_code *new_ptr;
-    int new_cap;
-    int i;
-
     if (!kb) return -1;
-    if (required <= 0) return 0;
-
-    if (kb->button_keys && kb->button_capacity >= required) {
-        return 0;
-    }
-
-    new_cap = kb->button_capacity;
-    if (new_cap < 8) new_cap = 8;
-    while (new_cap < required) {
-        new_cap *= 2;
-        if (new_cap < 0) return -1;
-    }
-
-    new_ptr = (key_pc_code*)realloc(kb->button_keys, (size_t)new_cap * sizeof(key_pc_code));
-    if (!new_ptr) return -1;
-
-    for (i = kb->button_capacity; i < new_cap; ++i) {
-        new_ptr[i] = KEY_PC_NONE;
-    }
-
-    kb->button_keys = new_ptr;
-    kb->button_capacity = new_cap;
+    if (required < 0 || required > LINUXPCKEYS_MAX_BUTTONS) return -1;
+    kb->button_capacity = LINUXPCKEYS_MAX_BUTTONS;
     return 0;
 }
 
@@ -486,8 +462,6 @@ static int linuxpckeys_button_state(void *user_data, int button_index)
 
     if (!kb) return 0;
     if (button_index < 0 || button_index >= kb->button_capacity) return 0;
-    if (!kb->button_keys) return 0;
-    if (!kb->key_state) return 0;
 
     key = kb->button_keys[button_index];
     if (key == KEY_PC_NONE) return 0;
@@ -511,8 +485,12 @@ void linuxpckeys_backend_init(linuxpckeys_backend *kb)
 
     key_pc_init(&kb->key_ctx);
 
-    kb->button_keys = NULL;
-    kb->button_capacity = 0;
+    {
+        int i;
+        for (i = 0; i < LINUXPCKEYS_MAX_BUTTONS; ++i)
+            kb->button_keys[i] = KEY_PC_NONE;
+    }
+    kb->button_capacity = LINUXPCKEYS_MAX_BUTTONS;
 
     kb->scanner.scanner = NULL;
     kb->scanner.max_buttons = 0;
@@ -525,14 +503,13 @@ void linuxpckeys_backend_init(linuxpckeys_backend *kb)
 
     kb->fd = open_keyboard_device();
 
-    /* reservar buffer para EVIOCGKEY */
+    /* Fixed snapshot storage: enough for KEY_MAX on 32- and 64-bit. */
     words = (KEY_MAX + (int)BITS_PER_LONG) / (int)BITS_PER_LONG;
     if (words < 1) words = 1;
+    if (words > LINUXPCKEYS_KEY_STATE_WORDS)
+        words = LINUXPCKEYS_KEY_STATE_WORDS;
     kb->key_state_words = words;
-    kb->key_state = (unsigned long*)malloc((size_t)words * sizeof(unsigned long));
-    if (kb->key_state) {
-        memset(kb->key_state, 0, (size_t)words * sizeof(unsigned long));
-    }
+    memset(kb->key_state, 0, sizeof(kb->key_state));
 }
 
 void linuxpckeys_backend_shutdown(linuxpckeys_backend *kb)
@@ -544,16 +521,9 @@ void linuxpckeys_backend_shutdown(linuxpckeys_backend *kb)
         kb->fd = -1;
     }
 
-    if (kb->button_keys) {
-        free(kb->button_keys);
-        kb->button_keys = NULL;
-    }
-    kb->button_capacity = 0;
+    kb->button_capacity = LINUXPCKEYS_MAX_BUTTONS;
 
-    if (kb->key_state) {
-        free(kb->key_state);
-        kb->key_state = NULL;
-    }
+    memset(kb->key_state, 0, sizeof(kb->key_state));
     kb->key_state_words = 0;
 
     kb->scanner_attached = 0;
@@ -603,15 +573,17 @@ int linuxpckeys_bind_button(linuxpckeys_backend *kb, int button_index, key_pc_co
 void linuxpckeys_backend_update(linuxpckeys_backend *kb)
 {
     if (!kb) return;
-    if (!kb->scanner_attached) return;
-    if (!kb->scanner.update) return;
 
-    /* refrescar snapshot EVIOCGKEY */
-    if (kb->fd >= 0 && kb->key_state && kb->key_state_words > 0) {
-        (void)ioctl(kb->fd, EVIOCGKEY((int)((size_t)kb->key_state_words * sizeof(unsigned long))), kb->key_state);
+    /* Refresh raw physical snapshot whether or not a scanner is attached. */
+    if (kb->fd >= 0 && kb->key_state_words > 0) {
+        (void)ioctl(kb->fd,
+                    EVIOCGKEY((int)((size_t)kb->key_state_words *
+                                      sizeof(unsigned long))),
+                    kb->key_state);
     }
 
-    kb->scanner.update(kb->scanner.scanner);
+    if (kb->scanner_attached && kb->scanner.update)
+        kb->scanner.update(kb->scanner.scanner);
 }
 
 int linuxpckeys_button_hold(const linuxpckeys_backend *kb, int button_index)
@@ -636,4 +608,26 @@ int linuxpckeys_button_released(const linuxpckeys_backend *kb, int button_index)
     if (!kb->scanner_attached) return 0;
     if (!kb->scanner.released) return 0;
     return kb->scanner.released(kb->scanner.scanner, button_index);
+}
+
+int linuxpckeys_input_key_down(const linuxpckeys_backend *kb, input_key89 key)
+{
+    key_pc_code legacy;
+    int code;
+    if (!kb) return 0;
+    legacy = polls_key_pc_from_input_key89(key);
+    if (legacy == KEY_PC_NONE) return 0;
+    code = key_pc_to_evdev_code(legacy);
+    if (code < 0 || code > KEY_MAX) return 0;
+    return test_bit(kb->key_state, code);
+}
+
+int linuxpckeys_bind_input_key89(linuxpckeys_backend *kb,
+                                 int button_index,
+                                 input_key89 key)
+{
+    key_pc_code legacy;
+    legacy = polls_key_pc_from_input_key89(key);
+    if (key != INPUT_KEY89_NONE && legacy == KEY_PC_NONE) return -1;
+    return linuxpckeys_bind_button(kb, button_index, legacy);
 }

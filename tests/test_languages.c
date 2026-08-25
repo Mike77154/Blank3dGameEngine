@@ -7,12 +7,16 @@
 
 typedef struct TestHostTag {
     int w_down;
+    int up_down;
+    int shift_down;
     int j_down;
     int f_down;
     int g_down;
     int m_down;
     int n_down;
     int ddsl_move;
+    int ddsl_walk;
+    int ddsl_run;
     int ddsl_jump;
     int ddsl_up;
     int ddsl_down;
@@ -20,6 +24,17 @@ typedef struct TestHostTag {
     int ddsl_cycle_prev;
     int rpyl_commands;
     int rpyl_enemies;
+    int rpyl_weapon_pickups;
+    int rpyl_ammo_pickups;
+    int rpyl_generic_pickups;
+    int rpyl_pickup_args_ok;
+    int rpyl_long_entity_args_ok;
+    int rpyl_mount_car_ok;
+    int rpyl_vehicle_ok;
+    int rpyl_skybox_ok;
+    int rpyl_skybox_reload_ok;
+    int vehicle_playerdriving;
+    int vehicle_forward_actions;
     int fpi_state;
     int fpi_actions;
     int fpi_movefore;
@@ -47,6 +62,9 @@ typedef struct TestHostTag {
     int fpi_groundlanceplayer;
     int fpi_motion_reset;
     int fpi_motion_clear_impact;
+    int gameverb_queries;
+    int gameverb_actions;
+    int gameverb_truth;
 } TestHost;
 
 static int test_key(void *user, const char *name)
@@ -67,7 +85,9 @@ static int test_input_query(void *user, const char *state, const char *name)
     host = (TestHost *)user;
     if (!host || !state || !name) return 0;
     if (strcmp(name, "w") == 0) return host->w_down;
-    if (strcmp(name, "up") == 0) return 0;
+    if (strcmp(name, "up") == 0) return host->up_down;
+    if (strcmp(name, "shift") == 0 || strcmp(name, "leftshift") == 0)
+        return host->shift_down;
     if (strcmp(name, "j") == 0 &&
         (strcmp(state, "pressed") == 0 || strcmp(state, "hold") == 0))
         return host->j_down;
@@ -98,6 +118,8 @@ static void test_ddsl(void *user, const char *action,
     }
     if (value_fixed == 0L) return;
     if (strcmp(action, "move_forward") == 0) host->ddsl_move++;
+    if (strcmp(action, "walk_forward") == 0) host->ddsl_walk++;
+    if (strcmp(action, "run_forward") == 0) host->ddsl_run++;
     if (strcmp(action, "jump") == 0) host->ddsl_jump++;
     if (strcmp(action, "move_up") == 0) host->ddsl_up++;
     if (strcmp(action, "move_down") == 0) host->ddsl_down++;
@@ -112,6 +134,63 @@ static void test_rpyl(void *user, const char *command,
     host = (TestHost *)user;
     if (!host || !command) return;
     host->rpyl_commands++;
+    if (strcmp(command, "weapon_pickup") == 0) {
+        host->rpyl_weapon_pickups++;
+        if (argc == 5 && args &&
+            strcmp(args[0], "config/pickups/uzi_weapon.ini") == 0 &&
+            strcmp(args[1], "pos") == 0 &&
+            strcmp(args[2], "-6.5") == 0 &&
+            strcmp(args[3], "0") == 0 && strcmp(args[4], "24") == 0)
+            host->rpyl_pickup_args_ok++;
+    }
+    if (strcmp(command, "ammo_pickup") == 0) {
+        host->rpyl_ammo_pickups++;
+        if (argc == 5 && args &&
+            strcmp(args[0], "config/pickups/uzi_ammo.ini") == 0 &&
+            strcmp(args[1], "pos") == 0 &&
+            strcmp(args[2], "-9.5") == 0 &&
+            strcmp(args[3], "0") == 0 && strcmp(args[4], "24") == 0)
+            host->rpyl_pickup_args_ok++;
+    }
+    if (strcmp(command, "pickup") == 0) {
+        host->rpyl_generic_pickups++;
+        if (argc == 5 && args &&
+            strcmp(args[0], "config/pickups/health_box.ini") == 0 &&
+            strcmp(args[1], "pos") == 0 &&
+            strcmp(args[2], "-4.5") == 0 &&
+            strcmp(args[3], "0") == 0 && strcmp(args[4], "24") == 0)
+            host->rpyl_pickup_args_ok++;
+    }
+    if (strcmp(command, "vehicle_ini") == 0 && argc == 5 && args) {
+        if (strcmp(args[0], "config/vehicles/test_car.ini") == 0 &&
+            strcmp(args[1], "pos") == 0 && strcmp(args[2], "5") == 0 &&
+            strcmp(args[3], "2.5") == 0 && strcmp(args[4], "7") == 0)
+            host->rpyl_vehicle_ok++;
+        else if (strcmp(args[0], "config/vehicles/test_motorcycle.ini") == 0 &&
+            strcmp(args[1], "pos") == 0 && strcmp(args[2], "-5") == 0 &&
+            strcmp(args[3], "2.3") == 0 && strcmp(args[4], "8") == 0)
+            host->rpyl_vehicle_ok++;
+        else if (strcmp(args[0], "config/vehicles/test_tank.ini") == 0 &&
+            strcmp(args[1], "pos") == 0 && strcmp(args[2], "14") == 0 &&
+            strcmp(args[3], "1.0") == 0 && strcmp(args[4], "9") == 0)
+            host->rpyl_vehicle_ok++;
+    }
+    if (strcmp(command, "mount_car") == 0)
+        host->rpyl_mount_car_ok++;
+    if ((strcmp(command, "skybox") == 0 ||
+         strcmp(command, "skybox_recipe") == 0) && argc == 1 && args &&
+        strcmp(args[0], "matryoshka_hybrid_example") == 0)
+        host->rpyl_skybox_ok++;
+    if (strcmp(command, "skybox_reload") == 0 && argc == 0)
+        host->rpyl_skybox_reload_ok++;
+    if (strcmp(command, "armed_ally") == 0 && argc == 17 && args &&
+        strcmp(args[7], "loadout") == 0 &&
+        strcmp(args[8], "config/npc_loadouts/armed_ally.ini") == 0 &&
+        strcmp(args[9], "faction") == 0 && strcmp(args[10], "allies") == 0 &&
+        strcmp(args[11], "team") == 0 && strcmp(args[12], "survivors") == 0 &&
+        strcmp(args[13], "role") == 0 && strcmp(args[14], "armed_ally") == 0 &&
+        strcmp(args[15], "tags") == 0)
+        host->rpyl_long_entity_args_ok++;
     if (strcmp(command, "enemy") == 0 ||
         strcmp(command, "zombie") == 0 ||
         strcmp(command, "gunner_enemy") == 0 ||
@@ -270,10 +349,61 @@ static void test_fpi_action(void *user, void *entity,
         host->fpi_state = (int)(value_q16 / Q16_ONE);
 }
 
+
+static int test_gameverb_condition(void *user, const gverb89_call *call,
+                                   gverb89_result *out)
+{
+    TestHost *host;
+    host = (TestHost *)user;
+    if (!host || !call || !out) return GVERB89_ERROR;
+    memset(out, 0, sizeof(*out));
+    if (strcmp(call->name, "can_walk_forward") == 0) {
+        host->gameverb_queries++;
+        out->truth = host->gameverb_truth;
+        return GVERB89_HANDLED;
+    }
+    if (strcmp(call->name, "vehicle_playerdriving") == 0) {
+        host->gameverb_queries++;
+        out->truth = host->vehicle_playerdriving;
+        return GVERB89_HANDLED;
+    }
+    return GVERB89_UNHANDLED;
+}
+
+static int test_gameverb_action(void *user, const gverb89_call *call)
+{
+    TestHost *host;
+    host = (TestHost *)user;
+    if (!host || !call) return GVERB89_ERROR;
+    if (strcmp(call->name, "walk_forward") == 0) {
+        host->gameverb_actions++;
+        return GVERB89_HANDLED;
+    }
+    if (strcmp(call->name, "vehicle_forward") == 0) {
+        host->vehicle_forward_actions++;
+        return GVERB89_HANDLED;
+    }
+    return GVERB89_UNHANDLED;
+}
+
+static int write_text_file(const char *path, const char *text)
+{
+    FILE *file;
+    file = fopen(path, "wb");
+    if (!file) return 0;
+    if (fputs(text, file) == EOF) {
+        fclose(file);
+        return 0;
+    }
+    fclose(file);
+    return 1;
+}
+
 int main(void)
 {
     Blank3DLanguageHost callbacks;
     TestHost host;
+    gverb89_registry gameverbs;
     memset(&host, 0, sizeof(host));
     memset(&callbacks, 0, sizeof(callbacks));
     callbacks.user = &host;
@@ -289,13 +419,22 @@ int main(void)
         printf("DDSL2 load failed: %s\n", blank3d_languages_status());
         return 1;
     }
-    host.w_down = 1;
-    if (!blank3d_languages_tick_ddsl2() || host.ddsl_move != 1) {
-        printf("DDSL2 execution failed: %s (%d)\n",
-               blank3d_languages_status(), host.ddsl_move);
+    host.up_down = 1;
+    if (!blank3d_languages_tick_ddsl2() ||
+        host.ddsl_walk != 1 || host.ddsl_run != 0) {
+        printf("DDSL2 walk invariant base failed: %s walk=%d run=%d\n",
+               blank3d_languages_status(), host.ddsl_walk, host.ddsl_run);
         return 2;
     }
-    host.w_down = 0;
+    host.shift_down = 1;
+    if (!blank3d_languages_tick_ddsl2() ||
+        host.ddsl_walk != 1 || host.ddsl_run != 1) {
+        printf("DDSL2 Viceversa run invariant failed: %s walk=%d run=%d\n",
+               blank3d_languages_status(), host.ddsl_walk, host.ddsl_run);
+        return 6;
+    }
+    host.up_down = 0;
+    host.shift_down = 0;
     host.j_down = 1;
     if (!blank3d_languages_tick_ddsl2() || host.ddsl_jump != 1) {
         printf("DDSL2 jump-J failed: %s (%d)\n",
@@ -564,6 +703,121 @@ int main(void)
                host.rpyl_commands, host.rpyl_enemies);
         return 7;
     }
+    if (host.rpyl_weapon_pickups != 1 || host.rpyl_ammo_pickups != 1 ||
+        host.rpyl_generic_pickups != 1 || host.rpyl_pickup_args_ok != 3) {
+        printf("RPYL pickup path dispatch failed: weapon=%d ammo=%d generic=%d args=%d\n",
+               host.rpyl_weapon_pickups, host.rpyl_ammo_pickups,
+               host.rpyl_generic_pickups, host.rpyl_pickup_args_ok);
+        return 31;
+    }
+    if (host.rpyl_vehicle_ok != 3) {
+        printf("RPYL vehicle INI yard dispatch failed: ok=%d\n",
+               host.rpyl_vehicle_ok);
+        return 27;
+    }
+    if (host.rpyl_long_entity_args_ok != 1) {
+        printf("RPYL long entity command truncated: ok=%d\n",
+               host.rpyl_long_entity_args_ok);
+        return 32;
+    }
+
+    /* Shared verb bus: DDSL2 and FPIL consume the same provider vocabulary. */
+    gverb89_init(&gameverbs);
+    if (!gverb89_register_condition(&gameverbs, "can_walk_forward",
+                                    test_gameverb_condition, &host) ||
+        !gverb89_register_condition(&gameverbs, "vehicle_playerdriving",
+                                    test_gameverb_condition, &host) ||
+        !gverb89_register_action(&gameverbs, "walk_forward",
+                                 test_gameverb_action, &host) ||
+        !gverb89_register_action(&gameverbs, "vehicle_forward",
+                                 test_gameverb_action, &host)) {
+        puts("gameverb registry setup failed");
+        return 40;
+    }
+    callbacks.gameverbs = &gameverbs;
+    blank3d_languages_init(&callbacks);
+    blank3d_languages_set_subject(77UL, &host);
+    host.gameverb_truth = 1;
+    host.gameverb_queries = 0;
+    host.gameverb_actions = 0;
+    if (!write_text_file("tests/tmp_gameverb.ddsl2",
+                         "If can_walk_forward then walk_forward\n") ||
+        !blank3d_languages_reload_ddsl2("tests/tmp_gameverb.ddsl2") ||
+        !blank3d_languages_tick_ddsl2() ||
+        host.gameverb_queries < 1 || host.gameverb_actions != 1) {
+        printf("DDSL2 shared gameverb failed: %s queries=%d actions=%d\n",
+               blank3d_languages_status(), host.gameverb_queries,
+               host.gameverb_actions);
+        remove("tests/tmp_gameverb.ddsl2");
+        return 41;
+    }
+    remove("tests/tmp_gameverb.ddsl2");
+
+    /* Player driving is authored as a second external DDSL2 source.  The
+       vehicle condition makes the layer inert on foot and authoritative once
+       a player occupies a vehicle whose INI enables playerdriving. */
+    host.up_down = 1;
+    host.vehicle_playerdriving = 1;
+    host.vehicle_forward_actions = 0;
+    if (!blank3d_languages_reload_ddsl2_pair("scripts/player.ddsl2",
+                                              "scripts/vehicle_driver.ddsl2") ||
+        !blank3d_languages_tick_ddsl2() ||
+        host.vehicle_forward_actions != 1) {
+        printf("DDSL2 player+vehicle driving pair failed: %s vehicle_forward=%d\n",
+               blank3d_languages_status(), host.vehicle_forward_actions);
+        return 43;
+    }
+    host.vehicle_playerdriving = 0;
+    host.vehicle_forward_actions = 0;
+    if (!blank3d_languages_tick_ddsl2() || host.vehicle_forward_actions != 0) {
+        printf("DDSL2 vehicle layer failed to become inert: %s vehicle_forward=%d\n",
+               blank3d_languages_status(), host.vehicle_forward_actions);
+        return 44;
+    }
+    host.up_down = 0;
+
+    host.gameverb_queries = 0;
+    host.gameverb_actions = 0;
+    if (!write_text_file("tests/tmp_gameverb.fpi",
+                         ":can_walk_forward:walk_forward\n") ||
+        !blank3d_languages_reload_fpil("tests/tmp_gameverb.fpi") ||
+        !blank3d_languages_tick_fpil(&host) ||
+        host.gameverb_queries < 1 || host.gameverb_actions != 1) {
+        printf("FPIL shared gameverb failed: %s queries=%d actions=%d\n",
+               blank3d_languages_status(), host.gameverb_queries,
+               host.gameverb_actions);
+        remove("tests/tmp_gameverb.fpi");
+        return 42;
+    }
+    remove("tests/tmp_gameverb.fpi");
+
+    host.gameverb_actions = 0;
+    if (!write_text_file("tests/tmp_gameverb.rpy",
+                         "label start:\n    verb walk_forward\n") ||
+        !blank3d_languages_run_rpyl("tests/tmp_gameverb.rpy") ||
+        host.gameverb_actions != 1) {
+        printf("RPYL shared gameverb failed: %s actions=%d\n",
+               blank3d_languages_status(), host.gameverb_actions);
+        remove("tests/tmp_gameverb.rpy");
+        return 43;
+    }
+    remove("tests/tmp_gameverb.rpy");
+
+    host.rpyl_skybox_ok = 0;
+    host.rpyl_skybox_reload_ok = 0;
+    if (!write_text_file("tests/tmp_skybox_recipe.rpy",
+                         "label start:\n"
+                         "    skybox_recipe matryoshka_hybrid_example\n"
+                         "    skybox_reload\n") ||
+        !blank3d_languages_run_rpyl("tests/tmp_skybox_recipe.rpy") ||
+        host.rpyl_skybox_ok != 1 || host.rpyl_skybox_reload_ok != 1) {
+        printf("RPYL skybox recipe bridge failed: %s recipe=%d reload=%d\n",
+               blank3d_languages_status(), host.rpyl_skybox_ok,
+               host.rpyl_skybox_reload_ok);
+        remove("tests/tmp_skybox_recipe.rpy");
+        return 45;
+    }
+    remove("tests/tmp_skybox_recipe.rpy");
 
     puts("Blank3D vendored DDSL2 + FPIL + RPYL test: OK");
     return 0;

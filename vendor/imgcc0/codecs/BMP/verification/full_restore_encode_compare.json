@@ -1,0 +1,96 @@
+{
+  "passed": 15,
+  "total": 15,
+  "results": [
+    {
+      "case": "idx1_rgb.bmp",
+      "identical": true,
+      "bytes": 106,
+      "sha256": "67cb0108c837abc7c11b2b9114c62533ca32b851d131126f450112fd30defe32"
+    },
+    {
+      "case": "idx4_rgb.bmp",
+      "identical": true,
+      "bytes": 250,
+      "sha256": "c87a1b8f594b39988338a83fde93991beb589af5b43ffd10d524ab7c8650599a"
+    },
+    {
+      "case": "idx4_rle4.bmp",
+      "identical": true,
+      "bytes": 252,
+      "sha256": "c130f430090416b0ccdbe93c358048669736325b8ed65838505e8a1939e572c7"
+    },
+    {
+      "case": "idx8_core12.bmp",
+      "identical": true,
+      "bytes": 1014,
+      "sha256": "11ad9a3736382e20ca0a3963c43a4376e4b280d78d68997099443d9eeff44b9f"
+    },
+    {
+      "case": "idx8_rgb.bmp",
+      "identical": true,
+      "bytes": 1298,
+      "sha256": "d4d26b8ce6fb8ee716c0c4c04561d07d5216cc0ea62c832d0ec58f6bc250b75d"
+    },
+    {
+      "case": "idx8_rle8.bmp",
+      "identical": true,
+      "bytes": 1298,
+      "sha256": "79ea6f85f40e88a0fc2a05d491f804825c1bc947cd273fc69af9eb2673dbf0db"
+    },
+    {
+      "case": "rgba_bf30_1_1.bmp",
+      "identical": true,
+      "bytes": 818,
+      "sha256": "71fa286a1e08a86d53011b73066950caa0c927f37c4f27e518a398dd05205723"
+    },
+    {
+      "case": "rgba_bf4444.bmp",
+      "identical": true,
+      "bytes": 466,
+      "sha256": "62b97f80aac6c19c1ec88d67fd13d8483d7fa7079cfe4fbe3efff656494fd4b8"
+    },
+    {
+      "case": "rgba_bgr24.bmp",
+      "identical": true,
+      "bytes": 626,
+      "sha256": "97d60c5e45511bf22ef845ddae3b857729e3a47d5920234e23397ee1f3b57877"
+    },
+    {
+      "case": "rgba_bgr24_topdown.bmp",
+      "identical": true,
+      "bytes": 626,
+      "sha256": "deb1b0e7c9b2a62d7bcec6c708601e1bb8c8e68015b8aa48f9bcbc821e479ff1"
+    },
+    {
+      "case": "rgba_bgra32.bmp",
+      "identical": true,
+      "bytes": 886,
+      "sha256": "036540aa096584d8da661d4d40d7b16c0865992ceb4b8a4a236db92e161cbe1c"
+    },
+    {
+      "case": "rgba_bgrx32.bmp",
+      "identical": true,
+      "bytes": 802,
+      "sha256": "9bc2468362483f4cdd69be185ac2e36a41daf2a193e1566b262fa53f0d47f4b8"
+    },
+    {
+      "case": "rgba_rgb555.bmp",
+      "identical": true,
+      "bytes": 450,
+      "sha256": "1194ad729ab04683495d289fbc47b7158a2943e7ea8eb8ecd75d6da11ed7318c"
+    },
+    {
+      "case": "rgba_rgb565.bmp",
+      "identical": true,
+      "bytes": 462,
+      "sha256": "9f36ccce57e020d915cff821fbeffbbb3644ff697efe00df2c6e44f4c2b24548"
+    },
+    {
+      "case": "rgba_v5_icc.bmp",
+      "identical": true,
+      "bytes": 729,
+      "sha256": "83cd360bca22ab14e59c8b8f238e48f76e2440d97b49e134e93715dd899cd61f"
+    }
+  ]
+}

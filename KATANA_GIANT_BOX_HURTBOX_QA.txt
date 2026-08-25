@@ -1,0 +1,10 @@
+Blank3D v3.27.2 - Giant Katana + Box Hurtboxes
+
+- Katana89 mesh is scaled declaratively from config/melee/katana.ini.
+- Diagnostic defaults: 220% thickness, 180% width, 180% length.
+- Blade attack volume remains a true red PDC3D OBB.
+- Every hostile target now registers two true green OBB hurtboxes:
+  torso and head. No capsule hurtboxes are used by this katana prototype.
+- F3 toggles both red attack boxes and green enemy hurt boxes.
+- K starts the Mecanim slash.
+- This remains outside GWeapon89 and does not alter firearms or NPC weapons.

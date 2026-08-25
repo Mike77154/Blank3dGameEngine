@@ -1,0 +1,7 @@
+bad_declared.apng	11	11	SAME_ERROR
+bad_seq.apng	11	11	SAME_ERROR
+pngish.png	11	11	SAME_ERROR
+seed_test_apng_anim.png	0	0	BYTE_IDENTICAL
+truncated.apng	11	11	SAME_ERROR
+valid_three_frame.apng	0	0	BYTE_IDENTICAL
+valid_two_frame.apng	0	0	BYTE_IDENTICAL

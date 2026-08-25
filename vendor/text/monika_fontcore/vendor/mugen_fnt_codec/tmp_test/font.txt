@@ -1,0 +1,11 @@
+[Def]
+type = fixed
+offset = 0,0
+size = 8,8
+spacing = 0,0
+colors = 256
+sprites = font.pcx
+
+[Map]
+A 0
+B 8

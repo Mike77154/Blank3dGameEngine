@@ -1,5 +1,84 @@
-# Blank3D v3.25.4 — Automatic Fire Frame Lock
+# Blank3D v3.27.3 — Corte de katana completamente delante del jugador
 
+## v3.27.3 pivote frontal y plano de seguridad
+
+La katana gigante y su OBB roja ya no giran alrededor de un pivote metido en
+el torso. El socket independiente `player.melee_r` toma su posición desde
+`config/melee/katana.ini` y desplaza **todo el rig Mecanim** 1.90 m hacia el
+frente local del jugador. Como la mesh, la hoja animada y la OBB ofensiva
+comparten el mismo root, el corte visible y el daño permanecen juntos delante
+del personaje.
+
+La regresión recorre la animación completa y comprueba dos cosas por separado:
+que el AABB conservador de la OBB roja no cruce el plano corporal y que ningún
+vértice de la katana visible vuelva a pasar por el protagonista. Las hurtboxes
+enemigas continúan como cajas verdes de torso y cabeza. Consulta
+`KATANA_FRONT_ONLY_SWING.md` y `KATANA_FRONT_ONLY_SWING_QA.txt`.
+
+## v3.27.1 OBB auténtica y primer montaje frontal de la katana
+
+`katana89` genera una katana procedural visible y `NationalMecanicanimal89`
+anima un corte activado con `K`. La colisión ofensiva sólo existe durante los
+frames o milisegundos declarados en `config/melee/katana.ini`; el núcleo
+`hurtbox3d + hitbox3d + melee3d` del paquete PhysicalDamageCollision3D cruza
+una primitiva OBB real, orientada por la matriz de la hoja, contra los
+volúmenes vulnerables de enemigos. La OBB conserva su pose anterior para cubrir el
+barrido entre frames.
+
+En esa versión la katana quedó centrada 0.80 m delante del actor; v3.27.3
+reemplaza ese primer montaje por el pivote frontal configurable de 1.90 m. `F3` alterna el dibujo de depuración: rojo para la
+caja ofensiva y verde para los volúmenes vulnerables. El prototipo no entra en
+`GWeapon89`, no altera balística y no afecta a las armas de NPC. Consulta
+`KATANA_MECANIM_PHYSICAL_DAMAGE_PROTOTYPE.md`.
+
+
+## v3.26.2 proyectiles físicos del jugador guiados por el target de cámara
+
+Lanzagranadas, rocket launcher y resortera ya no usan el plano de zeroing
+antiguo de 32 unidades. La cámara selecciona el objetivo real de la retícula;
+el proyectil nace en su muzzle físico y apunta a ese punto. Rocket conserva
+trayectoria lineal, mientras granada y Bolt3D calculan su arco después. La ruta
+es exclusiva del jugador y no modifica a los NPC. Consulta
+`PLAYER_PHYSICAL_PROJECTILE_AIM.md`.
+
+
+## v3.26.1 proyectil y trace visibles; raycast amarillo oculto
+
+Las armas lineales del jugador conservan el raycast de cámara/muzzle como
+autoridad inmediata de impacto, pero ese rayo ya no se manda al renderer. En
+su lugar se crea un proyectil cosmético móvil, con mesh y Aoi Trail3D, que
+recorre desde el muzzle visual hasta el punto ya resuelto. No tiene daño,
+colisión ni influencia sobre NPCs. Si el proveedor de trails está lleno, sólo
+se dibuja el pequeño tramo recorrido durante el frame, nunca la línea completa
+de origen a impacto. Consulta `PLAYER_PROJECTILE_VISUALS.md`.
+
+
+## v3.26.0 una cámara por archivo INI
+
+Cameranaku descubre todas las cámaras habilitadas en `config/cameras/`.
+`TPS Centred`, `OTS` y `FPS` ya son perfiles completamente separados; `V`
+recorre el catálogo ordenado y se pueden agregar más modos copiando la
+plantilla `camera_profile.ini.example`, cambiando su `id` y guardándola como
+`.ini`. La carpeta y el perfil inicial se eligen desde `config/blank3d.toml`.
+
+No hay una enumeración rígida de tres modos y los perfiles sólo gobiernan al
+jugador; los NPC conservan su ruta de cámara/armas. Consulta
+`CAMERA_INI_CATALOG.md`.
+
+## v3.25.5 autoridad de raycast de cámara para el jugador
+
+Las armas lineales del jugador ya no usan un proyectil físico persistente para
+decidir el impacto. FPS dispara un raycast desde la cámara al centro del
+viewport. TPS y OTS seleccionan el objetivo con ese mismo rayo y después hacen
+una segunda comprobación desde el muzzle para evitar disparar a través de una
+cobertura cercana. El daño es inmediato. Desde v3.26.1 la presentación usa un
+proyectil cosmético móvil con mesh y trail, sin colisión ni daño.
+
+El cambio no se aplica a NPCs. Granada, cohete y Bolt3D continúan siendo
+proyectiles físicos. La cámara anterior se dividió en `TPS` centrada, `OTS` con
+offset de hombro y `FPS`; `V` recorre esos tres modos. Consulta
+`PLAYER_CAMERA_RAY_AUTHORITY.md`, `TPS_OTS_CAMERA_SPLIT.md` y
+`PLAYER_CAMERA_RAY_QA.txt`.
 
 ## v3.25.4 cámara inmutable durante fuego automático
 
@@ -318,3 +397,105 @@ almacenamiento estático/caller-owned y sin `malloc`, `realloc` ni `free`.
 Hostile target selection now uses correctly converted Q16.16 distance, stable
 tie-breaking and recent-damage retargeting. Enemies can choose the blue armed
 ally instead of defaulting to the player. See `ENEMY_ALLY_RETARGET_FIX.md`.
+
+## input_keys89 vendor layer
+
+Keyboard name/alias identity is now isolated in `vendor/input_keys89`.
+Blank3D resolves DDSL2 key names through this stateless C89 library before
+querying HID-backed scanner state. The library owns no gameplay semantics, so
+the wildcard key assigner remains unrestricted.
+
+Validation targets:
+
+```sh
+make test-input-keys-vendor
+make test-input-stack
+make syntax-check
+```
+
+## Runtime spine ontology
+
+The World3D89 + Scene3D89 + GFO Object + ThingSystem89 + ECS89 + ActorSystem89 integration is documented in `RUNTIME_SPINE_WORLD_SCENE_GFO_THING_ECS_ACTOR.md`. The key rule is large managers once per runtime/definition, lightweight handles per Thing/Entity/Actor.
+
+## Universal variable authoring
+
+The runtime now includes `var_dsl89 + var_runtime89 + var_manager89` as a
+GameMaker-like authoring surface routed to NumSys, Flags or dynamic VarStore
+without replacing any specialized system. See `VAR_DSL89_UNIVERSAL_AUTHORING.md`.
+
+## GLOCO89 locomotion provider spine
+
+`gloco89` is vendored as the character locomotion controller between movement
+intent and the host physics/transform authority. MovementBaseVerbs and flat
+GAutomotion paths feed it; VerticalMotion, Collision and VPhysics resolve the
+result; World3D, Scene3D and Soquete T0 receive the final host transform.
+Stamina is provider-routed to NumSys and `locomotion.*` profile/state fields are
+available through the universal VarRuntime authoring layer. Special MotionAttack
+modes can suspend GLOCO rather than competing for transform authority.
+
+Validation targets:
+
+```sh
+make test-gloco-vendor
+make test-gloco-provider-stack
+make syntax-check
+make syntax-check-input-win32
+make audit
+```
+
+See `GLOCO89_LOCOMOTION_PROVIDER_INTEGRATION.md`.
+
+## Condor Event / Condition / Action rule core
+
+This build adds the context-based `condor_evact89` rule engine and the
+`Blank3DCondor` bridge. `gameverbs89` remains the named DSL vocabulary; Condor
+adds persistent/reactive `event -> condition -> action` rules. See
+`CONDOR_EVACT89_RULE_ENGINE.md` and `CONDOR_EVACT89_QA.txt`.
+
+## Mount89 white-box vehicle prototype
+
+A white box at `(5, 0.6, 6)` exercises the vendored `3d_mounting_system89`.
+Walk close and press **M** to mount/dismount. While mounted, the existing
+movement verbs drive the box at 16 u/s (19 u/s run) instead of moving the
+7 u/s player directly. See `MOUNT89_BOX_CAR_PROTOTYPE.md`.
+
+## Buster-style multi-projectile charge selector
+
+The Weapon System now vendors `morethanone89`. A `press_charge_release` weapon
+can fire its normal projectile immediately on press, then select a different
+projectile recipe by hold duration and emit exactly one charged shot on
+release. See `MORETHANONE89_BUSTER.md` and `config/weapons/buster.ini`.
+
+## SpriteAsset89 / SpriteVerbs89 / AssetRoute89 pipeline
+
+Blank3D now vendors a provider-driven sprite asset layer. `AssetRoute89`
+resolves logical asset names, `SpriteAsset89` owns clips/frames/playback, and
+`SpriteVerbs89` exposes Ren'Py/GameMaker-like semantic commands to RPYL/DDSL2.
+The bridge reuses `Blank3DImageAssets + imgcc0` for decoding/upload and can draw
+sprite-sheet subrectangles through the existing OpenGL host. Existing
+SpritePlane89/HUD/muzzle image paths retain their old direct-path behavior and
+can additionally resolve logical routed names.
+
+See `SPRITE_ASSET_PIPELINE89_INTEGRATION.md` and
+`SPRITE_ASSET_PIPELINE89_QA.txt`.
+
+Validation targets:
+
+```sh
+make test-spriteasset89-vendor
+make test-spriteverbs89-vendor
+make test-assetroute89-vendor
+make test-sprite-runtime89
+make test-image-stack
+make test-muzzle-image-pipeline
+make syntax-check
+make syntax-check-sprite-runtime89-win32
+```
+
+## Flamethrower FireLoop billboard experiment
+
+Weapon ID 14 now keeps its `expandiblefire89` boxes as mechanical collision
+truth but skins them with the user-supplied FireLoop1 128x128/50-frame atlas.
+The card is camera-facing, animated per projectile, three-layer additive, and
+feeds a separate GL_LIGHT2 stream illumination pulse. See
+`FLAMETHROWER_FIRELOOP_BILLBOARD.md`.

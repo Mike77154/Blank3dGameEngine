@@ -1,0 +1,29 @@
+PCX89 verification summary
+==========================
+
+Build gate:
+  gcc/cc -std=c89 -Wall -Wextra -Werror -pedantic: PASS
+
+Protocol token scan over production .c/.h:
+  dynamic runtime-memory tokens: 0
+  floating types: 0
+  explicit 64-bit integer types: 0
+  size_t in production API/source: 0
+  explicit long type in production API/source: 0
+
+Differential output against uploaded original:
+  Decode comparisons: 204 / 204 PASS
+    - file RGB
+    - file indexed + palette
+    - memory RGB
+    - memory indexed + palette
+  Encode comparisons: 6 / 6 PASS
+    - RGB RLE
+    - RGB raw
+    - indexed 1 bpp
+    - indexed 2 bpp
+    - indexed 4 bpp
+    - indexed 8 bpp
+
+Comparison criterion:
+  result metadata equal AND complete payload byte-for-byte equal.

@@ -1,0 +1,50 @@
+Blank3D generic health pickup QA
+================================
+
+Purpose
+-------
+Prove the pickup/world item handler is not weapon-only.
+
+Scene command
+-------------
+pickup "config/pickups/health_box.ini" pos -4.5 0 24
+
+The command is the generic `pickup` command, not weapon_pickup/ammo_pickup.
+The INI selects kind=health and amount=25.
+
+Runtime behavior
+----------------
+- White single-box mesh uses the existing pickup_item.gfo.
+- CT89 only offers the player subject as spatial candidate.
+- PBB custom rule rejects the pickup while player health is already 100.
+- Rejected full-health touch leaves the item active/visible.
+- After damage to 60 HP, leave/re-enter CT89 trigger.
+- PBB custom health effect adds 25 HP -> 85 HP.
+- PBB consume effect removes the item from the world.
+- No weapon or ammo grant binding exists for the health item.
+
+Verified commands
+-----------------
+make test-health-pickup
+  PASS: generic health pickup: PASS (PBB rule/effect, no weapon provider)
+
+make test-uzi-pickup
+  PASS: uzi RPY/INI pickup content spine: PASS
+  PASS: uzi pickup GFO/Object INI spine: PASS
+
+make test-languages
+  PASS: Blank3D vendored DDSL2 + FPIL + RPYL test: OK
+  Includes exact generic health pickup path/position assertion.
+
+make test-item-contact-blank3d
+  PASS: blank3d item/contact/weapon integration: PASS
+
+make syntax-check
+  PASS (exit 0): full source-set C89 syntax check with project Win32 shim.
+
+Architecture conclusion
+-----------------------
+The world pickup handler is generic. Weapon and ammo are specialized grant
+providers attached to PBB items. Health uses the same RPY -> pickup instance ->
+GFO/Thing -> CT89 -> PBB lifecycle, but its effect is a PBB custom host effect
+that targets Blank3D player health instead of the weapon inventory provider.

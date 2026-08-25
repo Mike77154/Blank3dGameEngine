@@ -77,10 +77,8 @@ int blank3d_list_cycle_register(Blank3DListCycleRegistry *registry,
         registry->bindings[slot].used = 1;
         ++registry->count;
     }
-    strncpy(registry->bindings[slot].name, normalized,
-            sizeof(registry->bindings[slot].name) - 1U);
-    registry->bindings[slot].name[
-        sizeof(registry->bindings[slot].name) - 1U] = '\0';
+    memcpy(registry->bindings[slot].name, normalized,
+           strlen(normalized) + 1U);
     registry->bindings[slot].list = *list;
     registry->bindings[slot].context = context;
     registry->bindings[slot].current = current;

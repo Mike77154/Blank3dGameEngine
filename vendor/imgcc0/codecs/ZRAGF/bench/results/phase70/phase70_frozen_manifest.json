@@ -1,0 +1,46 @@
+{
+  "manifest_version": 2,
+  "name": "phase70-local-locked-smoke-frozen",
+  "description": "Frozen content-hash manifest derived from lockfile generation.",
+  "datasets": [
+    {
+      "id": "local-phase70",
+      "kind": "existing",
+      "family": "mixed",
+      "version": "phase70-local-v1",
+      "root": "local_phase70",
+      "files": [
+        {
+          "path": "alpha.txt",
+          "expected_sha256": "11ce73616d8ca01bdf55ccfcb0526fece90c0cf94593e43364ee70df641cbdbf",
+          "expected_size": 45
+        },
+        {
+          "path": "binary.bin",
+          "expected_sha256": "fa0aee61a053432dc0346f68728b23d05c089e03765ddb97c8c8abc9620b906e",
+          "expected_size": 257
+        },
+        {
+          "path": "sprite_rgba.png",
+          "expected_sha256": "a2f658b2b0c5e7198265112325f0af41300f0ad34d8f117e5f0fbd0f1c17aaae",
+          "expected_size": 102
+        },
+        {
+          "path": "strip_gray.tiff",
+          "expected_sha256": "283b7d1047b04d28cba50429b2cbd1345d6dc910b3dee46bef450851942e606e",
+          "expected_size": 528
+        },
+        {
+          "path": "sprite_palette.png",
+          "expected_sha256": "5a1b510e11a1c49e54454f420e7458a2abecf38d3f2bcdd083493aed0a0345b1",
+          "expected_size": 860
+        },
+        {
+          "path": "strip_rgb.tiff",
+          "expected_sha256": "edf214b72589e6e4dabd399b95d967662dcb6e0609465a406760ea649315743f",
+          "expected_size": 908
+        }
+      ]
+    }
+  ]
+}

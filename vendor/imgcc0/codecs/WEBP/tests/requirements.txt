@@ -1,0 +1,5 @@
+Pillow
+numpy
+# builtins only for test_vp8_phase2.py
+
+# phase7 harness: stdlib only (optional Pillow fallback in run_oracle.py)

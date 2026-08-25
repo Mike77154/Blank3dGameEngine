@@ -1,0 +1,20 @@
+GCROSSHAIR89 INI / PROVIDER / ANIMATION RUNTIME QA
+==================================================
+
+[PASS] gcrosshair89 animation-capable bundle vendored as the single crosshair authority.
+[PASS] gcrosshair_runtime89 ABI 2 active.
+[PASS] gcrosshair_anim89 added to Blank3D include/source graph.
+[PASS] Project recipe root loads vendor 192 presets + 2 Blank3D compatibility presets.
+[PASS] New reusable animations/*.ini copied into config/crosshair.
+[PASS] Bundled crosshair raster assets copied beside the project recipe root.
+[PASS] Pistol first/third-person neutral geometry remains INI presets 192/193.
+[PASS] Blank3D pistol compatibility recipes use animations/blank3d_classic.ini.
+[PASS] AIM/FIRE/HIT input edges are handled by runtime89/anim89, not duplicate core triggers.
+[PASS] Real frame_ms is converted to a fixed ~60 Hz animation tick clock.
+[PASS] Manual custom1/custom2 event bridge exposed to the engine.
+[PASS] External provider slot remains overridable; Blank3D OpenGL stays primitive fallback.
+[PASS] Uploaded library's pre-INI golden master test: 192 canonical bytes IDENTICAL.
+[PASS] Uploaded library's animation coverage test: 192/192 presets animate on FIRE.
+[PASS] Blank3D test-crosshair-runtime passes with neutral legacy geometry + recipe FIRE/custom1 animation assertions.
+[PASS] test-weapon-ini, test-weapon-modules and test-sniper-stack pass.
+[PASS] Full active source tree passes strict C89 syntax-check after ABI-2 migration.

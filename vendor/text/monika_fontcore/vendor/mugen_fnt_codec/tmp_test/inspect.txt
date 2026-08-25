@@ -1,0 +1,13 @@
+signature: ElecbyteFnt
+version: 1.0
+pcx offset: 64 size: 142
+text offset: 206 size: 104
+comment: 12345678901234567890123456789012
+font type: Fixed
+offset: 0,0
+size: 8,8
+spacing: 0,0
+colors: 256
+sprites: font.pcx
+glyphs: 2
+image: 2x2 stride=6 format=rgb24

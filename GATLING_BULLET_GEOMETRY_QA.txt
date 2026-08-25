@@ -1,0 +1,34 @@
+Blank3D Gatling geometric projectile-origin QA
+===============================================
+
+Baseline:
+  blank3d_v3_27_3_gvehicle89_bull_forward_reverse_fix.zip
+
+New vendors:
+  bulletspin89
+  bulletcircle89
+  bulletinline89
+
+Results:
+  bulletspin89 strict C89/Werror .............. PASS
+  bulletcircle89 strict C89/Werror ............ PASS
+  bulletinline89 strict C89/Werror ............ PASS
+  gatling INI -> spin/circle/inline stack ..... PASS
+  weapon INI registry ......................... PASS
+  weapon modules regression ................... PASS
+  Shango/Homing reload regression ............. PASS
+  Satellaborner/Telesearcher stack ............ PASS
+  Flamethrower/expandiblefire89 stack ......... PASS
+  Uzi pickup regression ....................... PASS
+  generic health pickup regression ............ PASS
+  PBB/contact/weapon bridge regression ......... PASS
+  full runner syntax-check .................... PASS
+
+Static policy audit for the three new vendor include/src trees:
+  malloc/calloc/realloc/free .................. absent
+  float/double ................................ absent
+
+Important runtime behavior:
+  Gatling opts into a physical projectile path when geometric origin modules
+  are active. Blank3D uses swept projectile collision, so the circular muzzle
+  geometry is gameplay-authoritative rather than a cosmetic-only tracer.

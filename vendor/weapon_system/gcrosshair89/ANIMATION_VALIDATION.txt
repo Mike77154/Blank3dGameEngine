@@ -1,0 +1,32 @@
+gcrosshair89 animation/provider/INI validation
+==============================================
+
+Build flags:
+  -std=c89 -pedantic -Wall -Wextra -Werror
+
+PASS core89 tests
+PASS params89 tests
+PASS base89 192-preset tests
+PASS recipe loader + Recipe I/O provider
+PASS pre-INI canonical equivalence test
+PASS animation recipe coverage: 192 presets x 6 standard events = 1152 enabled standard event recipes
+PASS provider89 tests
+PASS anim89 fixed-point executor tests
+PASS runtime89 tests
+PASS runtime animation coverage: 192/192 presets visibly modify FIRE animation state
+
+Pre-INI canonical preset stream:
+  bytes: 88884
+  hardcoded SHA-256: 7024ddf62fc175a8d63055365637bb5fbc3518173d456bd5d1f1b231a372c088
+  INI+anim SHA-256:  7024ddf62fc175a8d63055365637bb5fbc3518173d456bd5d1f1b231a372c088
+  cmp: IDENTICAL
+
+Pre-INI raster regression:
+  192 presets x 4 states x 2 spread values = 1536 RGBA frames
+  96 x 96 RGBA8888
+  bytes per stream: 56623104
+  hardcoded SHA-256: 0fedb5522740438d63c6c02e90c328852ca641604ade50130c31bd50a7ede320
+  INI+anim SHA-256:  0fedb5522740438d63c6c02e90c328852ca641604ade50130c31bd50a7ede320
+  cmp: IDENTICAL
+
+The event animation layer is additive. Static/state preset identity remains unchanged.

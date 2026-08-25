@@ -1,0 +1,38 @@
+{
+  "actions/attest-build-provenance": {
+    "sha": "96278af6caaf10aea03fd8d33a09a777ca52d62f",
+    "tag": "v3.2.0"
+  },
+  "actions/attest-sbom": {
+    "sha": "bd218ad0dbcb3e146bd073d1d9c6d78e08aa8a0b",
+    "tag": "v2.4.0"
+  },
+  "actions/checkout": {
+    "sha": "93cb6efe18208431cddfb8368fd83d5badbf9bfd",
+    "tag": "v5.0.1"
+  },
+  "actions/dependency-review-action": {
+    "sha": "05fe4576374b728f0c523d6a13d64c25081e0803",
+    "tag": "v4.8.3"
+  },
+  "actions/upload-artifact": {
+    "sha": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+    "tag": "v4.6.2"
+  },
+  "github/codeql-action/analyze": {
+    "sha": "0d579ffd059c29b07949a3cce3983f0780820c98",
+    "tag": "v4.32.6"
+  },
+  "github/codeql-action/init": {
+    "sha": "0d579ffd059c29b07949a3cce3983f0780820c98",
+    "tag": "v4.32.6"
+  },
+  "github/codeql-action/upload-sarif": {
+    "sha": "0d579ffd059c29b07949a3cce3983f0780820c98",
+    "tag": "v4.32.6"
+  },
+  "ossf/scorecard-action": {
+    "sha": "4eaacf0543bb3f2c246792bd56e8cdeffafb205a",
+    "tag": "v2.4.3"
+  }
+}

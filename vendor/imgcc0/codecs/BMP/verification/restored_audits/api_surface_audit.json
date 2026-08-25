@@ -1,0 +1,10 @@
+{
+  "project": "bmp",
+  "ok": true,
+  "public_header": "include/bmp/bmp.h",
+  "installed_headers": [
+    "bmp.h",
+    "bmp_export.h"
+  ],
+  "findings": []
+}

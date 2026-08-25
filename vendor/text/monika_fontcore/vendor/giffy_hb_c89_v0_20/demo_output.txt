@@ -1,0 +1,193 @@
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=0
+trace hvar         i=-1 gid=5 out=1
+trace ligature     i=0 gid=2 out=52
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=0
+trace hvar         i=-1 gid=5 out=1
+trace kern         i=1 gid=6 out=7
+trace kern         i=3 gid=1 out=5
+latin liga+kern len=5
+  [00] gid=52 uni=U+0066 adv=960 off=(0,0) flags=0x0002
+  [01] gid=6 uni=U+0054 adv=448 off=(0,0) flags=0x0001
+  [02] gid=7 uni=U+006F adv=576 off=(0,0) flags=0x0001
+  [03] gid=1 uni=U+0041 adv=576 off=(0,0) flags=0x0001
+  [04] gid=5 uni=U+0056 adv=640 off=(0,0) flags=0x0001
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace mark_base    i=1 gid=1 out=8
+trace mark_mark    i=2 gid=8 out=11
+mark-to-base + mark-to-mark len=3
+  [00] gid=1 uni=U+0041 adv=640 off=(0,0) flags=0x0001
+  [01] gid=8 uni=U+0301 adv=0 off=(256,576) flags=0x0004
+  [02] gid=11 uni=U+0307 adv=0 off=(320,768) flags=0x0004
+trace context      i=1 gid=9 out=60
+contextual GSUB calt len=3
+  [00] gid=10 uni=U+0058 adv=512 off=(0,0) flags=0x0001
+  [01] gid=60 uni=U+0073 adv=512 off=(0,0) flags=0x0001
+  [02] gid=10 uni=U+0058 adv=512 off=(0,0) flags=0x0001
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=0
+trace hvar         i=-1 gid=5 out=1
+trace context_class i=1 gid=9 out=91
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=0
+trace hvar         i=-1 gid=5 out=1
+class-based contextual calt len=3
+  [00] gid=1 uni=U+0041 adv=640 off=(0,0) flags=0x0001
+  [01] gid=91 uni=U+0073 adv=512 off=(0,0) flags=0x0001
+  [02] gid=5 uni=U+0056 adv=640 off=(0,0) flags=0x0001
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=0
+trace hvar         i=-1 gid=5 out=1
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=0
+trace hvar         i=-1 gid=5 out=1
+trace kern         i=0 gid=6 out=1
+trace kern         i=1 gid=1 out=5
+trace context_pair i=1 gid=1 out=5
+trace context_pair_apply i=2 gid=5 out=65472
+contextual GPOS pair adjust len=4
+  [00] gid=6 uni=U+0054 adv=512 off=(0,0) flags=0x0001
+  [01] gid=1 uni=U+0041 adv=512 off=(0,0) flags=0x0001
+  [02] gid=5 uni=U+0056 adv=640 off=(0,0) flags=0x0001
+  [03] gid=10 uni=U+0058 adv=512 off=(0,0) flags=0x0001
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace syllable_status i=0 gid=8 out=0
+trace dotted       i=0 gid=90 out=90
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+dotted-circle fallback len=3
+  [00] gid=90 uni=U+25CC adv=512 off=(0,0) flags=0x0001
+  [01] gid=8 uni=U+0301 adv=0 off=(0,0) flags=0x0004
+  [02] gid=1 uni=U+0041 adv=640 off=(0,0) flags=0x0001
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=0
+trace hvar         i=-1 gid=1 out=0
+trace reverse      i=1 gid=1 out=61
+reverse chaining substitution len=2
+  [00] gid=10 uni=U+0058 adv=512 off=(0,0) flags=0x0001
+  [01] gid=61 uni=U+0041 adv=640 off=(0,0) flags=0x0001
+arabic joining + rtl len=3
+  [00] gid=31 uni=U+0627 adv=384 off=(0,0) flags=0x0021
+  [01] gid=38 uni=U+0645 adv=512 off=(0,0) flags=0x0001
+  [02] gid=33 uni=U+0628 adv=512 off=(0,0) flags=0x0001
+trace ligature     i=0 gid=42 out=46
+arabic lam-alef rlig len=1
+  [00] gid=46 uni=U+0644 adv=576 off=(0,0) flags=0x0002
+trace cluster      i=0 gid=20 out=1
+trace cluster      i=1 gid=21 out=1
+trace syllable_status i=0 gid=20 out=2817
+trace cluster      i=0 gid=20 out=1
+trace cluster      i=1 gid=21 out=1
+trace indic_matra  i=0 gid=21 out=2367
+trace single       i=1 gid=20 out=72
+indic pre-base reorder hook len=2
+  [00] gid=21 uni=U+093F adv=0 off=(0,0) flags=0x0004
+  [01] gid=72 uni=U+0915 adv=384 off=(0,0) flags=0x0001
+trace cluster      i=0 gid=70 out=1
+trace cluster      i=1 gid=71 out=1
+trace cluster      i=2 gid=20 out=2
+trace syllable_status i=0 gid=70 out=2817
+trace syllable_status i=2 gid=20 out=2306
+trace cluster      i=0 gid=70 out=1
+trace cluster      i=1 gid=71 out=1
+trace cluster      i=2 gid=20 out=2
+trace single       i=2 gid=20 out=72
+indic reph/half skeleton len=3
+  [00] gid=73 uni=U+0930 adv=0 off=(0,0) flags=0x0004
+  [01] gid=71 uni=U+094D adv=0 off=(0,0) flags=0x0004
+  [02] gid=72 uni=U+0915 adv=384 off=(0,0) flags=0x0001
+trace thai_lao     i=1 gid=82 out=81
+thai/lao mark normalization len=3
+  [00] gid=80 uni=U+0E01 adv=576 off=(0,0) flags=0x0001
+  [01] gid=82 uni=U+0E34 adv=0 off=(0,0) flags=0x0004
+  [02] gid=81 uni=U+0E48 adv=0 off=(0,0) flags=0x0004
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=1
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=1
+trace hvar         i=-1 gid=5 out=1
+trace hvar_validate i=-1 gid=1 out=4096
+trace hvar_region  i=-1 gid=1 out=1
+trace hvar         i=-1 gid=1 out=0
+trace hvar_validate i=-1 gid=5 out=4097
+trace hvar_region  i=-1 gid=5 out=1
+trace hvar         i=-1 gid=5 out=1
+trace kern         i=0 gid=1 out=5
+HVAR-style variation advance len=2
+  [00] gid=1 uni=U+0041 adv=832 off=(0,0) flags=0x0001
+  [01] gid=5 uni=U+0056 adv=896 off=(0,0) flags=0x0001
+record i=0 gid=1 uni=U+0041 adv=832 off=(0,0) flags=0x0001 syll=0 kind=0
+record i=1 gid=5 uni=U+0056 adv=896 off=(0,0) flags=0x0001 syll=0 kind=0
+hvar diag sparse=2 segments=0 item_delta=2 mapped=2 unmapped=43 lossy=0
+filtered hvar-validate trace count=4
+hvar range 1..8 mapped=2 unmapped=6 sparse=2 segment=0
+hvar contrib gid=A count=1 total=64
+  hcontrib[0] item=0 region=0 kind=1 delta=64 support=64 contribution=64
+overlay trace count=8
+  overlay[00] stage=20 event=14 kind=1 index=-1 gid=1 value=4096
+  overlay[01] stage=22 event=9 kind=0 index=-1 gid=1 value=1
+  overlay[02] stage=20 event=14 kind=1 index=-1 gid=5 value=4097
+  overlay[03] stage=22 event=9 kind=0 index=-1 gid=5 value=1
+  overlay[04] stage=20 event=14 kind=1 index=-1 gid=1 value=4096
+  overlay[05] stage=22 event=9 kind=0 index=-1 gid=1 value=1
+  overlay[06] stage=20 event=14 kind=1 index=-1 gid=5 value=4097
+  overlay[07] stage=22 event=9 kind=0 index=-1 gid=5 value=1
+hvar explain gid=1 item=0 kind=1 valid=1 regions=1 bad_regions=0 total=64
+hvar region validate bad_range=0 bad_axis=0 bad_record=0
+hvar region diag bad_range=0 bad_axis=0 bad_record=0 empty=0 max_axes=1
+overlay event-filter hvar count=4
+overlay compact hvar count=4
+  compact[00] event=9 flags=0x60 index=-1 a=1 b=1
+  compact[01] event=9 flags=0x60 index=-1 a=5 b=1
+  compact[02] event=9 flags=0x60 index=-1 a=1 b=1
+  compact[03] event=9 flags=0x60 index=-1 a=5 b=1
+numtrace row=0 stage=22 event=9 index=-1 gid=1 value=1
+numtrace row=1 stage=22 event=9 index=-1 gid=5 value=1
+numtrace row=2 stage=22 event=9 index=-1 gid=1 value=1
+numtrace row=3 stage=22 event=9 index=-1 gid=5 value=1
+thai mark class U+0E48=4 dotted-needed=0 syll-status=0x00 cluster=empty bases=0 marks=0
+trace ring count=16
+  ring[00] stage=cluster index=2 gid=20 out=2
+  ring[01] stage=single index=2 gid=20 out=72
+  ring[02] stage=thai_lao index=1 gid=82 out=81
+  ring[03] stage=hvar_validate index=-1 gid=1 out=4096
+  ring[04] stage=hvar_region index=-1 gid=1 out=1
+  ring[05] stage=hvar index=-1 gid=1 out=0
+  ring[06] stage=hvar_validate index=-1 gid=5 out=4097
+  ring[07] stage=hvar_region index=-1 gid=5 out=1
+  ring[08] stage=hvar index=-1 gid=5 out=1
+  ring[09] stage=hvar_validate index=-1 gid=1 out=4096
+  ring[10] stage=hvar_region index=-1 gid=1 out=1
+  ring[11] stage=hvar index=-1 gid=1 out=0
+  ring[12] stage=hvar_validate index=-1 gid=5 out=4097
+  ring[13] stage=hvar_region index=-1 gid=5 out=1
+  ring[14] stage=hvar index=-1 gid=5 out=1
+  ring[15] stage=kern index=0 gid=1 out=5

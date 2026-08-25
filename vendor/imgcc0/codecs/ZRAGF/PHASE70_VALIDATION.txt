@@ -1,0 +1,29 @@
+PHASE 70 VALIDATION
+
+Implemented:
+- Cache-first materialization for externally downloaded corpora via tools/fetch_phase70_corpora.py
+- Enhanced PNG/TIFF validation with structural parsers via tools/validate_phase70_png_tiff.py
+- Public runner phase70 with archive-cache/cache-only flow
+- Local locked phase70 corpus with two PNGs and two TIFFs
+
+Honest limitations in this container:
+- External corpus downloads were not executed here because the build container had no working network/DNS path for archive fetches.
+- The phase 70 fetcher, manifests, and tests were validated through cache-only materialization using locally prepared archives and files.
+
+Validation actually run:
+- Release build: zragflib + zragf_bench_phase70_public
+- Directed tests passed: native, wrappers, phase64 alloc/workspace, phase65 wrapper workspace, phase66 c89 smoke, phase70 materialize cached, phase70 locked corpora
+- Werror build: zragflib + zragf_bench_phase70_public + core directed executables
+- Werror directed tests passed for the same set
+- phase70 local runner generated:
+  * bench/results/phase70/phase70_corpus_lock.json
+  * bench/results/phase70/phase70_frozen_manifest.json
+  * bench/results/phase70/phase70_public.csv
+  * bench/results/phase70/phase70_public.md
+  * bench/results/phase70/phase70_png_tiff_validation.json
+  * bench/results/phase70/phase70_run_metadata.json
+
+Local validation highlights:
+- phase70 PNG/TIFF validation count: 4
+- phase70 PNG/TIFF validation failures: 0
+- Mixed locked smoke corpus still benchmarks successfully through zragf/zlib/libdeflate on the local bench harness.

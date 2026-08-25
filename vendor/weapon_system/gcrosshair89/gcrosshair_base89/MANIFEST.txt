@@ -1,0 +1,46 @@
+gcrosshair_base89 preset-pack-192-abi3-outline-vector-only-INI-recipes
+
+Core
+- include/gcrosshair89_types.h (ABI 3, synchronized with params/core)
+- include/gcrosshair_base89.h
+- include/gcrosshair_recipe89.h
+- src/gcrosshair_base89.c (catalog API bridge; no compiled preset tables)
+- src/gcrosshair_recipe89.c (fixed-capacity INI loader)
+- src/gcrosshair_recipe89_internal.h
+
+Recipe data
+- recipes/gcrosshair.ini (root)
+- recipes/lists/base192.ini (ordered stock catalog)
+- recipes/presets/*.ini (192 stock presets)
+- recipes/parts/abi3_defaults.ini (shared fragment)
+- recipes/assets/assets.ini (asset ID mapping)
+- recipes/examples/gcrosshair_modded.ini (stock + ID 192 extension example)
+- recipes/examples/parts/*.ini
+- recipes/examples/presets/*.ini
+- recipes/examples/lists/*.ini
+
+Documentation
+- RECIPE_SYSTEM.md
+- README.md
+- PRESET_CATALOG.csv / .md / .png
+- PRESET_DESIGN_NOTES.md
+- VECTOR_ONLY_MIGRATION.md
+- SHAPE_RENDER_CONTRACT.md
+- INTEGRACION_BLANK3D.md
+- VALIDATION.txt
+- CHANGELOG.md
+
+Examples/tests
+- examples/example_preset.c
+- examples/example_catalog.c
+- examples/example_abi3.c
+- examples/example_recipe_root.c
+- tests/test_base.c
+- tests/test_recipe_loader.c
+
+Build
+- Makefile
+- build_win32_mingw.bat
+
+Legacy assets
+- assets/*.tga

@@ -1,0 +1,7 @@
+system-zlib generated empty-final TIFF fixture:
+34c3c278b0cbbcb8fb92cf6b2da8005822a6767b2930d42e04d92c2fe309fd5e  verification/zragf_zlib_fix/empty_final_system_zlib.tif
+
+decoded PAM comparison:
+c9911d5d367559c13394170f43f6c7f2708bf364498ccc44acc49ced5f3e1d99  verification/zragf_zlib_fix/empty_final_old_zlib.pam
+c9911d5d367559c13394170f43f6c7f2708bf364498ccc44acc49ced5f3e1d99  verification/zragf_zlib_fix/empty_final_zragf.pam
+BYTE_EXACT_PASS

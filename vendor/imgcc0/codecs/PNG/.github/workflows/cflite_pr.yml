@@ -1,0 +1,37 @@
+name: clusterfuzzlite-pr
+
+on:
+  pull_request:
+    paths:
+      - '**.c'
+      - '**.h'
+      - 'fuzz/**'
+      - '.github/workflows/cflite_pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  fuzzing:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address, undefined, memory]
+    steps:
+      - uses: actions/checkout@v4
+      - id: build
+        name: Build fuzzers
+        uses: google/clusterfuzzlite/actions/build_fuzzers@v1
+        with:
+          language: c++
+          sanitizer: ${{ matrix.sanitizer }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run fuzzers
+        uses: google/clusterfuzzlite/actions/run_fuzzers@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          language: c++
+          fuzz-seconds: 600
+          mode: code-change
+          sanitizer: ${{ matrix.sanitizer }}

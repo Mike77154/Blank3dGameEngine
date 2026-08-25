@@ -1,0 +1,9 @@
+# phase 19 deflate-side fuzz helpers
+kw_raw="\x01"
+kw_zlib="\x78\x9c"
+kw_gzip="\x1f\x8b\x08"
+kw_sync="\x00\x00\xff\xff"
+kw_fixed="\xab\x5a\x0f\x00"
+kw_stored="\x01\x00\x00\xff\xff"
+kw_text="hello hello hello"
+kw_runs="AAAAAAAAAAAAAAAA"

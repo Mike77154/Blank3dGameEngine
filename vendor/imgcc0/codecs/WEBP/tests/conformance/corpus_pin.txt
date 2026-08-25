@@ -1,0 +1,7 @@
+# Official corpus pin for phase 7 conformance work
+# Source repo: https://chromium.googlesource.com/webm/libwebp-test-data/
+# Pinned branch head captured on 2026-03-13
+LIBWEBP_TEST_DATA_SHA=06ddd96e276c2c638a72d39d3c0f340afd61978c
+LIBWEBP_TEST_DATA_TREE=ad34fdedd181d149188ee46da769621b0e0466df
+ARCHIVE_URL=https://chromium.googlesource.com/webm/libwebp-test-data/+archive/06ddd96e276c2c638a72d39d3c0f340afd61978c.tar.gz
+NOTE=This pin freezes the official corpus snapshot used by the harness and manifests in this directory.

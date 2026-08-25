@@ -1,0 +1,8 @@
+bench/results/phase69/phase69_corpus_lock.json
+bench/results/phase69/phase69_frozen_manifest.json
+phase69 public bench rows=36 csv=bench/results/phase69/phase69_public.csv summary=bench/results/phase69/phase69_public.md
+bench/results/phase69/phase69_png_tiff_validation.json
+locking: /opt/pyvenv/bin/python tools/fetch_phase69_corpora.py --manifest bench/corpora/phase69_local_locked_manifest.json --root bench/corpora --lock-out bench/results/phase69/phase69_corpus_lock.json --freeze-manifest-out bench/results/phase69/phase69_frozen_manifest.json
+running: build/zragf_bench_phase69_public --csv bench/results/phase69/phase69_public.csv --summary bench/results/phase69/phase69_public.md --repeat 3 --warmup 1 --quick --no-builtins bench/corpora/local_phase69/alpha.txt bench/corpora/local_phase69/binary.bin bench/corpora/local_phase69/sprite_rgba.png bench/corpora/local_phase69/strip_gray.tiff
+validating: /opt/pyvenv/bin/python tools/validate_phase69_png_tiff.py --manifest bench/corpora/phase69_local_locked_manifest.json --root bench/corpora --json-out bench/results/phase69/phase69_png_tiff_validation.json
+metadata: bench/results/phase69/phase69_run_metadata.json

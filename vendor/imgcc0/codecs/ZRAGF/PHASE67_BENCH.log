@@ -1,0 +1,4 @@
+phase67 public bench rows=63 csv=bench/results/phase67/phase67_public.csv summary=bench/results/phase67/phase67_public.md
+running: build_phase67/zragf_bench_phase67_public --csv bench/results/phase67/phase67_public.csv --summary bench/results/phase67/phase67_public.md --repeat 2 --warmup 1
+csv   : bench/results/phase67/phase67_public.csv
+summary: bench/results/phase67/phase67_public.md

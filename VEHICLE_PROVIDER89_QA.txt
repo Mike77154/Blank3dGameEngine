@@ -1,0 +1,52 @@
+Vehicle System optional provider QA
+===================================
+
+Baseline: blank3d_v3_27_3_vehicle_system_split_phase1.zip
+
+Provider contract
+-----------------
+vehicleprovider89 standalone: PASS
+gvehicle89 provider dispatch: PASS
+Blank3D provider persistence/reset bridge: PASS
+
+Fallback parity (no provider connected)
+---------------------------------------
+demo_vehicle89.csv SHA-256:
+49b063ffdb17d70af6345d8b9a93f9e48dfee3880261eaf73b8d7c963ae694fd
+Matches Phase 1 baseline exactly.
+
+demo_multi_vehicle89.csv SHA-256:
+4bf3e70b482e001b3dec8b8fb8ba5922059fb8f149fd69f5fc700d6204fbb46e
+Matches Phase 1 baseline exactly.
+
+Vehicle / engine QA
+-------------------
+test-mount-vehicle: PASS
+test-vehicle-providers: PASS
+test-vehicle-system-split: PASS
+syntax-check: PASS
+
+Regression QA
+-------------
+Gatling geometry: PASS
+Shango/Homing reload: PASS
+Satellaborner/Telesearcher: PASS
+Flamethrower expandiblefire89: PASS
+Uzi pickup: PASS
+Generic health pickup: PASS
+Item/contact/weapon bridge: PASS
+Weapon modules: PASS
+
+Constraints audit
+-----------------
+New provider seam: no malloc/calloc/realloc/free calls.
+New provider seam: no float/double declarations.
+C89 pedantic + Werror provider tests: PASS.
+
+Design note
+-----------
+Provider seams are optional and capability-scoped. No Gamlib3D or VPhysics
+backend is forced on by default. External adapters may claim movement modules
+and/or physics phases and return HANDLED; DECLINED restores the internal
+fallback immediately. Vehicle-vs-vehicle pair collision remains on the
+existing gveh collision path in this phase to avoid accidental double solving.

@@ -1,0 +1,27 @@
+map /mnt/data/assets_sky/sky_night01/Materials/skybox/Sky_Night01FT.vmt -> face=+Z conv=Source6 FT/BK/LF/RT/UP/DN
+vmt basetexture: Skybox/Sky_Night01FT
+map /mnt/data/assets_sky/sky_night01/Materials/skybox/Sky_Night01BK.vmt -> face=-Z conv=Source6 FT/BK/LF/RT/UP/DN
+vmt basetexture: Skybox/Sky_Night01BK
+map /mnt/data/assets_sky/sky_night01/Materials/skybox/Sky_Night01LF.vmt -> face=-X conv=Source6 FT/BK/LF/RT/UP/DN
+vmt basetexture: Skybox/Sky_Night01LF
+map /mnt/data/assets_sky/sky_night01/Materials/skybox/Sky_Night01RT.vmt -> face=+X conv=Source6 FT/BK/LF/RT/UP/DN
+vmt basetexture: Skybox/Sky_Night01RT
+map /mnt/data/assets_sky/sky_night01/Materials/skybox/Sky_Night01UP.vmt -> face=+Y conv=Source6 FT/BK/LF/RT/UP/DN
+vmt basetexture: Skybox/Sky_Night01UP
+map /mnt/data/assets_sky/sky_night01/Materials/skybox/Sky_Night01DN.vmt -> face=-Y conv=Source6 FT/BK/LF/RT/UP/DN
+vmt basetexture: Skybox/Sky_Night01DN
+skip /mnt/data/assets_sky/sky_night01/Maps/Sky_Night01.vmf -> no sky face suffix
+vmf skyname: sky_night01
+map /mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/px.png -> face=+X conv=Axis6 px/nx/py/ny/pz/nz
+map /mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/nx.png -> face=-X conv=Axis6 px/nx/py/ny/pz/nz
+map /mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/py.png -> face=+Y conv=Axis6 px/nx/py/ny/pz/nz
+map /mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/ny.png -> face=-Y conv=Axis6 px/nx/py/ny/pz/nz
+map /mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/pz.png -> face=+Z conv=Axis6 px/nx/py/ny/pz/nz
+map /mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/nz.png -> face=-Z conv=Axis6 px/nx/py/ny/pz/nz
+complete mask: 0x3F present=6/6
+face +X source_suffix=RT axis_suffix=px present=1 path=/mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/px.png
+face -X source_suffix=LF axis_suffix=nx present=1 path=/mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/nx.png
+face +Y source_suffix=UP axis_suffix=py present=1 path=/mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/py.png
+face -Y source_suffix=DN axis_suffix=ny present=1 path=/mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/ny.png
+face +Z source_suffix=FT axis_suffix=pz present=1 path=/mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/pz.png
+face -Z source_suffix=BK axis_suffix=nz present=1 path=/mnt/data/assets_sky/sky_105/sky_105_cubemap_2k/nz.png

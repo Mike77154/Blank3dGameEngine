@@ -1,0 +1,31 @@
+detect: MUGEN ElecbyteFnt binary
+open-binary: ok features=0x00000200
+extract: pcx=3320 text=1026 comment=''
+open-text: ok glyphs=94 size=5x8 spacing=1,1 type=2
+sheet: 502x8 stride=502 format=1 palette=256
+sample-scale: 4 sample='!"#$%&'()*+,-./012
+3456789:;<=>?@ABC
+DEFGHIJKLMNOPQRS
+TUVWXYZ[\]^_`abcd
+efghijklmnopqrstuvwx
+yz{|}~
+!"#$%&'()*+,-./012
+3456789:;<=>?@ABC
+DEFGHIJKLMNOPQRS
+TUVWXYZ[\]^_`abcd
+efghijklmnopqrstuvwx
+yz{|}~
+!"#$%&'()*+,-./012
+3456789:;<=>?@ABC
+DEFGHIJKLMNOPQRS
+TUVWXYZ[\]^_`abcd
+efghijklmnopqrstuvwx
+yz{|}~
+!"#$%&'()*+,-./012
+3456789:;<=>?@ABC
+DEFGHIJKLMNOPQRS
+TUVWXYZ[\]^_`abcd
+efghijklmnopqrstuvwx
+yz{|}~
+'
+wrote: proof_mugen_fnt.png bytes=59788

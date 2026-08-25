@@ -1,5 +1,6 @@
 #include "blank3d_hud.h"
 #include "blank3d_numbar.h"
+#include "blank3d_weapon_modules.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -50,6 +51,117 @@ static void b3d_draw_line(void *user, int x1, int y1, int x2, int y2,
     glVertex2i(x1, hud->height - y1);
     glVertex2i(x2, hud->height - y2);
     glEnd();
+}
+
+static void b3d_draw_sprite(void *user, int sprite_id,
+                            int sx, int sy, int sw, int sh,
+                            int dx, int dy, int dw, int dh,
+                            unsigned long tint_rgba);
+
+static int b3d_iabs(int value)
+{
+    return value < 0 ? -value : value;
+}
+
+static void b3d_crosshair_line(void *user,
+                               int x0, int y0, int x1, int y1,
+                               int thickness_px,
+                               unsigned long rgba)
+{
+    int i;
+    int offset;
+    int dx;
+    int dy;
+    int left;
+    int top;
+    int length;
+
+    if (thickness_px < 1) thickness_px = 1;
+    if (thickness_px > 9) thickness_px = 9;
+
+    /* Preserve the exact old Blank3D one-pixel GL_LINES path.  This is the
+     * path used by the restored pistol recipes, so their raster appearance
+     * stays identical to the pre-gcrosshair HUD. */
+    if (thickness_px == 1) {
+        b3d_draw_line(user, x0, y0, x1, y1, rgba);
+        return;
+    }
+
+    /* Crosshair arms are normally axis aligned.  Filled quads give even and
+     * odd widths a stable, centered footprint; the old parallel-line loop
+     * biased even widths toward negative X/Y (for width 2: offsets -1,0). */
+    if (y0 == y1) {
+        left = x0 < x1 ? x0 : x1;
+        length = b3d_iabs(x1 - x0);
+        if (length < 1) length = 1;
+        top = y0 - (thickness_px / 2);
+        b3d_draw_rect(user, left, top, length, thickness_px, rgba);
+        return;
+    }
+    if (x0 == x1) {
+        top = y0 < y1 ? y0 : y1;
+        length = b3d_iabs(y1 - y0);
+        if (length < 1) length = 1;
+        left = x0 - (thickness_px / 2);
+        b3d_draw_rect(user, left, top, thickness_px, length, rgba);
+        return;
+    }
+
+    /* Diagonal/custom shapes keep a renderer-independent fallback.  Alternate
+     * offsets around the centerline instead of walking monotonically -N..0. */
+    dx = b3d_iabs(x1 - x0);
+    dy = b3d_iabs(y1 - y0);
+    for (i = 0; i < thickness_px; ++i) {
+        if (i == 0) offset = 0;
+        else if (i & 1) offset = (i + 1) / 2;
+        else offset = -(i / 2);
+        if (dx >= dy)
+            b3d_draw_line(user, x0, y0 + offset, x1, y1 + offset, rgba);
+        else
+            b3d_draw_line(user, x0 + offset, y0, x1 + offset, y1, rgba);
+    }
+}
+
+static void b3d_crosshair_dot(void *user,
+                              int center_x, int center_y,
+                              int diameter_px,
+                              unsigned long rgba)
+{
+    int half;
+    if (diameter_px < 1) diameter_px = 1;
+    half = diameter_px / 2;
+    b3d_draw_rect(user,
+                  center_x - half, center_y - half,
+                  diameter_px, diameter_px, rgba);
+}
+
+static void b3d_crosshair_image(void *user,
+                                int image_id,
+                                int x, int y,
+                                int width, int height,
+                                unsigned long tint_rgba)
+{
+    /* Zero source size means full decoded image.  Destination dimensions
+       remain controlled by the crosshair recipe. */
+    b3d_draw_sprite(user, image_id,
+                    0, 0, 0, 0,
+                    x, y, width, height,
+                    tint_rgba);
+}
+
+static void b3d_crosshair_bind_opengl_fallback(Blank3DHud *hud)
+{
+    GC89_DrawCallbacks primitives;
+    if (!hud || !hud->crosshair.initialized) return;
+    memset(&primitives, 0, sizeof(primitives));
+    primitives.draw_line = b3d_crosshair_line;
+    primitives.draw_dot = b3d_crosshair_dot;
+    primitives.draw_image = b3d_crosshair_image;
+
+    /* Keep the provider slot free for a future HUD/vector backend.  Blank3D's
+     * immediate-mode OpenGL primitives are the guaranteed local fallback. */
+    blank3d_crosshair_set_primitive_fallback(&hud->crosshair,
+                                              &primitives, hud);
 }
 
 static void b3d_draw_sprite(void *user, int sprite_id,
@@ -165,15 +277,28 @@ static void b3d_begin_2d(int width, int height)
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
+
+    /* HUD geometry is presentation-space data, not world geometry.  Do not
+       let GL_LIGHT0/GL_LIGHT1 (muzzle flashes, scene lights) illuminate or
+       tint GBar/NumBar/crosshair primitives.  Likewise start with texturing
+       disabled; sprite providers opt in around their own draws. */
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4ub(255U, 255U, 255U, 255U);
 }
 
 static void b3d_end_2d(void)
 {
+    /* Re-establish the engine's world baseline for the next render pass. */
+    glBindTexture(GL_TEXTURE_2D, 0U);
+    glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
+    glColor4ub(255U, 255U, 255U, 255U);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
@@ -271,6 +396,44 @@ static void b3d_draw_text5x7(Blank3DHud *hud,
     glEnd();
 }
 
+static int b3d_draw_text_runtime(Blank3DHud *hud,
+                                 int x, int y,
+                                 const char *text,
+                                 int pixel_size,
+                                 unsigned long rgba)
+{
+    const unsigned char *pixels;
+    int width;
+    int height;
+    if (!hud || !text || pixel_size <= 0) return 0;
+    if (!blank3d_text89_raster_rgba(hud->text, text, pixel_size, rgba,
+                                     &pixels, &width, &height)) return 0;
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glRasterPos2i(x, hud->height - y);
+    glPixelZoom(1.0f, -1.0f);
+    glDrawPixels((GLsizei)width, (GLsizei)height,
+                 GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glPixelZoom(1.0f, 1.0f);
+    return 1;
+}
+
+static void b3d_draw_text_provider(Blank3DHud *hud,
+                                   int x, int y,
+                                   const char *text,
+                                   int scale,
+                                   int gap,
+                                   unsigned long rgba)
+{
+    int pixel_size;
+    if (!hud || !text) return;
+    if (scale < 1) scale = 1;
+    pixel_size = hud->text ? hud->text->default_pixel_size * scale : 7 * scale;
+    if (pixel_size < 5) pixel_size = 5;
+    if (hud->text && blank3d_text89_is_raster_ready(hud->text) &&
+        b3d_draw_text_runtime(hud, x, y, text, pixel_size, rgba)) return;
+    b3d_draw_text5x7(hud, x, y, text, scale, gap, rgba);
+}
+
 static void b3d_text_append(char *dst, unsigned int cap, const char *src)
 {
     unsigned int at;
@@ -338,6 +501,18 @@ static void b3d_draw_counter(Blank3DHud *hud,
     count = (int)strlen(text);
     text_w = count > 0 ? count * (5 * scale + gap) - gap : 1;
     text_h = 7 * scale;
+    if (hud->text && blank3d_text89_is_raster_ready(hud->text)) {
+        int font_w;
+        int font_h;
+        int pixel_size;
+        pixel_size = hud->text ? hud->text->default_pixel_size * scale : 7 * scale;
+        if (pixel_size < 5) pixel_size = 5;
+        if (blank3d_text89_measure(hud->text, text, pixel_size,
+                                   &font_w, &font_h)) {
+            text_w = font_w + 6;
+            text_h = font_h + 4;
+        }
+    }
     blank3d_bighud_resolve_rect(node, hud->width, hud->height,
                                 text_w, text_h, &x, &y, &w, &h);
     if (node->counter_background)
@@ -356,11 +531,104 @@ static void b3d_draw_counter(Blank3DHud *hud,
                       node->counter_border_color);
     }
     if (node->counter_shadow)
-        b3d_draw_text5x7(hud, x + scale, y + scale, text,
-                         scale, gap, node->counter_shadow_color);
-    b3d_draw_text5x7(hud, x, y, text, scale, gap, node->counter_color);
+        b3d_draw_text_provider(hud, x + scale, y + scale, text,
+                               scale, gap, node->counter_shadow_color);
+    b3d_draw_text_provider(hud, x, y, text, scale, gap, node->counter_color);
     (void)w;
     (void)h;
+}
+
+static int b3d_hud_text_contains_ammo(const char *text)
+{
+    const char *p;
+    if (!text) return 0;
+    for (p = text; p[0] && p[1] && p[2] && p[3]; ++p) {
+        if ((p[0] == 'a' || p[0] == 'A') &&
+            (p[1] == 'm' || p[1] == 'M') &&
+            (p[2] == 'm' || p[2] == 'M') &&
+            (p[3] == 'o' || p[3] == 'O')) return 1;
+    }
+    return 0;
+}
+
+static int b3d_hud_node_uses_gproj_ammo(const Blank3DBigHudNode *node)
+{
+    if (!node || node->type != B3D_BIGHUD_NODE_BAR) return 0;
+    if (node->unit_renderer_kind == B3D_BIGHUD_UNIT_RENDERER_GPROJ_AMMO)
+        return 1;
+    /* Backward compatibility for older ammo recipes that predate the
+     * explicit vector_ammo_indicator directive. */
+    return b3d_hud_text_contains_ammo(node->name);
+}
+
+static void b3d_hud_attach_ammo_renderer(Blank3DHud *hud,
+                                         Blank3DBigHudNode *node)
+{
+    if (!hud || !node || node->type != B3D_BIGHUD_NODE_BAR) return;
+    if (b3d_hud_node_uses_gproj_ammo(node))
+        blank3d_gproj_ammo_gbar_attach(&hud->ammo_gbar, &node->meter);
+}
+
+static void b3d_draw_active_reload_visualizer(Blank3DHud *hud,
+                                               Blank3DBigHudNode *node,
+                                               const Blank3DBigHudTelemetry *telemetry)
+{
+    long elapsed;
+    long duration;
+    long window_start;
+    long window_end;
+    long result;
+    int x0;
+    int x1;
+    int y;
+    int cursor_x;
+    int ws;
+    int we;
+    GBar89_Rect cursor_slot;
+    unsigned long track_color;
+    unsigned long window_color;
+    unsigned long cursor_fill;
+    unsigned long cursor_outline;
+    if (!hud || !node || !telemetry || !node->active_reload_visualizer) return;
+    if (telemetry->numbar_layer_count <= 0L) return;
+
+    elapsed = telemetry->numbar_phase;
+    window_start = telemetry->numbar_overlay;
+    result = telemetry->numbar_layer_size;
+    duration = telemetry->numbar_overlay_max;
+    window_end = telemetry->numbar_mid;
+    if (duration < 1L) duration = 1L;
+    if (elapsed < 0L) elapsed = 0L;
+    if (elapsed > duration) elapsed = duration;
+    if (window_start < 0L) window_start = 0L;
+    if (window_end < window_start) window_end = window_start;
+    if (window_end > duration) window_end = duration;
+
+    x0 = node->meter.rect.x + node->meter.rect.w / 3;
+    x1 = node->meter.rect.x + node->meter.rect.w - 3;
+    if (x1 <= x0) return;
+    y = node->meter.rect.y + node->meter.rect.h + 4;
+    track_color = 0x747C86B0UL;
+    window_color = result > 0L ? 0xB7E7C6E8UL :
+                   (result < 0L ? 0xE6A8A8E8UL : 0xDDE4EAE0UL);
+    cursor_fill = result > 0L ? 0xEAFBF0FFUL :
+                  (result < 0L ? 0xF5DADAFFUL : 0xF4F6F8FFUL);
+    cursor_outline = 0x11161CE8UL;
+
+    b3d_draw_rect(hud, x0, y, x1 - x0 + 1, 2, track_color);
+    ws = x0 + (int)((window_start * (long)(x1 - x0)) / duration);
+    we = x0 + (int)((window_end * (long)(x1 - x0)) / duration);
+    if (we <= ws) we = ws + 1;
+    b3d_draw_rect(hud, ws, y - 1, we - ws + 1, 4, window_color);
+
+    cursor_x = x0 + (int)((elapsed * (long)(x1 - x0)) / duration);
+    cursor_slot.x = cursor_x - 4;
+    cursor_slot.y = y - 10;
+    cursor_slot.w = 9;
+    cursor_slot.h = 15;
+    blank3d_gproj_ammo_gbar_render(&hud->ammo_gbar, &hud->render_ops,
+                                   &cursor_slot, cursor_fill,
+                                   cursor_outline, 100);
 }
 
 static void b3d_draw_bighud(Blank3DHud *hud,
@@ -389,7 +657,10 @@ static void b3d_draw_bighud(Blank3DHud *hud,
             node->meter.rect.y = y;
             node->meter.rect.w = w;
             node->meter.rect.h = h;
+            b3d_hud_attach_ammo_renderer(hud, node);
             gbar89_draw(&node->meter, &hud->render_ops);
+            if (b3d_hud_node_uses_gproj_ammo(node))
+                b3d_draw_active_reload_visualizer(hud, node, telemetry);
         } else if (node->type == B3D_BIGHUD_NODE_ECG) {
             source_w = (B3D_ECG_WIDTH * node->ecg_scale_x_q8) / 256;
             source_h = (B3D_ECG_HEIGHT * node->ecg_scale_y_q8) / 256;
@@ -540,6 +811,8 @@ void blank3d_hud_draw_layout_scaled(Blank3DHud *hud,
             temp.meter.rect.w = temp.width;
             temp.meter.rect.h = temp.height;
             b3d_scale_meter_pixels(&temp.meter, scale_x_q8, scale_y_q8);
+            if (b3d_hud_node_uses_gproj_ammo(&temp))
+                blank3d_gproj_ammo_gbar_attach(&hud->ammo_gbar, &temp.meter);
             gbar89_draw(&temp.meter, &hud->render_ops);
         } else if (node->type == B3D_BIGHUD_NODE_COUNTER) {
             temp.counter_scale = b3d_scale_px(node->counter_scale, average_q8);
@@ -747,6 +1020,22 @@ static void b3d_scope_preset_emit(void *user, const gsp89_draw_cmd *cmd)
         b3d_draw_circle_outline(hud, cmd->x0, cmd->y0,
                                 cmd->radius_x, cmd->radius_y, rgba);
         break;
+    case GSP89_CMD_SPRITE:
+        if (hud->sprite_provider.draw_uv) {
+            hud->sprite_provider.draw_uv(hud->sprite_provider.user,
+                                         cmd->asset_id,
+                                         cmd->uv_x0, cmd->uv_y0,
+                                         cmd->uv_x1, cmd->uv_y1,
+                                         cmd->x0, cmd->y0,
+                                         cmd->x1 - cmd->x0,
+                                         cmd->y1 - cmd->y0, rgba);
+        } else {
+            b3d_draw_sprite(hud, cmd->asset_id, 0, 0, 0, 0,
+                            cmd->x0, cmd->y0,
+                            cmd->x1 - cmd->x0,
+                            cmd->y1 - cmd->y0, rgba);
+        }
+        break;
     case GSP89_CMD_SCOPE_MASK:
         break;
     default:
@@ -764,10 +1053,31 @@ void blank3d_hud_set_sprite_provider(Blank3DHud *hud,
     else memset(&hud->sprite_provider, 0, sizeof(hud->sprite_provider));
 }
 
+void blank3d_hud_set_weapon_ammo_id(Blank3DHud *hud, int ammo_id)
+{
+    if (!hud) return;
+    blank3d_gproj_ammo_gbar_set_ammo(&hud->ammo_gbar, ammo_id);
+}
+
+void blank3d_hud_set_text_provider(Blank3DHud *hud, Blank3DText89 *text)
+{
+    if (!hud) return;
+    hud->text = text;
+}
+
+const char *blank3d_hud_text_status(const Blank3DHud *hud)
+{
+    if (!hud) return "HUD unavailable";
+    if (!hud->text)
+        return "HUD text provider not attached; legacy 5x7 fallback active";
+    return blank3d_text89_status(hud->text);
+}
+
 void blank3d_hud_init(Blank3DHud *hud)
 {
     if (!hud) return;
     memset(hud, 0, sizeof(*hud));
+    blank3d_gproj_ammo_gbar_init(&hud->ammo_gbar);
 
     memset(&hud->render_ops, 0, sizeof(hud->render_ops));
     hud->render_ops.user = hud;
@@ -777,6 +1087,17 @@ void blank3d_hud_init(Blank3DHud *hud)
     hud->render_ops.draw_triangles = b3d_draw_triangles;
     hud->render_ops.push_clip = b3d_push_clip;
     hud->render_ops.pop_clip = b3d_pop_clip;
+
+    {
+        if (blank3d_crosshair_init(&hud->crosshair,
+                                   B3D_CROSSHAIR_DEFAULT_ROOT)) {
+            b3d_crosshair_bind_opengl_fallback(hud);
+        } else {
+            fprintf(stderr, "[gcrosshair89] %s\n",
+                    gcb89_recipe_last_error());
+        }
+        hud->crosshair_weapon_id = -1;
+    }
 
     blank3d_ecg_vitals_init(&hud->ecg);
     if (!blank3d_bighud_load(&hud->layout, &hud->ecg,
@@ -794,7 +1115,9 @@ void blank3d_hud_draw(Blank3DHud *hud,
                       int clip,
                       int clip_capacity,
                       int reserve,
+                      int weapon_id,
                       int first_person,
+                      int aiming,
                       int muzzle_flash,
                       int threat_level,
                       unsigned int damage_flash_ms,
@@ -803,7 +1126,8 @@ void blank3d_hud_draw(Blank3DHud *hud,
 {
     int cx;
     int cy;
-    int gap;
+    const Blank3DWeaponModules *weapon_modules;
+    const char *crosshair_preset;
     Blank3DBigHudTelemetry telemetry;
     if (!hud || width <= 0 || height <= 0) return;
     hud->width = width;
@@ -831,12 +1155,46 @@ void blank3d_hud_draw(Blank3DHud *hud,
 
     cx = width / 2;
     cy = height / 2;
-    gap = first_person ? 5 : 8;
+    if (hud->crosshair.initialized) {
+        const char *active_crosshair;
+        weapon_modules = blank3d_weapon_modules_get(weapon_id);
+        crosshair_preset = weapon_modules &&
+                           weapon_modules->crosshair_preset_name[0]
+                         ? weapon_modules->crosshair_preset_name
+                         : "blank3d_default";
+        if (weapon_modules && first_person &&
+            weapon_modules->crosshair_preset_first_person[0])
+            crosshair_preset =
+                weapon_modules->crosshair_preset_first_person;
+        else if (weapon_modules && !first_person &&
+                 weapon_modules->crosshair_preset_third_person[0])
+            crosshair_preset =
+                weapon_modules->crosshair_preset_third_person;
+
+        active_crosshair = blank3d_crosshair_preset_name(&hud->crosshair);
+        if (hud->crosshair_weapon_id != weapon_id ||
+            strcmp(active_crosshair, crosshair_preset) != 0) {
+            if (!blank3d_crosshair_set_preset_name(&hud->crosshair,
+                                                    crosshair_preset)) {
+                fprintf(stderr,
+                        "[gcrosshair89] unknown preset '%s' for weapon %d; "
+                        "using blank3d_default\n",
+                        crosshair_preset, weapon_id);
+                (void)blank3d_crosshair_set_preset_name(&hud->crosshair,
+                                                        "blank3d_default");
+            }
+            hud->crosshair_weapon_id = weapon_id;
+        }
+    }
     if (!sniper || !blank3d_sniper_is_scoped(sniper)) {
-        b3d_draw_line(hud, cx - 13, cy, cx - gap, cy, 0xFFFFFFFFUL);
-        b3d_draw_line(hud, cx + gap, cy, cx + 13, cy, 0xFFFFFFFFUL);
-        b3d_draw_line(hud, cx, cy - 13, cx, cy - gap, 0xFFFFFFFFUL);
-        b3d_draw_line(hud, cx, cy + gap, cx, cy + 13, 0xFFFFFFFFUL);
+        (void)blank3d_crosshair_draw(&hud->crosshair,
+                                     width, height,
+                                     aiming,
+                                     muzzle_flash,
+                                     0,
+                                     0L,
+                                     (unsigned long)(frame_ms > 0U
+                                                     ? frame_ms : 1U));
     }
     if (muzzle_flash) {
         b3d_draw_rect(hud, cx - 3, cy - 3, 6, 6, 0xFFD040D0UL);

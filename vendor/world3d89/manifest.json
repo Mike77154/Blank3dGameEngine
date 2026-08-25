@@ -1,0 +1,22 @@
+{
+  "name": "world3d89",
+  "version": "2.0.0",
+  "protocol": "c89-fixed-arena-world-manager",
+  "language": "C89 / gnu89",
+  "memory": "external arenas only; no malloc/free/realloc/heap ownership",
+  "math": "16.16 fixed-point only; no float/double",
+  "features": [
+    "static cell hash open addressing",
+    "handle generation recycling fix",
+    "cell-range AABB queries",
+    "streaming budgets per tick",
+    "streaming hysteresis",
+    "data layers, phase masks, difficulty masks",
+    "separated service bridge callbacks",
+    "additive cell descriptors",
+    "interior portal graph",
+    "HLOD/proxy asset references",
+    "debug telemetry emitters",
+    "minimal declarative descriptor parser"
+  ]
+}

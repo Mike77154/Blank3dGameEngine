@@ -1,0 +1,2 @@
+golden_presets=192 visual_byte_failures=0 command_byte_failures=0
+visual_corpus_fnv_old=12459162832947896641 visual_corpus_fnv_ini=12459162832947896641

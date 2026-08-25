@@ -1,0 +1,34 @@
+OK: heap allocation calls
+OK: floating types
+OK: explicit 64-bit integer types
+OK: LP64-sensitive explicit declarations
+OK: long integer literal suffixes
+OK: floating numeric literals
+ALL_TESTS_OK
+ROUNDTRIP_OK encoded=678 peak=274352
+OK peak=18888 capacity=67108864
+built /mnt/data/png_full_restored/PNG_c89_fixed89_full/differential/out/test_differential_libpng
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/valid_rgba.png
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/valid_gray.png
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/valid_text_iccp.png
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/valid_unknown.png
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/valid_palette_meta.png
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/valid_largeish.png
+MATCH-REJECT /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/bad_crc.png ref=reject ours=-4
+MATCH-REJECT /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/truncated.png ref=reject ours=-1
+MATCH-REJECT /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/huge_ihdr.png ref=reject ours=-8
+MATCH-REJECT /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/out_of_order.png ref=reject ours=-1
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/too_many_unknownish.png
+MATCH-REJECT /mnt/data/png_full_restored/PNG_c89_fixed89_full/fuzz/corpus/png_fuzz_decode_full/large_chunk_header.png ref=reject ours=-11
+MATCH /mnt/data/png_full_restored/PNG_c89_fixed89_full/test_adam7_iccp.png
+DIFF_OK
+PASS png_fuzz_decode_full
+PASS png_fuzz_decode_incremental
+PASS png_fuzz_apng_decode
+PASS png_fuzz_encode_png
+PASS png_fuzz_encode_apng
+PASS png_fuzz_unknown_chunks
+PASS png_fuzz_convert_formats
+PASS png_fuzz_adam7
+PASS png_fuzz_metadata
+ALL_LOCAL_C89_PROTOCOL_TESTS_OK

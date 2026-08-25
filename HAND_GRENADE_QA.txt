@@ -1,0 +1,13 @@
+Blank3D v3.26.3 hand grenade integration QA
+
+PASS: ghandgrenade3d89 vendored under weapon_system
+PASS: projectile mesh 10 builds pineapple_classic at game LOD
+PASS: weapon id 10 is separate from grenade launcher id 6
+PASS: ammo hand_grenades (id 9) is separate from grenades_40mm (id 5)
+PASS: gravity/bounce physical projectile path
+PASS: explosion registration includes hand grenade
+PASS: projectile mesh provider tests
+PASS: weapon module tests
+PASS: configuration tests
+PASS: player physical projectile camera aim test
+PASS: complete C89 syntax-check

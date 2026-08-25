@@ -1,0 +1,33 @@
+Blank3D v3.25.5 PLAYER CAMERA RAY QA
+====================================
+
+ARCHITECTURE
+PASS  Player linear small arms bypass persistent physical projectile gameplay.
+PASS  FPS ray begins at camera and follows camera forward.
+PASS  TPS/OTS camera ray selects reticle target.
+PASS  TPS/OTS muzzle ray blocks near cover before selected target.
+PASS  Cosmetic tracer has no movement, collision, radius or damage.
+PASS  Grenade, rocket and Bolt3D remain physical.
+PASS  NPC event path is unchanged.
+
+CAMERA MODES
+PASS  TPS is centered orbit without shoulder offset.
+PASS  OTS applies shoulder offset explicitly.
+PASS  FPS remains first-person.
+PASS  V cycles TPS -> OTS -> FPS -> TPS.
+
+AUTOMATED TESTS
+PASS  make test-player-camera-fire-ray
+PASS  make test-cameranaku-provider
+PASS  make test-automatic-fire-frame-lock
+PASS  make test-universal-weapon-aim
+PASS  make test-shotgun-runtime
+PASS  make test-aim-convergence
+PASS  make test-collision
+PASS  make syntax-check
+PASS  make audit
+
+RUNTIME LIMITATION
+NOT RUN  Win32 graphical validation with MSYS2/MinGW32.
+The required manual stress test is forward/strafe movement + continuous yaw
+rotation + sustained machine-gun/Gatling fire in TPS, OTS and FPS.

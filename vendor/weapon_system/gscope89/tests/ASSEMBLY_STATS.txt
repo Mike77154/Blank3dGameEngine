@@ -1,0 +1,7 @@
+formal_presets=192
+assembled_presets=192
+geometry_components=192
+shared_fragments=21
+presets_using_shared_geometry=54
+serialized_shape_sections=2781
+runtime_shape_count=3953

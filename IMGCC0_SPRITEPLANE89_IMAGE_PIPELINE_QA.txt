@@ -1,0 +1,63 @@
+Blank3D imgcc0 + SpritePlane89 image pipeline QA
+================================================
+
+Vendored libraries
+------------------
+PASS  imgcc0 static archive build (C89 pedantic-errors)
+PASS  imgcc0 protocol-audit
+      166 active C/header files scanned
+      no dynamic-allocation calls
+      no floating types
+      no explicit 64-bit integer types
+      no C99 line comments
+PASS  imgcc0 strict sample regression
+      JPG, TGA, QOI, WEBP, TIFF, GIF frames, animated WEBP frames
+      13 byte-identical frame outputs
+PASS  imgcc0 adapter regression
+      PNG RGBA8, PNG Adam7, APNG, DDS DXT5/BC5, BMP, PCX
+      9 byte-identical canonical outputs
+PASS  PSD adapter regression
+      24/24 byte-identical canonical outputs
+PASS  ZRAGF zlib image compatibility regression
+PASS  TIFF + ZRAGF tests
+PASS  SpritePlane89 strict C89/Werror demo
+
+Blank3D integration
+-------------------
+PASS  test-image-stack
+      existing ring.tga -> imgcc0 -> RGBA8 upload provider -> SpritePlane89
+      64x64 image
+      repeated load uploads once
+      200 transient same-image spawns reuse one atlas frame
+PASS  test-muzzle-image-pipeline
+      weapon INI -> muzzle image recipe -> image registry -> SpritePlane89
+      path/size/lifetime/blend/billboard verified
+PASS  test-crosshair-image-hybrid
+      image mode emits image primitive without vector lines
+      hybrid mode emits both raster image and vector lines
+PASS  test-crosshair-runtime (legacy/vector regression)
+PASS  test-sniper-stack (vector scope regression)
+PASS  test-weapon-ini
+PASS  test-buster-morethanone
+PASS  test-gatling-geometry-stack
+PASS  test-vehicle-ini-yard
+PASS  test-languages
+PASS  full syntax-check
+
+Architecture checks
+-------------------
+- imgcc0 is the file decoder; it owns no renderer.
+- SpritePlane89 is generic world-plane/billboard geometry; it owns no image decoder.
+- Weapon muzzle image is a temporary SpritePlane89 client of the existing muzzle event.
+- HUD/BigHUD use the optional image provider; vector primitives remain unchanged.
+- GCrosshair89 retains vector/image/hybrid modes.
+- GScope89 retains vector commands and now routes raster GSP89_CMD_SPRITE through the HUD image provider.
+- SpritePlane89 lower-case API is namespaced sprpl89_* in the Blank3D vendored copy to avoid collision with shotpumpkin89's unrelated sp89_* ABI.
+- No ChatGPT-generated image asset is used by this change.
+
+Host adapter policy
+-------------------
+- Image registry capacity: 128.
+- Dynamic image IDs: 20000..32000.
+- Current host max decoded dimensions: 1024x1024.
+- Current host uploads the first decoded frame as a static texture. The full imgcc0 animated/multipage vendor remains intact; animation playback is not wired into this adapter yet.

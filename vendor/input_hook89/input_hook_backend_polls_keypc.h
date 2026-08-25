@@ -25,7 +25,7 @@ extern "C" {
 #include <stddef.h> /* size_t */
 
 #include "input_hook.h"
-#include "polls/key_pc.h" /* key_pc_code, KEY_PC_COUNT */
+#include "key_pc.h" /* key_pc_code, KEY_PC_COUNT */
 
 /* ============================================================
    1) Minimal API that describes a polls backend instance

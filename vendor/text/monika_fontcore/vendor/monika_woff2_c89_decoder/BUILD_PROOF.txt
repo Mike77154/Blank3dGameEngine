@@ -1,0 +1,24 @@
+Build proof generated in sandbox for v3_hmtx_transform.
+
+Commands executed:
+
+  make clean
+  make check
+  make check-brotli
+
+Observed output:
+
+  PASS core copy-brotli synthetic WOFF2
+  PASS hmtx transform v1 synthetic WOFF2
+  ok: 388 bytes -> 868 bytes, tables=10
+  ok: 388 bytes -> 888 bytes, tables=10
+
+Compiler flags used by Makefile:
+
+  -std=c89 -Wall -Wextra -pedantic -Iinclude
+
+Notes:
+
+  - Core decoder and hmtx/glyf/loca reverse transforms use caller-owned/static buffers only.
+  - No malloc/free/realloc/calloc are used by the core.
+  - The optional Google Brotli adapter uses a fixed arena allocator provided through BrotliDecoderCreateInstance.

@@ -68,6 +68,10 @@ int main(void)
     if (meshes[5].vertex_count < 40U) return 6;  /* real 40 mm mesh */
     if (meshes[6].vertex_count < 100U) return 7; /* real RPG mesh */
     if (meshes[8].vertex_count < 80U) return 11; /* primitive stone */
+    if (meshes[9].vertex_count < 120U) return 12; /* hand grenade mesh */
+    if (meshes[11].vertex_count < 100U) return 13; /* homing tandem rocket */
+    if (meshes[12].vertex_count > 32U || meshes[12].index_count > 48U)
+        return 14; /* intentionally tiny low-poly flame cube */
     for (i = 0; i < B3D_CASING_MESH_COUNT; ++i) {
         if (!blank3d_casing_mesh_build(
                 i + 1, &casing_meshes[i], casing_vertices[i],

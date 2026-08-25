@@ -1,0 +1,20 @@
+3DKin-GF v0.1.0 build verification
+==================================
+
+Native GCC C89 -Werror: all tests passed
+Native Clang C89 -Werror: all tests passed
+ASan + UBSan: all tests passed
+Heap API scan: no heap API calls
+Numeric type scan: no float, double, or long long types
+32-bit ELF object: ELF 32-bit LSB relocatable, Intel i386, version 1 (SYSV), not stripped
+32-bit Windows object: Intel i386 COFF object file, not stripped, 5 sections, symbol offset=0x420b, 61 symbols, 1st section name ".text", 2nd section name ".data"
+Windows core unresolved symbols: none
+
+Commands used
+-------------
+cc/clang -std=c89 -pedantic -Wall -Wextra -Werror
+cc -m32 -ffreestanding ... -c src/gk3d.c
+clang -target i686-pc-windows-gnu -ffreestanding ... -c src/gk3d.c
+
+The prebuilt MinGW32 archive is in:
+prebuilt/mingw32/libgk3d.a

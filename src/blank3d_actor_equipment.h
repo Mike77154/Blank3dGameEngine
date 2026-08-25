@@ -4,13 +4,14 @@
 #include "blank3d_attachment.h"
 #include "blank3d_mechanical_weapon.h"
 #include "blank3d_weapon_presentation.h"
+#include "equipment_system89.h"
 #include "gweapon89.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define B3D_EQUIPMENT_MAX_ACTORS 40
+#define B3D_EQUIPMENT_MAX_ACTORS EQ89_MAX_ACTORS
 #define B3D_EQUIPMENT_OBJECT_BASE 20000
 
 #define B3D_EQUIPMENT_ACTOR_GENERIC 0
@@ -18,27 +19,16 @@ extern "C" {
 #define B3D_EQUIPMENT_ACTOR_ENEMY   2
 #define B3D_EQUIPMENT_ACTOR_ALLY    3
 
-typedef struct Blank3DActorEquipmentInstanceTag {
-    int used;
-    int actor_id;
-    int actor_kind;
-    int object_id;
-    int weapon_id;
-    int model_id;
-    int attached;
-    int visible;
-    int last_result;
-    char socket_name[GATTACH89_NAME_LEN];
-    char attachment_name[GATTACH89_NAME_LEN];
-    char model_name[B3D_WPRES_NAME_CAP];
-    Blank3DMechanicalWeapon animator;
-} Blank3DActorEquipmentInstance;
+#define B3D_EQUIPMENT_EVENT_FIRE 1
+
+typedef EQ89_Instance Blank3DActorEquipmentInstance;
 
 typedef struct Blank3DActorEquipmentSystemTag {
+    EQ89_System core;
     Blank3DAttachmentWorld *attachments;
     const Blank3DWeaponPresentationRegistry *presentations;
-    Blank3DActorEquipmentInstance instances[B3D_EQUIPMENT_MAX_ACTORS];
-    int count;
+    GWP89_Manager *weapon_manager;
+    Blank3DMechanicalWeapon animators[B3D_EQUIPMENT_MAX_ACTORS];
     int initialized;
     int last_result;
     char status[192];
@@ -81,6 +71,9 @@ Blank3DActorEquipmentInstance *blank3d_actor_equipment_find(
     int actor_id);
 const Blank3DActorEquipmentInstance *blank3d_actor_equipment_find_const(
     const Blank3DActorEquipmentSystem *equipment,
+    int actor_id);
+Blank3DMechanicalWeapon *blank3d_actor_equipment_animator(
+    Blank3DActorEquipmentSystem *equipment,
     int actor_id);
 int blank3d_actor_equipment_packet_count(
     const Blank3DActorEquipmentSystem *equipment,

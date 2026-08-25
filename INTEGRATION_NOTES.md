@@ -233,3 +233,83 @@ Every recipe may select bullet, tracer, heavy or arc trail profiles. Projectiles
 attach to a fixed Aoi Trail3D89 slot, emit Q8.8 temporal points as they move, and
 build renderer-facing ribbon triangles. When all trail slots are occupied, the
 adapter recycles them round-robin and detaches the old bullet mapping safely.
+
+## v3.25.5 — Player camera ray authority and camera split
+
+Player linear small arms now resolve gameplay through
+`blank3d_player_fire_ray_resolve()`. FPS uses one camera ray. TPS and OTS use a
+camera selection ray followed by a muzzle obstruction ray. Damage is applied
+immediately and the runtime emits only a 48 ms cosmetic segment. NPC weapons,
+grenades, rockets and Bolt3D continue through the inherited physical projectile
+path.
+
+CameraNaku now exposes separate centered TPS, shoulder-offset OTS and FPS modes.
+`V` cycles TPS -> OTS -> FPS. See `PLAYER_CAMERA_RAY_AUTHORITY.md` and
+`TPS_OTS_CAMERA_SPLIT.md`.
+
+
+## v3.26.0 — catálogo de cámaras por archivos INI
+
+- `src/blank3d_camera_profiles.c/.h` examina `config/cameras/*.ini` con un
+  catálogo fijo de hasta 16 perfiles.
+- `blank3d_cameranaku` ya selecciona índices/IDs dinámicos en lugar de una
+  enumeración cerrada TPS/FPS/OTS.
+- `V` recorre todos los perfiles habilitados; `camera_profile <id>` permite
+  seleccionarlos desde scripting.
+- `config/blank3d.toml` sólo define `profile_dir` y `start_profile`; cada cámara
+  conserva sus propios rig, offset, lens, smoothing, render y política de aim.
+- La ruta se aplica sólo al jugador. No se tocó el weapon manager de NPC.
+- Véase `CAMERA_INI_CATALOG.md` y `tests/test_camera_profile_catalog.c`.
+
+
+## v3.26.1 — visualización separada del raycast del jugador
+
+El raycast de cámara/muzzle queda reservado para impacto y daño. El renderer
+recibe un proyectil cosmético móvil con mesh y Aoi Trail3D. La línea amarilla
+completa origen-impacto dejó de dibujarse para el jugador; sólo existe un
+segmento corto previous/current como fallback si no puede asignarse un trail.
+NPCs y proyectiles físicos no cambiaron.
+
+
+## v3.26.2 — target de cámara para proyectiles físicos del jugador
+
+- `blank3d_player_projectile_aim_prepare()` selecciona el target mediante el
+  mismo raycast autoritativo de FPS/TPS/OTS usado por las armas hitscan.
+- Lanzagranadas, rocket launcher y resortera nacen en el origen físico real y
+  dejan de usar el plano cercano de convergencia del zeroing antiguo.
+- Rocket usa `normalize(target - origin)`; granada y Bolt3D aplican después su
+  compensación de gravedad.
+- La integración se ejecuta sólo cuando `actor_id == B3D_PLAYER_ACTOR_ID`; los
+  NPC conservan el weapon-manager path anterior.
+- Véase `PLAYER_PHYSICAL_PROJECTILE_AIM.md` y
+  `tests/test_player_physical_projectile_aim.c`.
+
+## Gatling geometric muzzle composition (bullet*89)
+
+The Gatling profile now composes `bulletspin89 -> bulletcircle89 -> bulletinline89` before `gprojectilespawn89`. Spin state is per actor/weapon, the ring origin is fixed-point CORDIC geometry, and the displaced projectile converges to the same aim target. See `GATLING_BULLET_GEOMETRY_VENDORS.md`.
+
+## gvehicle89 Vehicle System split — phase 1
+
+The gvehicle facade now delegates deterministic movement/physics to subvendors under
+`vendor/gvehicle89/vendor/`: vehiclephysics89, carmovement89, tankmovement89,
+watermovement89, airmovement89, rotorcraftmovement89 and spacemovement89.
+Motorcyclemovement89 and busmovement89 are explicit phase-1 specialization seams that
+currently delegate to carmovement89 and are not dispatched until dedicated profile/tag
+semantics are authored.
+
+The split is behavior-preserving: old/new vehicle and multi-vehicle demo CSV output is
+byte-identical. Mount/occupancy authority remains gvehpos89 + 3d_mounting_system89.
+
+## imgcc0 + SpritePlane89 image pipeline
+
+Blank3D now vendors imgcc0 and SpritePlane89. imgcc0 is the decode authority; SpritePlane89 is a
+generic world-plane/billboard renderer input. Weapon muzzle images are only one temporary client.
+HUD/BigHUD sprites, GCrosshair image/hybrid modes, and GScope raster commands share the decoded
+image registry while all previous vector paths remain available. See
+`IMGCC0_SPRITEPLANE89_IMAGE_PIPELINE.md`.
+
+## gskybox89 common image pipeline
+
+`gskybox89` is vendored as a renderer-agnostic sky core. Blank3D resolves face
+requests through AssetRoute89 and decodes/uploads them through the shared
+Blank3DImageAssets/imgcc0 pipeline. See `GSKYBOX89_IMGCC0_INTEGRATION.md`.

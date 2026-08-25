@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a reproducible bug in the PCX library or its governance tooling.
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please include enough detail to reproduce the issue.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Library/release version
+      placeholder: 1.8.0
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - parse
+        - decode
+        - encode
+        - release tooling
+        - rulesets/governance
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproducer
+      description: Steps, sample file notes, or commands to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true

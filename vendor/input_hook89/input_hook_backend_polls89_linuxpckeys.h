@@ -1,0 +1,11 @@
+#ifndef INPUT_HOOK_BACKEND_POLLS89_LINUXPCKEYS_H
+#define INPUT_HOOK_BACKEND_POLLS89_LINUXPCKEYS_H
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "input_hook_backend_polls89.h"
+const ihk_polls89_key_api *ihk_polls89_api_linuxpckeys(void);
+#ifdef __cplusplus
+}
+#endif
+#endif

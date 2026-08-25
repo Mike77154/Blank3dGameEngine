@@ -1,0 +1,44 @@
+Blank3D Flamethrower FireLoop Billboard QA
+===========================================
+
+SOURCE
+  FireLoop1 128x128 / 50 frames                    PASS
+  Atlas size 1024x896                              PASS
+  50 source cells pixel-identical in atlas         PASS
+  Source transparency preserved                    PASS
+
+RUNTIME
+  imgcc0 PNG decode                                PASS
+  atlas dimensions 1024x896                       PASS
+  transparent atlas corner                         PASS
+  opaque/hot first-frame center                    PASS
+  frame index always 0..49                         PASS
+  atlas row/column bounds                          PASS
+  per-projectile phase variation                   PASS
+  growth follows expandiblefire89 mesh scale       PASS
+  heat tint/glow fades with projectile age         PASS
+
+MECHANICS
+  expandiblefire89 vendor test                     PASS
+  ID14 INI -> expandiblefire89 stack               PASS
+  physical box remains collision truth             PASS
+  atlas failure keeps procedural cube fallback     PASS (code path)
+
+RENDER INTEGRATION
+  camera-facing basis = active camera right/up     PASS (syntax/integration)
+  outer glow + body + hot-core layering            PASS (code path)
+  GL_LIGHT2 stream-light path                      PASS (syntax/integration)
+  half-pixel atlas UV guard                        PASS (code path)
+  render state restored after billboard pass       PASS (code path)
+
+REGRESSION
+  casing VPhysics rebound/damping/sleep            PASS
+  imgcc0 -> image registry -> SpritePlane89        PASS
+  weapon muzzle image pipeline                     PASS
+  whole-engine C89 syntax-check                    PASS
+
+PROTOCOL
+  billboard phase/growth module malloc/free        0
+  billboard phase/growth module float/double       0
+  billboard phase/growth module explicit 64-bit    0
+  OpenGL floating conversion remains renderer-only

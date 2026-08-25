@@ -7,8 +7,12 @@ extern "C" {
 
 #include <stddef.h>
 
-#include "polls/key_pc.h"
-#include "polls/polls_scanner_iface.h"
+#include "key_pc.h"
+#include "polls_scanner_iface.h"
+#include "input_keys89.h"
+
+#define LINUXPCKEYS_MAX_BUTTONS 64
+#define LINUXPCKEYS_KEY_STATE_WORDS 32
 
 /* Backend de teclado PC para Linux (evdev). */
 
@@ -16,7 +20,7 @@ typedef struct linuxpckeys_backend {
     key_pc_context key_ctx;
 
     /* bindings: botón lógico -> tecla física (KEY_PC_*) */
-    key_pc_code *button_keys;
+    key_pc_code button_keys[LINUXPCKEYS_MAX_BUTTONS];
     int          button_capacity;
 
     /* Scanner enchufable (NO builtin) */
@@ -27,8 +31,8 @@ typedef struct linuxpckeys_backend {
     int fd;
 
     /* snapshot de teclas (EVIOCGKEY). Se refresca en linuxpckeys_backend_update(). */
-    unsigned long *key_state;
-    int            key_state_words;
+    unsigned long key_state[LINUXPCKEYS_KEY_STATE_WORDS];
+    int           key_state_words;
 } linuxpckeys_backend;
 
 /* Inicializa el backend y abre un dispositivo de teclado (auto-detect).
@@ -55,6 +59,8 @@ void linuxpckeys_backend_update(linuxpckeys_backend *kb);
 int  linuxpckeys_button_hold(const linuxpckeys_backend *kb, int button_index);
 int  linuxpckeys_button_pressed(const linuxpckeys_backend *kb, int button_index);
 int  linuxpckeys_button_released(const linuxpckeys_backend *kb, int button_index);
+int  linuxpckeys_input_key_down(const linuxpckeys_backend *kb, input_key89 key);
+int  linuxpckeys_bind_input_key89(linuxpckeys_backend *kb, int button_index, input_key89 key);
 
 #ifdef __cplusplus
 }

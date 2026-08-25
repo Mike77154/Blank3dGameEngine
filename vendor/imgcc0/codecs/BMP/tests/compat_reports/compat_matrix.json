@@ -1,0 +1,359 @@
+{
+  "executed": 6,
+  "passed": 6,
+  "results": [
+    {
+      "id": "generated-indexed2",
+      "path": "generated_indexed2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "generated",
+        "2bpp"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/generated_indexed2.bmp",
+      "origin": "generated",
+      "status": "ran",
+      "cli_returncode": 0,
+      "observed": {
+        "path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/generated_indexed2.bmp",
+        "size": 78,
+        "parse_ok": true,
+        "parse_status": "BMP_OK",
+        "decode_ok": true,
+        "decode_status": "BMP_OK",
+        "dib_type": "BMP_DIB_INFO",
+        "compression": "BMP_COMP_RGB",
+        "width": 5,
+        "height": 2,
+        "bpp": 2,
+        "warning_mask": 0
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "generated-os2v2-64",
+      "path": "generated_os2v2_64.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "generated",
+        "os2-v2",
+        "64-byte-dib"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/generated_os2v2_64.bmp",
+      "origin": "generated",
+      "status": "ran",
+      "cli_returncode": 0,
+      "observed": {
+        "path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/generated_os2v2_64.bmp",
+        "size": 102,
+        "parse_ok": true,
+        "parse_status": "BMP_OK",
+        "decode_ok": true,
+        "decode_status": "BMP_OK",
+        "dib_type": "BMP_DIB_OS2V2",
+        "compression": "BMP_COMP_RGB",
+        "width": 4,
+        "height": 2,
+        "bpp": 8,
+        "warning_mask": 0
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "generated-invalid-topdown-rle8",
+      "path": "invalid_topdown_rle8.bmp",
+      "expected": {
+        "parse_ok": false
+      },
+      "tags": [
+        "generated",
+        "bad",
+        "top-down",
+        "rle-invalid"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/invalid_topdown_rle8.bmp",
+      "origin": "generated",
+      "status": "ran",
+      "cli_returncode": 0,
+      "observed": {
+        "path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/invalid_topdown_rle8.bmp",
+        "size": 58,
+        "parse_ok": false,
+        "parse_status": "BMP_ERR_FORMAT",
+        "decode_ok": false,
+        "decode_status": "BMP_ERR_ARGUMENT",
+        "dib_type": null,
+        "compression": null,
+        "width": null,
+        "height": null,
+        "bpp": null,
+        "warning_mask": 0
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "generated-payload-png",
+      "path": "payload_png.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "generated",
+        "embedded-png"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/payload_png.bmp",
+      "origin": "generated",
+      "status": "ran",
+      "cli_returncode": 0,
+      "observed": {
+        "path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/payload_png.bmp",
+        "size": 70,
+        "parse_ok": true,
+        "parse_status": "BMP_OK",
+        "decode_ok": false,
+        "decode_status": "BMP_ERR_UNSUPPORTED",
+        "dib_type": "BMP_DIB_INFO",
+        "compression": "BMP_COMP_PNG",
+        "width": 3,
+        "height": 2,
+        "bpp": 0,
+        "warning_mask": 128
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "generated-payload-jpeg",
+      "path": "payload_jpeg_round3.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "generated",
+        "embedded-jpeg"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/payload_jpeg_round3.bmp",
+      "origin": "generated",
+      "status": "ran",
+      "cli_returncode": 0,
+      "observed": {
+        "path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/payload_jpeg_round3.bmp",
+        "size": 64,
+        "parse_ok": true,
+        "parse_status": "BMP_OK",
+        "decode_ok": false,
+        "decode_status": "BMP_ERR_UNSUPPORTED",
+        "dib_type": "BMP_DIB_INFO",
+        "compression": "BMP_COMP_JPEG",
+        "width": 3,
+        "height": 2,
+        "bpp": 0,
+        "warning_mask": 128
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "generated-valid-rgb24",
+      "path": "valid_rgb24.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "generated",
+        "baseline"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/valid_rgb24.bmp",
+      "origin": "generated",
+      "status": "ran",
+      "cli_returncode": 0,
+      "observed": {
+        "path": "/mnt/data/BMP_C89_FIXED_FULL/tests/generated_corpus/valid_rgb24.bmp",
+        "size": 58,
+        "parse_ok": true,
+        "parse_status": "BMP_OK",
+        "decode_ok": true,
+        "decode_status": "BMP_OK",
+        "dib_type": "BMP_DIB_INFO",
+        "compression": "BMP_COMP_RGB",
+        "width": 1,
+        "height": 1,
+        "bpp": 24,
+        "warning_mask": 0
+      },
+      "matches_expectation": true
+    },
+    {
+      "id": "pal2",
+      "source": "bmpsuite",
+      "relative_path": "q/pal2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "2bpp",
+        "indexed"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/pal2.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "pal8os2",
+      "source": "bmpsuite",
+      "relative_path": "g/pal8os2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "good",
+        "os2-v1"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/g/pal8os2.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "pal8os2v2",
+      "source": "bmpsuite",
+      "relative_path": "q/pal8os2v2.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "os2-v2",
+        "64-byte-dib"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/pal8os2v2.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "pal8os2v2-16",
+      "source": "bmpsuite",
+      "relative_path": "q/pal8os2v2-16.bmp",
+      "expected": {
+        "parse_ok": false
+      },
+      "tags": [
+        "questionable",
+        "os2-v2",
+        "truncated-header"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/pal8os2v2-16.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "rgb32h52",
+      "source": "bmpsuite",
+      "relative_path": "q/rgb32h52.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "dib-v2",
+        "52-byte-header"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/rgb32h52.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "rgba32h56",
+      "source": "bmpsuite",
+      "relative_path": "q/rgba32h56.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "questionable",
+        "dib-v3",
+        "56-byte-header",
+        "alpha"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/rgba32h56.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "pal8rle",
+      "source": "bmpsuite",
+      "relative_path": "g/pal8rle.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": true
+      },
+      "tags": [
+        "good",
+        "rle8"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/g/pal8rle.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "rgb24png",
+      "source": "bmpsuite",
+      "relative_path": "q/rgb24png.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "questionable",
+        "embedded-png"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/rgb24png.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "rgb24jpeg",
+      "source": "bmpsuite",
+      "relative_path": "q/rgb24jpeg.bmp",
+      "expected": {
+        "parse_ok": true,
+        "decode_ok": false
+      },
+      "tags": [
+        "questionable",
+        "embedded-jpeg"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/q/rgb24jpeg.bmp",
+      "origin": "external",
+      "status": "missing"
+    },
+    {
+      "id": "rletopdown",
+      "source": "bmpsuite",
+      "relative_path": "b/rletopdown.bmp",
+      "expected": {
+        "parse_ok": false
+      },
+      "tags": [
+        "bad",
+        "top-down",
+        "rle-invalid"
+      ],
+      "resolved_path": "/mnt/data/BMP_C89_FIXED_FULL/tests/external_corpus/downloaded/bmpsuite/b/rletopdown.bmp",
+      "origin": "external",
+      "status": "missing"
+    }
+  ]
+}

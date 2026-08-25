@@ -1,0 +1,5 @@
+frame=idle scale_x1000=1000
+frame=20ms scale_x1000=1114
+frame=35ms scale_x1000=1140
+frame=70ms scale_x1000=1117
+frame=120ms scale_x1000=1000

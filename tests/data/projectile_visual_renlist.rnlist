@@ -1,0 +1,9 @@
+image projectile burn:
+    source sequence
+    billboard view
+    blend add
+    fps 25
+    "fire_atlas"
+    frame "muzzle_flash" for 55
+    "fire_atlas"
+    repeat

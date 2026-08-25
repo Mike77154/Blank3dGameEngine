@@ -1,0 +1,14 @@
+Blank3D v3.27.3 visual authority regression QA
+
+CAUSE 1: GWP89_EVENT_MUZZLE_REQUEST wrote g.muzzle_flash_ms for every actor.
+FIX 1: MUZZLE_REQUEST is world presentation only; FIRE_ACCEPTED owns local HUD fire timer.
+
+CAUSE 2: skybox rendered after opaque world geometry.
+FIX 2: skybox renders after camera setup and before world opaque geometry.
+
+PASS: test-visual-feedback-authority89
+PASS: test-crosshair-runtime
+PASS: test-weapon-ini
+PASS: test-skybox-recipes89
+PASS: test-gskybox89-imgcc0
+PASS: whole-engine syntax-check

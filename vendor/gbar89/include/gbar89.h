@@ -270,6 +270,13 @@ typedef struct GBar89_RenderOps {
     void (*pop_clip)(void *user);
 } GBar89_RenderOps;
 
+typedef void (*GBar89_UnitRenderFn)(void *user,
+                                    const GBar89_RenderOps *ops,
+                                    const GBar89_Rect *slot,
+                                    unsigned long fill_rgba,
+                                    unsigned long outline_rgba,
+                                    int scale_percent);
+
 typedef struct GBar89_Command {
     int type;
     int sprite_id;
@@ -458,6 +465,8 @@ typedef struct GBar89_Meter {
     int unit_count;
     int unit_padding;
     int unit_scale_percent;
+    void *unit_renderer_user;
+    GBar89_UnitRenderFn unit_renderer;
 } GBar89_Meter;
 
 /* Fixed-point helpers. */
@@ -537,6 +546,9 @@ void gbar89_set_unit_vector(GBar89_Meter *meter,
                             int point_count, int closed, int filled,
                             int unit_count, int padding,
                             int scale_percent);
+void gbar89_set_unit_renderer(GBar89_Meter *meter,
+                              GBar89_UnitRenderFn renderer,
+                              void *user);
 
 /* States. */
 void gbar89_set_state(GBar89_Meter *meter, int state);

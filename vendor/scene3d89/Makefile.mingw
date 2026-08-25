@@ -1,0 +1,19 @@
+CC=gcc
+CFLAGS=-std=c89 -Wall -Wextra -pedantic -Iinclude
+SRC=src/sm3d_scene.c src/sm3d_scene_bridge.c src/sm3d_arena.c
+
+all: demo test test-v2
+
+demo:
+	$(CC) $(CFLAGS) $(SRC) demo/demo_scene3d89.c -o demo_scene3d89.exe
+
+test:
+	$(CC) $(CFLAGS) $(SRC) tests/test_scene3d89.c -o test_scene3d89.exe
+	./test_scene3d89.exe
+
+test-v2:
+	$(CC) $(CFLAGS) $(SRC) tests/test_scene3d89_v2.c -o test_scene3d89_v2.exe
+	./test_scene3d89_v2.exe
+
+clean:
+	rm -f demo_scene3d89.exe test_scene3d89.exe test_scene3d89_v2.exe demo_scene3d89 test_scene3d89 test_scene3d89_v2

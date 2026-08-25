@@ -1,5 +1,6 @@
 #include "blank3d_npc_inventory.h"
 #include "blank3d_weapon_ini.h"
+#include "blank3d_weapon_host_io.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -21,6 +22,7 @@ int main(void)
     int result;
 
     gwp89_init(&manager);
+    (void)blank3d_weapon_host_io_bind(&manager);
     loaded = blank3d_weapon_ini_load_manifest(&manager,
         "tests/data/npc_custom/weapons.ini", status, sizeof(status));
     if (loaded != 2 || manager.weapon_count != 2) {

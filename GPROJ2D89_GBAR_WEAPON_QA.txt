@@ -1,0 +1,21 @@
+GProj2D89 -> Weapon System -> GBar integration QA
+=================================================
+
+PASS  GProj2D89 v1.0.1 vendored under vendor/weapon_system/gproj2d89.
+PASS  gweapon89 remains source of truth for ammo_id, clip and capacity.
+PASS  blank3d_systems_ammo_id exposes equipped ammo identity read-only.
+PASS  Blank3DGProjAmmoGBar maps weapon ammo IDs to GProj vector profiles.
+PASS  GBar89 supports optional external unit renderer without removing legacy unit_points.
+PASS  Ammo-named BigHUD/GBar nodes receive the GProj renderer automatically.
+PASS  GBar still owns filled/empty state, unit count, slot layout, padding and scale.
+PASS  Bridge compiles with -std=c89 -pedantic-errors -Wall -Wextra -Werror.
+PASS  Bridge/GProj source audit: no malloc/calloc/realloc/free/float/double/long long.
+PASS  Isolated bridge render test emitted triangle fills and vector outlines.
+PASS  make test-gbar-v04-bighud.
+PASS  make test-hud-world-light-isolation89.
+PASS  make syntax-check.
+
+Runtime flow:
+  gweapon89 -> blank3d_systems_ammo_id()/clip() -> HUD
+             -> Blank3DGProjAmmoGBar -> GProj2D89 geometry
+             -> GBar89 unit slots/fill -> HUD RenderOps

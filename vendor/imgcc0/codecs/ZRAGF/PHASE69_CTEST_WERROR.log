@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /tmp/phase69/build_werror
+Test project /tmp/phase69/build_werror
+    Start 68: zragf_test_phase69_locked_corpora
+1/1 Test #68: zragf_test_phase69_locked_corpora ...   Passed    5.30 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   5.31 sec

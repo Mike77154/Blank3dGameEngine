@@ -1,0 +1,45 @@
+gcrosshair89 provider/runtime validation
+=======================================
+
+Build mode:
+  -std=c89 -pedantic -Wall -Wextra -Werror
+
+Validated modules:
+  gcrosshair_core89
+    test_core: OK
+    test_abi3_shapes: OK
+    test_outline: OK
+
+  gcrosshair_params89
+    test_params: OK
+    test_shapes: OK
+
+  gcrosshair_base89
+    test_base: OK (192 presets)
+    test_recipe_loader: OK (192 INI presets)
+    test_recipe_io_provider: OK
+
+  gcrosshair_provider89
+    vector provider accepts: OK
+    vector provider declines -> internal core fallback: OK
+    primitive provider/fallback routing: OK
+    HUD viewport/anchor routing: OK
+    asset provider routing: OK
+    semantic preset metadata: OK
+    bundled RGBA line/dot raster fallback: OK
+
+  gcrosshair_runtime89
+    preset -> style -> resolve -> provider route: OK
+    bundled primitive plug-and-play path: OK
+    semantic delegation of legacy stub preset: OK
+
+Memory/numeric constraints:
+  New provider89/runtime89 C/H contain no malloc/realloc/calloc/free,
+  no float and no double. Caller-owned/static storage only.
+
+Compatibility note:
+  The original vector-only source itself contains 44 semantic vector stubs
+  whose normal low-level ABI3 geometry emits zero primitives. They were not
+  silently altered. Provider ABI 2 exposes preset semantic ID/name/category
+  so an external vector/HUD provider can distinguish and implement them.
+  See LEGACY_SEMANTIC_STUBS.md.

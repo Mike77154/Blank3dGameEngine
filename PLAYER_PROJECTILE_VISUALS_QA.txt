@@ -1,0 +1,19 @@
+Blank3D v3.26.1 — PLAYER PROJECTILE VISUALS QA
+================================================
+PASS: player hitscan authority ray remains gameplay-only
+PASS: full yellow origin-to-impact segment removed from player rendering
+PASS: cosmetic player projectile mesh is visible
+PASS: cosmetic projectile moves from visual muzzle to resolved impact
+PASS: configured Aoi Trail3D profile is attached and emitted
+PASS: pale previous-to-current fallback trace only when trail pool is unavailable
+PASS: cosmetic projectile has zero damage and no collision sweep
+PASS: NPC projectile path unchanged
+PASS: grenade, rocket and Bolt3D physical paths unchanged
+PASS: player camera ray authority regression
+PASS: projectile mesh provider regression
+PASS: Aoi Trail3D regression
+PASS: camera catalogue/Cameranaku regressions
+PASS: automatic-fire, aim convergence and shotgun regressions
+PASS: complete active C89 syntax check
+PASS: allocator audit
+NOT RUN: graphical Win32/OpenGL run in this environment

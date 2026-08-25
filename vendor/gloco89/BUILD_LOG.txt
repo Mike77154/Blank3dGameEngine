@@ -1,0 +1,32 @@
+Build command used:
+
+make clean && make
+
+Compiler flags:
+
+-ansi -pedantic -Wall -Wextra -Iinclude
+
+Result:
+
+Compiled libgloco89.a and demo_gloco89 successfully in the sandbox.
+
+Provider-mode update validation:
+
+- Strict compile: -std=c89 -pedantic-errors -Wall -Wextra -Werror -O2 -Iinclude
+- Legacy demo output compared byte-for-byte with the original package: identical.
+- Provider demo compiled and executed successfully.
+- Legacy GLOCO_WorldProbeFn retained as fallback.
+- No heap allocation or floating-point types introduced.
+
+
+Engine-ready v0.2 validation:
+
+- GLOCO_MAX_ACTORS / GLOCO_MAX_PROFILES configurable by build defines.
+- StatsProvider validated with external stamina authority and internal fallback.
+- speed_override validated.
+- HARD_STOP rising-edge latch validated (one event while held, re-arms on release).
+- Blank3D adapter validated with Thing/Actor slot binding, NumSys stamina, VarRuntime live profiles,
+  MovementBaseVerbs, GAutomotion desired movement, VerticalAxis, Collision/VPhysics provider boundaries,
+  special-motion suspension and host Transform authority.
+- Win32-safe Q12 fraction multiply used by the horizontal collision correction path.
+- Strict C89/Werror tests and allocator/libm symbol audit passed.

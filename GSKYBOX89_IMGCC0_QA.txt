@@ -1,0 +1,27 @@
+gskybox89 + imgcc0 integration QA
+=================================
+
+Upstream gskybox89 strict C89 build/check: PASS
+Upstream vendor byte-tree preservation: PASS
+AssetRoute89 logical-name resolution: PASS
+Six-face imgcc0 decode: PASS
+  +X PNG: PASS
+  -X progressive JPEG: PASS
+  +Y BMP: PASS
+  -Y TGA: PASS
+  +Z PCX: PASS
+  -Z TIFF: PASS
+Blank3D common image registry upload mock: PASS
+OpenGL adapter strict C89 syntax/warning gate: PASS
+Portable bridge strict C89 syntax/warning gate: PASS
+Whole-engine syntax-check: PASS
+Existing image stack regression: PASS
+Muzzle image pipeline regression: PASS
+ProjectileVisual2D89 bridge regression: PASS
+Five projectile sprite modes regression: PASS
+Previous Blank3D paths missing: 0
+
+Known boundary:
+- Sky faces currently inherit Blank3DImageAssets' 1024x1024 maximum decoded
+  dimension and fixed common image scratch/file capacities.
+- gskybox89 remains format-agnostic; formats are determined by imgcc0.

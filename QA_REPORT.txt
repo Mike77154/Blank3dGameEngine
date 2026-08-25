@@ -1,3 +1,36 @@
+Blank3D v3.26.1 — PLAYER PROJECTILE VISUALS
+================================================
+PASS: player authority ray hidden from player rendering
+PASS: visible cosmetic projectile mesh + Aoi Trail3D
+PASS: short moving fallback trace, never full yellow hitscan line
+PASS: zero damage/collision on cosmetic projectile
+PASS: NPC and physical projectile paths remain isolated
+PASS: selected camera/weapon/trail regressions
+PASS: C89 syntax and allocator audit
+NOT RUN: graphical Win32 build/run in this environment
+
+Blank3D v3.26.0 — CAMERA INI CATALOG
+======================================
+PASS: one independent INI per camera profile
+PASS: add-only discovery verified with a fourth camera
+PASS: TPS Centred, OTS and FPS remain independent
+PASS: ordered V-cycle and selection by profile ID
+PASS: profile directory/start profile loaded from blank3d.toml
+PASS: NPC camera/weapon path remains isolated
+PASS: automatic-fire and player-ray regressions
+PASS: C89 syntax and allocator audit
+NOT RUN: graphical Win32 build/run in this environment
+
+Blank3D v3.25.5 — PLAYER CAMERA RAY / TPS-OTS SPLIT
+======================================================
+PASS: player-only camera ray authority (FPS/TPS/OTS)
+PASS: TPS muzzle obstruction validation
+PASS: cosmetic tracer has no gameplay physics
+PASS: NPC projectile path remains isolated
+PASS: centered TPS and explicit OTS provider modes
+PASS: C89 syntax and allocator audit
+NOT RUN: Win32 graphical stress test in this environment
+
 Blank3D v3.25.4 QA REPORT
 =========================
 

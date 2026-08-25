@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "required_status_checks": [
+    "merge-gate",
+    "analyze (c-cpp)"
+  ]
+}

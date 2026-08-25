@@ -1,0 +1,33 @@
+SHANGO + HOMING RELOAD QA
+=========================
+
+PASS  test-special-reload
+      Shango: fire -> clip 0 -> reload -> clip 1/reserve 5 -> second fire
+      Homing: fire -> clip 0 -> reload -> clip 1/reserve 5 -> second fire
+      Shango trigger_latched returns to 0.
+
+PASS  test-config
+      ammo_shango_cells=6
+      ammo_homing_rockets=6
+      ammo_fuel=360
+
+PASS  test-weapon-ini
+      weapon registry loads with corrected Shango fire_mode.
+
+PASS  test-sattele-stack
+      Satellaborner89/Telesearcher89 composition remains intact.
+
+PASS  test-flamethrower-stack
+      ID14/expandiblefire89 stack remains intact.
+
+PASS  test-item-contact-blank3d
+      item/contact/weapon integration remains intact.
+
+PASS  syntax-check
+      complete source set passes portable Win32/OpenGL syntax shim.
+
+KNOWN BASELINE ISSUE
+--------------------
+`make test-core` exits 42 in both the input baseline and this worktree because
+`tests/test_systems.c` contains stale weapon-cycle expectations from before the
+starting loadout was expanded with later weapon IDs. It is not a reload regression.

@@ -35,43 +35,16 @@ static void b3d_compact_name(const char *source, char *out, int capacity)
     out[j] = '\0';
 }
 
-key_pc_code blank3d_input_key_from_name(const char *name)
+input_key89 blank3d_input_key_from_name(const char *name)
 {
-    key_pc_code key;
-    char wanted[64];
-    char candidate[64];
-    int i;
-    if (!name || !*name) return KEY_PC_NONE;
-    key = key_pc_from_name(name);
-    if (key != KEY_PC_NONE) return key;
-    b3d_compact_name(name, wanted, (int)sizeof(wanted));
-    for (i = 1; i < (int)KEY_PC_COUNT; ++i) {
-        const char *known;
-        known = key_pc_name((key_pc_code)i);
-        if (!known) continue;
-        b3d_compact_name(known, candidate, (int)sizeof(candidate));
-        if (strcmp(wanted, candidate) == 0) return (key_pc_code)i;
-    }
-    if (strcmp(wanted, "esc") == 0) return KEY_PC_ESCAPE;
-    if (strcmp(wanted, "return") == 0) return KEY_PC_ENTER;
-    if (strcmp(wanted, "pgup") == 0) return KEY_PC_PAGE_UP;
-    if (strcmp(wanted, "pgdn") == 0) return KEY_PC_PAGE_DOWN;
-    if (strcmp(wanted, "del") == 0) return KEY_PC_DELETE;
-    if (strcmp(wanted, "ins") == 0) return KEY_PC_INSERT;
-    if (strcmp(wanted, "leftshift") == 0) return KEY_PC_LSHIFT;
-    if (strcmp(wanted, "rightshift") == 0) return KEY_PC_RSHIFT;
-    if (strcmp(wanted, "leftctrl") == 0 ||
-        strcmp(wanted, "leftcontrol") == 0) return KEY_PC_LCTRL;
-    if (strcmp(wanted, "rightctrl") == 0 ||
-        strcmp(wanted, "rightcontrol") == 0) return KEY_PC_RCTRL;
-    if (strcmp(wanted, "leftalt") == 0) return KEY_PC_LALT;
-    if (strcmp(wanted, "rightalt") == 0) return KEY_PC_RALT;
-    return KEY_PC_NONE;
+    return input_keys89_from_name(name);
 }
 
-const char *blank3d_input_key_name(key_pc_code key)
+const char *blank3d_input_key_name(input_key89 key,
+                                   char *tmp,
+                                   unsigned int tmp_size)
 {
-    return key_pc_name(key);
+    return input_keys89_name(key, tmp, tmp_size);
 }
 
 static int b3d_mouse_index(const char *name)
@@ -126,12 +99,7 @@ void blank3d_input_init(Blank3DInput *input)
     int i;
     if (!input) return;
     memset(input, 0, sizeof(*input));
-#ifdef _WIN32
-    ihk_win32_async_backend_init(&input->win32_async);
-    ihk_win32_async_make_backend(&input->win32_async, &input->backend);
-#else
     b3d_make_zero_backend(&input->backend);
-#endif
     input_hook_init(&input->keyboard, &input->backend);
     for (i = 0; i < B3D_INPUT_KEY_BANKS; ++i) {
         (void)input_scanner_init(&input->key_banks[i], 0, 0);
@@ -251,12 +219,22 @@ void blank3d_input_shutdown(Blank3DInput *input)
     input->initialized = 0;
 }
 
+static int b3d_input_hid_usage_from_name(const char *control_name)
+{
+    input_key89 key;
+    unsigned int usage;
+    if (!control_name || !*control_name) return -1;
+    key = input_keys89_from_name(control_name);
+    if (!input_keys89_keyboard_usage(key, &usage)) return -1;
+    if (usage > 255U) return -1;
+    return (int)usage;
+}
+
 int blank3d_input_query(const Blank3DInput *input,
                         Blank3DInputState state,
                         const char *control_name)
 {
     int mouse;
-    key_pc_code key;
     int usage;
     if (!input || !control_name) return 0;
     mouse = b3d_mouse_index(control_name);
@@ -269,9 +247,8 @@ int blank3d_input_query(const Blank3DInput *input,
         if (state == B3D_INPUT_LONG_HOLD) return input->mouse_current[mouse];
         return 0;
     }
-    key = blank3d_input_key_from_name(control_name);
-    if (key == KEY_PC_NONE) return 0;
-    usage = (int)key;
+    usage = b3d_input_hid_usage_from_name(control_name);
+    if (usage < 0) return 0;
     return b3d_key_bank_query(input, state, usage);
 }
 

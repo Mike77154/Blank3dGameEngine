@@ -1,4 +1,5 @@
 #include "blank3d_actor_equipment.h"
+#include "blank3d_weapon_host_io.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +37,7 @@ int main(void)
     soq3d_pose player_socket;
     soq3d_pose gunner_socket;
     soq3d_pose ally_socket;
-    Blank3DActorEquipmentInstance *gunner_instance;
+    Blank3DMechanicalWeapon *gunner_animator;
     const Blank3DWeaponPresentation *machine_presentation;
     const nm89_geometry_packet *gunner_packet;
     const nm89_pose *action_pose;
@@ -45,8 +46,10 @@ int main(void)
     int machine_slot;
 
     blank3d_attachment_init(&attachments);
-    CHECK(blank3d_weapon_presentation_load_manifest(&presentations,
-        "config/weapons/weapons.ini", status, sizeof(status)) == 9,
+    gwp89_init(&manager);
+    (void)blank3d_weapon_host_io_bind(&manager);
+    CHECK(gweaponpresentation89_load_manifest(&manager, &presentations,
+        "config/weapons/weapons.ini", status, sizeof(status)) == 15,
         "presentation manifest should expose all weapon models");
     blank3d_actor_equipment_init(&equipment, &attachments, &presentations);
     CHECK(equipment.initialized, "equipment service should initialize");
@@ -77,7 +80,6 @@ int main(void)
         ALLY_ID, B3D_ATTACH89_SOCKET_WEAPON_R, &ally_socket),
         "ally carrier pose should publish");
 
-    gwp89_init(&manager);
     make_profile(&pistol, 1, "pistol", 700U);
     make_profile(&machine_gun, 2, "machine_gun", 900U);
     pistol_slot = gwp89_add_weapon(&manager, &pistol);
@@ -143,16 +145,16 @@ int main(void)
           machine_presentation->recoil_z == gwp89_fx_from_text("0.08"),
           "presentation values should remain Q20.12 until animator boundary");
 
-    gunner_instance = blank3d_actor_equipment_find(&equipment, GUNNER_ID);
-    CHECK(gunner_instance != 0, "gunner equipment instance should exist");
+    gunner_animator = blank3d_actor_equipment_animator(&equipment, GUNNER_ID);
+    CHECK(gunner_animator != 0, "gunner equipment animator should exist");
     blank3d_actor_equipment_trigger_fire(&equipment, GUNNER_ID, 2);
     CHECK(blank3d_actor_equipment_sync_actor(&equipment, &manager,
         GUNNER_ID, B3D_EQUIPMENT_ACTOR_ENEMY, 16U),
         "gunner fire event should tick animator");
     action_pose = blank3d_mechanical_weapon_part_pose(
-        &gunner_instance->animator, B3D_MECH89_PART_SLIDE);
+        gunner_animator, B3D_MECH89_PART_SLIDE);
     CHECK(action_pose != 0 && action_pose->resolved.move.z !=
-          (nm89_fx)(gunner_instance->animator.presentation.action_home_z * 16L),
+          (nm89_fx)(gunner_animator->presentation.action_home_z * 16L),
           "machine-gun mechanism should move after fire");
 
     CHECK(gwp89_equip_slot(&manager, GUNNER_ID, pistol_slot, 1) == GWP89_OK,

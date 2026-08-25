@@ -1,0 +1,102 @@
+--- a/include/psd89/psd89.h
++++ b/include/psd89/psd89.h
+@@ -76,6 +76,10 @@
+ 
+ #ifndef PSD89_MAX_COMPOSE_ROW_BYTES
+ #define PSD89_MAX_COMPOSE_ROW_BYTES 30000U
++#endif
++
++#ifndef PSD89_MAX_VECTOR_SEGMENTS
++#define PSD89_MAX_VECTOR_SEGMENTS 2048
+ #endif
+ 
+ #define PSD89_SIG_8BPS 0x38425053UL
+@@ -261,6 +265,10 @@
+     psd89_layer_mask_ref mask_ref;
+     psd89_layer_user_mask user_mask;
+     psd89_vector_mask vector_mask;
++    psd89_u8 layer_mask_global_present;
++    psd89_u8 layer_mask_global;
++    psd89_u8 vector_mask_global_present;
++    psd89_u8 vector_mask_global;
+     psd89_layer_blend_ranges_ref blend_ranges_ref;
+     psd89_u16 tag_count;
+     psd89_tag_ref tags[PSD89_MAX_TAG_BLOCKS_PER_LAYER];
+@@ -336,6 +344,77 @@
+                             psd89_u32 scratch_stride,
+                             const psd89_compose_options *opt);
+ 
++typedef struct psd89_vector_segment {
++    psd89_fx16 x0;
++    psd89_fx16 y0;
++    psd89_fx16 x1;
++    psd89_fx16 y1;
++} psd89_vector_segment;
++
++typedef struct psd89_vector_flatten_options {
++    psd89_fx16 flatness;
++    psd89_u16 max_depth;
++    int honor_handles;
++} psd89_vector_flatten_options;
++
++typedef struct psd89_vector_flatten_result {
++    psd89_u16 segment_count;
++    psd89_vector_segment segments[PSD89_MAX_VECTOR_SEGMENTS];
++} psd89_vector_flatten_result;
++
++enum {
++    PSD89_ZIP_DIAG_OK = 0,
++    PSD89_ZIP_DIAG_ZLIB_STATUS = -200,
++    PSD89_ZIP_DIAG_BAD_PLANAR_SIZE = -201,
++    PSD89_ZIP_DIAG_BAD_PREDICTED_SIZE = -202,
++    PSD89_ZIP_DIAG_STREAM_MISMATCH = -203
++};
++
++typedef struct psd89_zip_diag {
++    int code;
++    int zlib_status;
++    psd89_u16 compression;
++    psd89_u32 rows;
++    psd89_u32 cols;
++    psd89_u16 channels;
++    unsigned long compressed_bytes;
++    unsigned long decoded_bytes;
++    unsigned long expected_bytes;
++} psd89_zip_diag;
++
++void psd89_vector_flatten_options_init(psd89_vector_flatten_options *opt);
++void psd89_vector_flatten_result_init(psd89_vector_flatten_result *out);
++int psd89_vector_flatten_mask(psd89_u32 doc_width,
++                              psd89_u32 doc_height,
++                              const psd89_vector_mask *mask,
++                              const psd89_vector_flatten_options *opt,
++                              psd89_vector_flatten_result *out);
++int psd89_vector_contains_point_px(const psd89_vector_mask *mask,
++                                   const psd89_vector_flatten_result *flat,
++                                   psd89_s32 px,
++                                   psd89_s32 py);
++psd89_u8 psd89_vector_coverage_u8(const psd89_vector_mask *mask,
++                                  const psd89_vector_flatten_result *flat,
++                                  psd89_s32 px,
++                                  psd89_s32 py);
++
++int psd89_mask_global_bool_parse(const psd89_u8 raw[4], psd89_u8 *value);
++void psd89_mask_global_bool_write(psd89_u8 raw[4], psd89_u8 value);
++
++void psd89_zip_diag_init(psd89_zip_diag *diag);
++unsigned long psd89_zip_expected_planar_bytes(psd89_u32 rows,
++                                              psd89_u32 cols,
++                                              psd89_u16 channels);
++int psd89_zip_diag_check_planar(psd89_u16 compression,
++                                psd89_u32 rows,
++                                psd89_u32 cols,
++                                psd89_u16 channels,
++                                unsigned long compressed_bytes,
++                                unsigned long decoded_bytes,
++                                int zlib_status,
++                                psd89_zip_diag *diag);
++const char *psd89_zip_diag_string(int code);
++
+ int psd89_write(psd89_io *io, const psd89_doc *doc);
+ 
+ #ifdef __cplusplus

@@ -1,0 +1,60 @@
+HOWLUND WINDOW MAKER 89 - SANITIZATION REPORT
+==============================================
+
+Source: /mnt/data/hwnd_window.zip
+Source SHA-256: a1c1cb62179abdc6cbb1c5fc8a4fcc571ef5c3f60a530d47be67ca6ea3e30e63
+
+PUBLIC API
+----------
+Old namespace: HWND_* / hwnd_*
+New namespace: HOWM89_* / howm89_*
+Reason: HWND is a native Win32 window handle type and is no longer used by portable public API.
+
+PROTOCOL89
+----------
+Portable core:
+  malloc/calloc/realloc/free : 0
+  float/double               : 0
+  long long                  : 0
+  int64_t/uint64_t           : 0
+  stdint.h                   : 0
+  fixed-capacity windows     : YES (default 16)
+  Q16 opacity/scale          : YES
+
+Maintained built-in backend sources:
+  explicit heap APIs         : 0
+  C float/double keywords    : 0
+  explicit 64-bit types      : 0
+
+OS-native ABI types remain inside platform adapters only.
+
+ARCHITECTURE
+------------
+Portable core does not auto-detect or require an OS backend.
+User may register any HOWM89_BackendVTable + backend_user.
+Built-in backends are optional convenience modules.
+Default-backend auto selection is optional and OFF by default in CMake.
+
+BACKENDS PRESERVED
+------------------
+Windows 32/64  -> backends/win32
+Linux X11 32/64 -> backends/x11
+macOS family -> backends/cocoa
+Optional convenience selector -> backends/auto
+Historical per-bitness locations documented under backends/by_system_backend.
+
+RESPONSIBILITY CLEANUP
+----------------------
+Removed logical/internal render-size ownership from window library.
+HOWM89 creates/manages native windows only.
+Render resolution belongs to video configuration/provider layers.
+
+QA RUN
+------
+strict C89 core test                         PASS
+strict C89 X11 backend compile               PASS
+Protocol89 grep audit                        PASS
+CMake core-only build                        PASS
+CMake optional X11 backend build             PASS
+legacy public HWND-like names in core        0
+Windows/X11/Cocoa identifiers in public core 0

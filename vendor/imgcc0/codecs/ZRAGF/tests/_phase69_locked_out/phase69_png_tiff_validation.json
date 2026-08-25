@@ -1,0 +1,69 @@
+{
+  "phase": 69,
+  "count": 2,
+  "failures": 0,
+  "results": [
+    {
+      "path": "/mnt/data/ZRAGF_work/sanitized/bench/corpora/local_phase69/sprite_rgba.png",
+      "sha256": "a2f658b2b0c5e7198265112325f0af41300f0ad34d8f117e5f0fbd0f1c17aaae",
+      "suffix": ".png",
+      "ok": true,
+      "reason": "",
+      "readers": {
+        "pillow": {
+          "ok": true,
+          "format": "PNG",
+          "width": 8,
+          "height": 8,
+          "frames": 1,
+          "mode": "RGBA",
+          "pixel_sha256": "1c109ec9821223eb3ae970073eb292f8f41054728e8730f668e338aa690836c5"
+        },
+        "identify": {
+          "ok": true,
+          "format": "PNG",
+          "width": 8,
+          "height": 8,
+          "frames": 1
+        }
+      }
+    },
+    {
+      "path": "/mnt/data/ZRAGF_work/sanitized/bench/corpora/local_phase69/strip_gray.tiff",
+      "sha256": "283b7d1047b04d28cba50429b2cbd1345d6dc910b3dee46bef450851942e606e",
+      "suffix": ".tiff",
+      "ok": true,
+      "reason": "",
+      "readers": {
+        "pillow": {
+          "ok": true,
+          "format": "TIFF",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "mode": "L",
+          "pixel_sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880"
+        },
+        "tifffile": {
+          "ok": true,
+          "pages": 1,
+          "width": 16,
+          "height": 16,
+          "dtype": "uint8",
+          "shape": [
+            16,
+            16
+          ],
+          "pixel_sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880"
+        },
+        "identify": {
+          "ok": true,
+          "format": "TIFF",
+          "width": 16,
+          "height": 16,
+          "frames": 1
+        }
+      }
+    }
+  ]
+}

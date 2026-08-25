@@ -24,6 +24,9 @@ extern "C" {
 #define B3D_BIGHUD_COUNTER_VALUE 0
 #define B3D_BIGHUD_COUNTER_PAIR 1
 
+#define B3D_BIGHUD_UNIT_RENDERER_DEFAULT 0
+#define B3D_BIGHUD_UNIT_RENDERER_GPROJ_AMMO 1
+
 #define B3D_BIGHUD_ANCHOR_NONE BVH_ANCHOR_NONE
 #define B3D_BIGHUD_ANCHOR_TOP_LEFT BVH_ANCHOR_TOP_LEFT
 #define B3D_BIGHUD_ANCHOR_TOP_CENTER BVH_ANCHOR_TOP_CENTER
@@ -93,6 +96,8 @@ typedef struct Blank3DBigHudNodeTag {
     GBar89_Meter meter;
     GBar89_VectorPoint unit_points[GBAR89_MAX_VECTOR_POINTS];
     int unit_point_count;
+    int unit_renderer_kind;
+    int active_reload_visualizer;
     int radial_phase_speed_deg_per_sec;
     long radial_phase_accum_q16;
 

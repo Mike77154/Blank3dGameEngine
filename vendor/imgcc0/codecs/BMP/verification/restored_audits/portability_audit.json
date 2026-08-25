@@ -1,0 +1,125 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "configure preset linux-gcc-release",
+      "ok": true,
+      "details": "available configure presets: ['base', 'linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "build preset linux-gcc-release",
+      "ok": true,
+      "details": "available build presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "test preset linux-gcc-release",
+      "ok": true,
+      "details": "available test presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "configure preset linux-clang-release",
+      "ok": true,
+      "details": "available configure presets: ['base', 'linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "build preset linux-clang-release",
+      "ok": true,
+      "details": "available build presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "test preset linux-clang-release",
+      "ok": true,
+      "details": "available test presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "configure preset macos-clang-release",
+      "ok": true,
+      "details": "available configure presets: ['base', 'linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "build preset macos-clang-release",
+      "ok": true,
+      "details": "available build presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "test preset macos-clang-release",
+      "ok": true,
+      "details": "available test presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "configure preset windows-msvc-release",
+      "ok": true,
+      "details": "available configure presets: ['base', 'linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "build preset windows-msvc-release",
+      "ok": true,
+      "details": "available build presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "test preset windows-msvc-release",
+      "ok": true,
+      "details": "available test presets: ['linux-gcc-release', 'linux-clang-release', 'macos-clang-release', 'windows-msvc-release', 'windows-msvc-analyze']"
+    },
+    {
+      "name": "ci workflow portability job",
+      "ok": true,
+      "details": "expected portability-matrix job in .github/workflows/ci.yml"
+    },
+    {
+      "name": "ci matrix contains ubuntu-latest",
+      "ok": true,
+      "details": "runner token search"
+    },
+    {
+      "name": "ci matrix contains macos-latest",
+      "ok": true,
+      "details": "runner token search"
+    },
+    {
+      "name": "ci matrix contains windows-latest",
+      "ok": true,
+      "details": "runner token search"
+    },
+    {
+      "name": "ci references linux-gcc-release",
+      "ok": true,
+      "details": "preset token search"
+    },
+    {
+      "name": "ci references linux-clang-release",
+      "ok": true,
+      "details": "preset token search"
+    },
+    {
+      "name": "ci references macos-clang-release",
+      "ok": true,
+      "details": "preset token search"
+    },
+    {
+      "name": "ci references windows-msvc-release",
+      "ok": true,
+      "details": "preset token search"
+    },
+    {
+      "name": "CMake uses CTest",
+      "ok": true,
+      "details": "expected include(CTest)"
+    },
+    {
+      "name": "CMake enables Windows export-all-symbols",
+      "ok": true,
+      "details": "expected WINDOWS_EXPORT_ALL_SYMBOLS property or variable"
+    },
+    {
+      "name": "CMake sets MSVC runtime library",
+      "ok": true,
+      "details": "expected MSVC runtime property"
+    },
+    {
+      "name": "CMake sets MSVC /W4 /WX",
+      "ok": true,
+      "details": "expected /W4 and /WX in compile options"
+    }
+  ]
+}

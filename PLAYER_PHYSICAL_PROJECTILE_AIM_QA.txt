@@ -1,0 +1,19 @@
+Blank3D v3.26.2 player physical projectile camera aim QA
+=========================================================
+
+PASS: FPS empty-space target remains on full camera range
+PASS: TPS centred target remains on full camera range
+PASS: OTS target remains on full camera range
+PASS: old 32-unit physical zero plane is bypassed
+PASS: projectile direction is exactly physical-origin -> camera target
+PASS: TPS/OTS muzzle obstruction becomes the physical target
+PASS: grenade retains negative gravity and forward launch
+PASS: rocket remains linear and converges on center camera ray
+PASS: slingshot retains Bolt3D gravity and forward launch
+PASS: player-only integration; NPC event path unchanged
+PASS: C89 -Wall -Wextra -pedantic -Werror
+PASS: runner syntax-check
+PASS: active integration allocator audit
+
+Command:
+  make test-player-physical-projectile-aim

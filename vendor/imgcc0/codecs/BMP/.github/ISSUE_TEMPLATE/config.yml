@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security policy
+    url: ./SECURITY.md
+    about: Use the private security channel described in SECURITY.md for sensitive vulnerabilities.
+  - name: Support guide
+    url: ./SUPPORT.md
+    about: Check the support guide before opening a governance or usage issue.

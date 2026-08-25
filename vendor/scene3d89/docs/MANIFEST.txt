@@ -1,0 +1,18 @@
+name: scene3d89
+version: 1.1.0
+phase: phase2:scene_orchestration_manager
+language: C89 / gnu89
+memory: fixed arrays, no malloc/free/realloc/heap
+math: fixed-point 16.16, no float/double
+features:
+  - pure scene manager
+  - scene tree
+  - scene graph
+  - scene load/unload requests
+  - scene slots: persistent, level, room, overlay, world_cell
+  - scene dependency refs
+  - prefab/scene-template instancing
+  - portal-sector visibility hints
+  - dirty subtree traversal
+  - DAG semantic overlay
+  - optional text manifest reader

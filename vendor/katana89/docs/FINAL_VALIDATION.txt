@@ -1,0 +1,6 @@
+protocol check: PASS
+strict compile: PASS
+33 presets: PASS
+OBJ/MTL exports: 33/33
+degenerate triangles: 0
+NaN coordinates: 0

@@ -1,0 +1,17 @@
+# relpath	mode	tags
+alpha_no_compression.webp	pam	alpha,raw
+alpha_filter_0_method_0.webp	pam	alpha,filter0,method0
+alpha_filter_0_method_1.webp	pam	alpha,filter0,method1
+alpha_filter_1.webp	pam	alpha,filter1
+alpha_filter_1_method_0.webp	pam	alpha,filter1,method0
+alpha_filter_1_method_1.webp	pam	alpha,filter1,method1
+alpha_filter_2.webp	pam	alpha,filter2
+alpha_filter_2_method_0.webp	pam	alpha,filter2,method0
+alpha_filter_2_method_1.webp	pam	alpha,filter2,method1
+alpha_filter_3.webp	pam	alpha,filter3
+alpha_filter_3_method_0.webp	pam	alpha,filter3,method0
+alpha_filter_3_method_1.webp	pam	alpha,filter3,method1
+lossy_alpha1.webp	pam	alpha,lossy
+lossy_alpha2.webp	pam	alpha,lossy
+lossy_alpha3.webp	pam	alpha,lossy
+lossy_alpha4.webp	pam	alpha,lossy

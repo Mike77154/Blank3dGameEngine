@@ -1,0 +1,11 @@
+StaticSprite89 protocol audit
+=============================
+C89 core: yes
+Dynamic allocation: none
+malloc/calloc/realloc/free: none
+float/double: none
+long long / explicit 64-bit integer types: none
+Filesystem: none
+Renderer/GPU dependency: none
+Image decoder dependency: none
+Capacity: descriptor-local / compile-time string cap

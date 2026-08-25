@@ -1,0 +1,6 @@
+# ImageSequencer89 loose-image recipe
+sequence pulse
+loop forward
+frame "fire_atlas" 40
+frame "muzzle_flash" 60
+frame "fire_atlas" 50

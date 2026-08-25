@@ -22,6 +22,17 @@ void bridge_gl_apply_pose(const soq3d_pose *pose);
 void bridge_gl_apply_q16_matrix(const signed int matrix[4][4]);
 void bridge_gl_draw_mesh(const g3d_mesh *mesh);
 void bridge_gl_begin_frame(int width, int height);
+void bridge_gl_set_muzzle_light(int enabled,
+                                g3d_fix x_q12, g3d_fix y_q12, g3d_fix z_q12,
+                                long intensity_q16, long radius_q16,
+                                unsigned char r, unsigned char g,
+                                unsigned char b);
+void bridge_gl_set_flamethrower_light(int enabled,
+                                      g3d_fix x_q12, g3d_fix y_q12,
+                                      g3d_fix z_q12,
+                                      long intensity_q16, long radius_q16,
+                                      unsigned char r, unsigned char g,
+                                      unsigned char b);
 void bridge_gl_draw_grid(int half_extent);
 void bridge_gl_draw_segment(const Vec3 *a, const Vec3 *b,
                             unsigned char r, unsigned char g,

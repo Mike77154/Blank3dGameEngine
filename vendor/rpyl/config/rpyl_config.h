@@ -92,7 +92,7 @@
 #endif
 
 #ifndef RPYL_AST_MAX_ARGS
-#define RPYL_AST_MAX_ARGS 8
+#define RPYL_AST_MAX_ARGS 24
 #endif
 
 #ifndef RPYL_AST_MAX_ARG_TEXT
@@ -105,7 +105,7 @@
 
 /* ---------------- Parser helpers ---------------- */
 #ifndef RPYL_PARSER_MAX_PREARGS
-#define RPYL_PARSER_MAX_PREARGS 8
+#define RPYL_PARSER_MAX_PREARGS 24
 #endif
 
 #ifndef RPYL_PARSER_MAX_BLOCK_NAME
@@ -163,7 +163,7 @@
 #endif
 
 #ifndef RPYL_RUNTIME_MAX_ARGS
-#define RPYL_RUNTIME_MAX_ARGS 8
+#define RPYL_RUNTIME_MAX_ARGS 24
 #endif
 
 #ifndef RPYL_RUNTIME_MAX_JOINED

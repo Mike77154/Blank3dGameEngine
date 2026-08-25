@@ -1,0 +1,66 @@
+gvehicle89 v6 build report
+===========================
+
+Patch goal:
+- Fix the five review items from v5.
+- Add requested v6 engine-facing adapter structure.
+
+Implemented:
+1) Deterministic fixed-point ABI guard
+   - Added include/gveh_config.h.
+   - gveh_i32/gveh_u32 now default to signed/unsigned int.
+   - Compile-time guards require sizeof(gveh_i32)==4 and sizeof(gveh_u32)==4.
+
+2) Real roll in basis solver
+   - gveh_basis_yaw_pitch_roll now applies roll around local forward.
+   - Aircraft/spacecraft no longer ignore roll in local_to_world transforms.
+
+3) Fixed-slot fleet manager
+   - Added gveh_vehicle_world with slots[GVEH_MAX_VEHICLES].
+   - Added spawn/despawn/get/input/step helpers.
+   - No malloc/free/realloc/heap.
+
+4) Vehicle-vs-vehicle collision bridge
+   - Added collision radius in gveh_profile.
+   - Added gveh_collision_resolve_pair.
+   - gveh_vehicle_world_step resolves active pair contacts after stepping.
+
+5) Optional module gating
+   - Added profile module flags.
+   - Major simulation families are now gated by module flags and gveh_config compile knobs.
+   - This reduces work for simple vehicle classes while keeping v5 compatibility.
+
+Requested v6 files added:
+- include/gveh_engine_adapter.h
+- include/gveh_entity_bridge.h
+- include/gveh_collision_bridge.h
+- include/gveh_profile_bank.h
+- src/gveh_engine_adapter.c
+- src/gveh_entity_bridge.c
+- src/gveh_collision_bridge.c
+- src/gveh_profile_bank.c
+- demo/demo_multi_vehicle89.c
+
+Build command:
+- make clean && make
+
+Build flags:
+- -std=c89 -Wall -Wextra -pedantic -Iinclude
+
+Validation:
+- Build passed.
+- demo_vehicle89 passed for every built-in profile selector.
+- demo_multi_vehicle89 passed with 3 active vehicles and 23 profile-bank entries.
+
+Constraint scan:
+- No malloc/calloc/realloc/free in include/src/demo.
+- No float/double/long long in include/src/demo.
+- No C++ // comments in include/src/demo.
+
+Generated outputs:
+- demo_vehicle89.csv
+- demo_vehicle89.ppm
+- demo_vehicle89.png
+- demo_multi_vehicle89.csv
+- demo_multi_vehicle89.ppm
+- demo_multi_vehicle89.png

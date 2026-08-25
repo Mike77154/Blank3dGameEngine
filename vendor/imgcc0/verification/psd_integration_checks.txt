@@ -1,0 +1,94 @@
+imgcc0 0.5.0 PSD89 integration verification
+===========================================
+
+$ make protocol-audit
+python3 scripts/audit_imgcc0_protocol.py
+imgcc0 strict-build protocol audit: PASS
+  scanned 166 active C/header files
+  no dynamic-allocation calls
+  no floating types
+  no explicit 64-bit integer types
+  no C99 line comments
+
+$ make vendor-verify
+python3 scripts/verify_vendor_swap.py
+PASS vendor PNG: 230 files byte-identical to supplied package
+PASS vendor DDS: 80 files byte-identical to supplied package
+PASS vendor BMP: 250 files byte-identical to supplied package
+PASS vendor PCX: 234 files byte-identical to supplied package
+PASS vendor ZRAGF: 308 files byte-identical to supplied package
+PASS vendor PSD: 90 files byte-identical to supplied package
+PASS PSD replacement vendor present
+
+$ make adapter-regression
+python3 scripts/audit_imgcc0_protocol.py
+imgcc0 strict-build protocol audit: PASS
+  scanned 166 active C/header files
+  no dynamic-allocation calls
+  no floating types
+  no explicit 64-bit integer types
+  no C99 line comments
+python3 scripts/test_vendor_adapters.py
+PASS adapter parity: png codecs/PNG/tests/corpus/png/rgba8.png 1780 bytes
+PASS adapter parity: png codecs/PNG/tests/corpus/png/gray2_adam7.png 1780 bytes
+PASS adapter parity: apng codecs/PNG/tests/corpus/apng/valid_three_frame.apng 120 bytes
+PASS adapter parity: dds codecs/DDS/corpus/parity_expected/dxt5.dds 604 bytes
+PASS adapter parity: dds codecs/DDS/corpus/parity_expected/bc5.dds 604 bytes
+PASS adapter parity: bmp codecs/BMP/tests/generated_corpus/valid_rgb24.bmp 36 bytes
+PASS adapter parity: bmp codecs/BMP/tests/generated_corpus/generated_indexed2.bmp 72 bytes
+PASS adapter parity: pcx codecs/PCX/tests/fuzz_corpus/valid_rgb24_round3.pcx 56 bytes
+PASS adapter parity: pcx codecs/PCX/tests/fuzz_corpus/valid_indexed8_palette.pcx 64 bytes
+vendor adapter parity: PASS (9 byte-identical canonical outputs)
+python3 scripts/test_psd_adapter.py
+PASS PSD adapter parity: codecs/PSD/examples/example_fidelity_roundtrip_v23.psd 132 bytes
+PASS PSD adapter parity: codecs/PSD/examples/example_file_roundtrip.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/examples/example_group_roundtrip.psd 36 bytes
+PASS PSD adapter parity: codecs/PSD/examples/example_layer_mask_roundtrip.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_clbl_group_rle.psd 36 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_clbl_individual_rle.psd 36 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_group_mul_rle.psd 36 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_group_pass_rle.psd 36 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_lmgm_clip_rle.psd 40 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_mask_shift_density_rle.psd 96 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_nested_group_mul_rle.psd 36 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_real_user_mask_rle.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_user_mask_raw.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_user_mask_rle.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_vector_bezier_rle.psd 288 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_vector_mask_zip.psd 64 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_vector_mask_zip_pred.psd 64 bytes
+PASS PSD adapter parity: codecs/PSD/tests/corpus/rgb_vmgm_clip_rle.psd 40 bytes
+PASS PSD adapter parity: codecs/PSD/tests/test_v12_roundtrip.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/test_v13_roundtrip.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/test_v14_real_mask.psd 48 bytes
+PASS PSD adapter parity: codecs/PSD/tests/test_v14_shifted_mask.psd 96 bytes
+PASS PSD adapter parity: codecs/PSD/tests/test_v15_zip.psd 64 bytes
+PASS PSD adapter parity: codecs/PSD/tests/test_v15_zip_pred.psd 64 bytes
+PSD vendor adapter parity: PASS (24/24 byte-identical canonical outputs)
+
+$ make regression
+python3 scripts/audit_imgcc0_protocol.py
+imgcc0 strict-build protocol audit: PASS
+  scanned 166 active C/header files
+  no dynamic-allocation calls
+  no floating types
+  no explicit 64-bit integer types
+  no C99 line comments
+python3 scripts/test_strict_samples.py
+PASS sample.jpg frame 0
+PASS sample.tga frame 0
+PASS sample.qoi frame 0
+PASS sample.webp frame 0
+PASS sample.tiff frame 0
+PASS sample.gif frame 0
+PASS sample.gif frame 1
+PASS sample.gif frame 2
+PASS sample.gif frame 3
+PASS sample_anim.webp frame 0
+PASS sample_anim.webp frame 1
+PASS sample_anim.webp frame 2
+PASS sample_anim.webp frame 3
+strict regression: PASS (13 byte-identical frame outputs)
+
+$ nm -u build/libimgcc0.a | grep heap symbols
+PASS: no unresolved malloc/calloc/realloc/free symbols

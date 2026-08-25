@@ -1,0 +1,10 @@
+# Vehicle driving layer. This script is merged with player.ddsl2 at runtime.
+# It only becomes authoritative while the Player occupies a vehicle whose
+# INI declares playerdriving=1. Outside a vehicle these rules are inert.
+
+If vehicle_playerdriving and key_hold Up then vehicle_forward
+If vehicle_playerdriving and key_hold Shift and key_hold Up then vehicle_run_forward
+If vehicle_playerdriving and key_hold Down then vehicle_reverse
+If vehicle_playerdriving and key_hold Shift and key_hold Down then vehicle_run_reverse
+If vehicle_playerdriving and key_hold Left then vehicle_steer_left
+If vehicle_playerdriving and key_hold Right then vehicle_steer_right

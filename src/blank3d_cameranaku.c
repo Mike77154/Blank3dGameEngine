@@ -145,18 +145,84 @@ static void b3d_cnk_lens(cnk_profile *profile,
                          b3d_q20_to_cnk(far_clip));
 }
 
+
+static cnk_fx b3d_q20_unit_to_cnk(g3d_fix value)
+{
+    return b3d_q20_to_cnk(value);
+}
+
+static const Blank3DCameraProfile *b3d_cnk_profile(
+    const Blank3DCameraNaku *camera)
+{
+    if (!camera) return (const Blank3DCameraProfile *)0;
+    return blank3d_camera_catalog_current(&camera->catalog);
+}
+
+static void b3d_cnk_build_runtime_profile(Blank3DCameraNaku *camera,
+                                          const Blank3DCameraProfile *source)
+{
+    if (!camera || !source) return;
+    if (source->rig == B3D_CAMERA_RIG_FPS)
+        cnk_profile_style_fps(&camera->active_profile);
+    else
+        cnk_profile_style_orbit(&camera->active_profile);
+
+    camera->active_profile.pivot_offset = cnk_vec3_make(
+        b3d_q20_to_cnk(source->pivot_x),
+        b3d_q20_to_cnk(source->pivot_y),
+        b3d_q20_to_cnk(source->pivot_z));
+    camera->active_profile.look_offset = cnk_vec3_make(
+        b3d_q20_to_cnk(source->look_x),
+        b3d_q20_to_cnk(source->look_y),
+        b3d_q20_to_cnk(source->look_z));
+    camera->active_profile.distance = b3d_q20_to_cnk(source->distance);
+    camera->active_profile.min_distance = b3d_q20_to_cnk(source->min_distance);
+    camera->active_profile.max_distance = b3d_q20_to_cnk(source->max_distance);
+    camera->active_profile.min_pitch_deg = b3d_q20_to_cnk(source->pitch_min);
+    camera->active_profile.max_pitch_deg = b3d_q20_to_cnk(source->pitch_max);
+    camera->active_profile.pos_lag = b3d_q20_unit_to_cnk(source->pos_lag);
+    camera->active_profile.rot_lag = b3d_q20_unit_to_cnk(source->rot_lag);
+    camera->active_profile.fov_lag = b3d_q20_unit_to_cnk(source->fov_lag);
+    camera->active_profile.collision_radius = source->collision_enabled
+        ? b3d_q20_to_cnk(source->collision_radius) : 0;
+    if (source->collision_enabled)
+        camera->active_profile.flags |= CNK_FLAG_KEEP_LINE_OF_SIGHT;
+    else
+        camera->active_profile.flags &= ~CNK_FLAG_KEEP_LINE_OF_SIGHT;
+    b3d_cnk_lens(&camera->active_profile,
+                 camera->width,
+                 camera->height,
+                 source->fov,
+                 source->near_clip,
+                 source->far_clip);
+}
+
 static void b3d_cnk_apply_current_profile(Blank3DCameraNaku *camera)
 {
+    const Blank3DCameraProfile *profile;
     if (!camera) return;
-    if (camera->mode == B3D_CNK_CAMERA_FPS) {
-        cnk_camera_apply_profile(&camera->camera, &camera->fps_profile);
-        camera->view_style = GWP89_VIEW_FPS;
-    } else {
-        cnk_camera_apply_profile(&camera->camera, &camera->tps_profile);
-        camera->view_style = GWP89_VIEW_OVER_SHOULDER;
-    }
+    profile = b3d_cnk_profile(camera);
+    if (!profile) return;
+
+    b3d_cnk_build_runtime_profile(camera, profile);
+    cnk_camera_apply_profile(&camera->camera, &camera->active_profile);
     cnk_camera_set_transform_provider(&camera->camera,
                                       &camera->transform_provider);
+    camera->view_style = profile->view_style;
+    camera->pitch_min = profile->pitch_min;
+    camera->pitch_max = profile->pitch_max;
+    camera->pitch = g3d_fix_clamp(camera->pitch,
+                                  camera->pitch_min,
+                                  camera->pitch_max);
+    camera->fov = profile->fov;
+    if (profile->view_style == GWP89_VIEW_FPS)
+        camera->mode = B3D_CNK_CAMERA_FPS;
+    else if (profile->view_style == GWP89_VIEW_OVER_SHOULDER)
+        camera->mode = B3D_CNK_CAMERA_OTS;
+    else
+        camera->mode = B3D_CNK_CAMERA_TPS;
+    camera->camera.state.pose.yaw_deg = b3d_gamlib_yaw_to_cnk(camera->yaw);
+    camera->camera.state.pose.pitch_deg = b3d_q20_to_cnk(camera->pitch);
 }
 
 void blank3d_cameranaku_init(Blank3DCameraNaku *camera,
@@ -166,20 +232,26 @@ void blank3d_cameranaku_init(Blank3DCameraNaku *camera,
                               g3d_fix near_clip,
                               g3d_fix far_clip)
 {
+    Blank3DCameraProfile *profile;
+    int i;
     if (!camera) return;
     memset(camera, 0, sizeof(*camera));
     camera->width = width > 0 ? width : 640;
     camera->height = height > 0 ? height : 480;
-    camera->mode = B3D_CNK_CAMERA_TPS;
     camera->camera_id = B3D_CNK_CAMERA_ID;
     camera->yaw = 0;
     camera->pitch = 0;
-    camera->pitch_min = G3D_FIX_FROM_INT(-85);
-    camera->pitch_max = G3D_FIX_FROM_INT(85);
-    camera->fov = fov;
     camera->zoom_fx = GWP89_FIX_ONE;
     camera->target_position = gamlib_vec3(0, 0, 0);
     camera->target_velocity = gamlib_vec3(0, 0, 0);
+
+    blank3d_camera_catalog_init(&camera->catalog);
+    for (i = 0; i < camera->catalog.count; ++i) {
+        profile = &camera->catalog.profiles[i];
+        profile->fov = fov;
+        profile->near_clip = near_clip;
+        profile->far_clip = far_clip;
+    }
 
     cnk_transform_provider_clear(&camera->transform_provider);
     cnk_transform_provider_set(&camera->transform_provider,
@@ -189,24 +261,11 @@ void blank3d_cameranaku_init(Blank3DCameraNaku *camera,
                                b3d_cnk_provider_rotate);
     cnk_transform_provider_set_mode(&camera->transform_provider,
                                     CNK_TRANSFORM_MODE_RECEIVE_PROVIDER);
-
     cnk_camera_reset(&camera->camera);
-    cnk_profile_style_fps(&camera->fps_profile);
-    cnk_profile_style_orbit(&camera->tps_profile);
-    b3d_cnk_lens(&camera->fps_profile, camera->width, camera->height,
-                 fov, near_clip, far_clip);
-    b3d_cnk_lens(&camera->tps_profile, camera->width, camera->height,
-                 fov, near_clip, far_clip);
-    camera->fps_profile.pos_lag = CNK_ONE;
-    camera->fps_profile.rot_lag = CNK_ONE;
-    camera->fps_profile.fov_lag = CNK_ONE;
-    camera->tps_profile.pos_lag = CNK_FX_FRAC(45, 100);
-    camera->tps_profile.rot_lag = CNK_FX_FRAC(55, 100);
-    camera->tps_profile.fov_lag = CNK_FX_FRAC(55, 100);
     b3d_cnk_apply_current_profile(camera);
     camera->initialized = 1;
     strcpy(camera->status,
-           "Cameranaku89 v3.4 receive-provider ready: four feeder axes negated + Gamlib3D TRS");
+           "Cameranaku89 camera INI catalog ready");
 }
 
 void blank3d_cameranaku_configure(Blank3DCameraNaku *camera,
@@ -220,48 +279,106 @@ void blank3d_cameranaku_configure(Blank3DCameraNaku *camera,
                                    g3d_fix near_clip,
                                    g3d_fix far_clip)
 {
+    Blank3DCameraProfile *profile;
+    int i;
     if (!camera) return;
-    camera->pitch_min = pitch_min;
-    camera->pitch_max = pitch_max;
-    camera->shoulder = shoulder;
-    camera->fov = fov;
-
-    cnk_profile_style_fps(&camera->fps_profile);
-    camera->fps_profile.pivot_offset =
-        cnk_vec3_make(0, b3d_q20_to_cnk(eye_height), 0);
-    camera->fps_profile.min_pitch_deg = b3d_q20_to_cnk(pitch_min);
-    camera->fps_profile.max_pitch_deg = b3d_q20_to_cnk(pitch_max);
-    camera->fps_profile.pos_lag = CNK_ONE;
-    camera->fps_profile.rot_lag = CNK_ONE;
-    camera->fps_profile.fov_lag = CNK_ONE;
-    b3d_cnk_lens(&camera->fps_profile, camera->width, camera->height,
-                 fov, near_clip, far_clip);
-
-    cnk_profile_style_orbit(&camera->tps_profile);
-    camera->tps_profile.pivot_offset =
-        cnk_vec3_make(0, b3d_q20_to_cnk(camera_height), 0);
-    camera->tps_profile.look_offset = cnk_vec3_make(0, 0, 0);
-    camera->tps_profile.distance = b3d_q20_to_cnk(camera_distance);
-    camera->tps_profile.min_distance = CNK_FX_FRAC(1, 2);
-    camera->tps_profile.max_distance = CNK_FX_FROM_INT(64);
-    camera->tps_profile.min_pitch_deg = b3d_q20_to_cnk(pitch_min);
-    camera->tps_profile.max_pitch_deg = b3d_q20_to_cnk(pitch_max);
-    camera->tps_profile.pos_lag = CNK_FX_FRAC(45, 100);
-    camera->tps_profile.rot_lag = CNK_FX_FRAC(55, 100);
-    camera->tps_profile.fov_lag = CNK_FX_FRAC(55, 100);
-    b3d_cnk_lens(&camera->tps_profile, camera->width, camera->height,
-                 fov, near_clip, far_clip);
+    for (i = 0; i < camera->catalog.count; ++i) {
+        profile = &camera->catalog.profiles[i];
+        profile->pitch_min = pitch_min;
+        profile->pitch_max = pitch_max;
+        profile->fov = fov;
+        profile->near_clip = near_clip;
+        profile->far_clip = far_clip;
+        if (profile->rig == B3D_CAMERA_RIG_FPS) {
+            profile->pivot_y = eye_height;
+        } else {
+            profile->pivot_y = camera_height;
+            profile->distance = camera_distance;
+            if (profile->view_style == GWP89_VIEW_OVER_SHOULDER)
+                profile->offset_right = shoulder;
+        }
+    }
     b3d_cnk_apply_current_profile(camera);
+}
+
+int blank3d_cameranaku_load_profiles(Blank3DCameraNaku *camera,
+                                     const char *directory)
+{
+    int result;
+    if (!camera || !directory) return 0;
+    result = blank3d_camera_catalog_load(&camera->catalog, directory);
+    b3d_cnk_apply_current_profile(camera);
+    sprintf(camera->status, "CamNaku: %s",
+            blank3d_camera_catalog_status(&camera->catalog));
+    return result;
+}
+
+int blank3d_cameranaku_set_profile_index(Blank3DCameraNaku *camera,
+                                         int index)
+{
+    if (!camera) return 0;
+    if (!blank3d_camera_catalog_select_index(&camera->catalog, index))
+        return 0;
+    b3d_cnk_apply_current_profile(camera);
+    return 1;
+}
+
+int blank3d_cameranaku_set_profile(Blank3DCameraNaku *camera,
+                                   const char *profile_id)
+{
+    if (!camera || !profile_id) return 0;
+    if (!blank3d_camera_catalog_select_id(&camera->catalog, profile_id))
+        return 0;
+    b3d_cnk_apply_current_profile(camera);
+    return 1;
+}
+
+int blank3d_cameranaku_next_profile(Blank3DCameraNaku *camera)
+{
+    if (!camera) return 0;
+    if (!blank3d_camera_catalog_next(&camera->catalog)) return 0;
+    b3d_cnk_apply_current_profile(camera);
+    return 1;
+}
+
+int blank3d_cameranaku_profile_count(const Blank3DCameraNaku *camera)
+{
+    return camera ? camera->catalog.count : 0;
+}
+
+int blank3d_cameranaku_profile_index(const Blank3DCameraNaku *camera)
+{
+    return camera ? camera->catalog.active_index : -1;
+}
+
+const Blank3DCameraProfile *blank3d_cameranaku_current_profile(
+    const Blank3DCameraNaku *camera)
+{
+    return b3d_cnk_profile(camera);
+}
+
+const Blank3DCameraProfile *blank3d_cameranaku_profile_at(
+    const Blank3DCameraNaku *camera,
+    int index)
+{
+    return camera ? blank3d_camera_catalog_at(&camera->catalog, index)
+                  : (const Blank3DCameraProfile *)0;
 }
 
 void blank3d_cameranaku_set_mode(Blank3DCameraNaku *camera, int mode)
 {
+    int view_style;
+    int index;
     if (!camera) return;
-    camera->mode = mode == B3D_CNK_CAMERA_FPS
-                 ? B3D_CNK_CAMERA_FPS : B3D_CNK_CAMERA_TPS;
-    b3d_cnk_apply_current_profile(camera);
-    camera->camera.state.pose.yaw_deg = b3d_gamlib_yaw_to_cnk(camera->yaw);
-    camera->camera.state.pose.pitch_deg = b3d_q20_to_cnk(camera->pitch);
+    if (mode == B3D_CNK_CAMERA_FPS)
+        view_style = GWP89_VIEW_FPS;
+    else if (mode == B3D_CNK_CAMERA_OTS)
+        view_style = GWP89_VIEW_OVER_SHOULDER;
+    else
+        view_style = GWP89_VIEW_THIRD_PERSON;
+    index = blank3d_camera_catalog_find_view_style(&camera->catalog,
+                                                   view_style);
+    if (index >= 0) (void)blank3d_cameranaku_set_profile_index(camera, index);
 }
 
 void blank3d_cameranaku_set_angles(Blank3DCameraNaku *camera,
@@ -293,7 +410,6 @@ static g3d_fix b3d_cnk_feeder_magnitude(g3d_fix magnitude)
 void blank3d_cameranaku_feed_left(Blank3DCameraNaku *camera,
                                    g3d_fix magnitude)
 {
-    /* Negated feeder: old left delta was negative; Naku needs positive. */
     blank3d_cameranaku_add_look(camera,
         b3d_cnk_feeder_magnitude(magnitude), 0);
 }
@@ -301,7 +417,6 @@ void blank3d_cameranaku_feed_left(Blank3DCameraNaku *camera,
 void blank3d_cameranaku_feed_right(Blank3DCameraNaku *camera,
                                     g3d_fix magnitude)
 {
-    /* Negated feeder: old right delta was positive; Naku needs negative. */
     blank3d_cameranaku_add_look(camera,
         g3d_fix_neg_sat(b3d_cnk_feeder_magnitude(magnitude)), 0);
 }
@@ -309,7 +424,6 @@ void blank3d_cameranaku_feed_right(Blank3DCameraNaku *camera,
 void blank3d_cameranaku_feed_up(Blank3DCameraNaku *camera,
                                  g3d_fix magnitude)
 {
-    /* Negated feeder: old up delta was positive; Naku needs negative. */
     blank3d_cameranaku_add_look(camera, 0,
         g3d_fix_neg_sat(b3d_cnk_feeder_magnitude(magnitude)));
 }
@@ -317,7 +431,6 @@ void blank3d_cameranaku_feed_up(Blank3DCameraNaku *camera,
 void blank3d_cameranaku_feed_down(Blank3DCameraNaku *camera,
                                    g3d_fix magnitude)
 {
-    /* Negated feeder: old down delta was negative; Naku needs positive. */
     blank3d_cameranaku_add_look(camera, 0,
         b3d_cnk_feeder_magnitude(magnitude));
 }
@@ -335,8 +448,7 @@ void blank3d_cameranaku_set_fov(Blank3DCameraNaku *camera, g3d_fix fov)
 {
     if (!camera || fov <= 0) return;
     camera->fov = fov;
-    camera->fps_profile.lens.fov_y_deg = b3d_q20_to_cnk(fov);
-    camera->tps_profile.lens.fov_y_deg = b3d_q20_to_cnk(fov);
+    camera->active_profile.lens.fov_y_deg = b3d_q20_to_cnk(fov);
     cnk_camera_set_fov(&camera->camera, b3d_q20_to_cnk(fov));
 }
 
@@ -384,25 +496,27 @@ void blank3d_cameranaku_resize(Blank3DCameraNaku *camera,
     if (width > 0) camera->width = width;
     if (height > 0) camera->height = height;
     cnk_camera_set_viewport(&camera->camera, camera->width, camera->height);
-    camera->fps_profile.lens.viewport_w = camera->width;
-    camera->fps_profile.lens.viewport_h = camera->height;
-    camera->tps_profile.lens.viewport_w = camera->width;
-    camera->tps_profile.lens.viewport_h = camera->height;
+    camera->active_profile.lens.viewport_w = camera->width;
+    camera->active_profile.lens.viewport_h = camera->height;
 }
 
 void blank3d_cameranaku_update(Blank3DCameraNaku *camera,
                                 unsigned short dt_ms)
 {
+    const Blank3DCameraProfile *profile;
     cnk_vec3 position;
     cnk_vec3 velocity;
     cnk_basis effective_basis;
     cnk_vec3 eye;
-    cnk_vec3 shoulder_delta;
+    cnk_vec3 delta;
+    cnk_vec3 term;
     cnk_fx yaw;
     cnk_fx pitch;
     int ticks;
 
     if (!camera || !camera->initialized) return;
+    profile = b3d_cnk_profile(camera);
+    if (!profile) return;
     position = b3d_vec3_to_cnk(camera->target_position);
     velocity = b3d_vec3_to_cnk(camera->target_velocity);
     yaw = b3d_gamlib_yaw_to_cnk(camera->yaw);
@@ -415,8 +529,7 @@ void blank3d_cameranaku_update(Blank3DCameraNaku *camera,
                           0);
     cnk_camera_set_fov(&camera->camera, b3d_q20_to_cnk(camera->fov));
 
-    if (camera->mode == B3D_CNK_CAMERA_TPS) {
-        /* Orbit is the CamNaku profile that preserves full mouse pitch in TPS. */
+    if (profile->rig == B3D_CAMERA_RIG_ORBIT) {
         camera->camera.state.pose.yaw_deg = yaw;
         camera->camera.state.pose.pitch_deg = pitch;
     }
@@ -429,22 +542,36 @@ void blank3d_cameranaku_update(Blank3DCameraNaku *camera,
         pitch + b3d_q20_to_cnk(camera->sway_pitch),
         0);
     eye = camera->camera.state.pose.pos;
-    if (camera->mode == B3D_CNK_CAMERA_TPS && camera->shoulder != 0) {
-        shoulder_delta = cnk_transform_scale_uniform(
-            &camera->transform_provider,
-            effective_basis.right,
-            b3d_q20_to_cnk(camera->shoulder));
-        eye = cnk_transform_move(&camera->transform_provider,
-                                 eye,
-                                 shoulder_delta);
+    delta = cnk_vec3_make(0, 0, 0);
+    if (profile->offset_right != 0) {
+        term = cnk_transform_scale_uniform(&camera->transform_provider,
+                    effective_basis.right,
+                    b3d_q20_to_cnk(profile->offset_right));
+        delta = cnk_transform_move(&camera->transform_provider, delta, term);
     }
+    if (profile->offset_up != 0) {
+        term = cnk_transform_scale_uniform(&camera->transform_provider,
+                    effective_basis.up,
+                    b3d_q20_to_cnk(profile->offset_up));
+        delta = cnk_transform_move(&camera->transform_provider, delta, term);
+    }
+    if (profile->offset_forward != 0) {
+        term = cnk_transform_scale_uniform(&camera->transform_provider,
+                    effective_basis.forward,
+                    b3d_q20_to_cnk(profile->offset_forward));
+        delta = cnk_transform_move(&camera->transform_provider, delta, term);
+    }
+    eye = cnk_transform_move(&camera->transform_provider, eye, delta);
 
     camera->eye = b3d_cnk_to_vec3(eye);
     camera->forward = b3d_cnk_to_vec3(effective_basis.forward);
     camera->right = b3d_cnk_to_vec3(effective_basis.right);
     camera->up = b3d_cnk_to_vec3(effective_basis.up);
     sprintf(camera->status,
-             "CamNaku provider active | TRS %lu/%lu/%lu | weapon camera %lu",
+             "CamNaku [%s] %d/%d | TRS %lu/%lu/%lu | weapon %lu",
+             profile->id,
+             camera->catalog.active_index + 1,
+             camera->catalog.count,
              camera->provider_move_calls,
              camera->provider_scale_calls,
              camera->provider_rotate_calls,
@@ -473,11 +600,6 @@ int blank3d_cameranaku_weapon_provider(void *context,
     if (packet->phase != GWP89_PHASE_PRE ||
         packet->operation != GWP89_OP_GET_CAMERA)
         return GWP89_PROVIDER_PASS;
-
-    /* CamaraNaku is the player camera. NPC weapon actors must preserve the
-       camera/socket basis supplied by their own AI aiming bridge; otherwise
-       every enemy inherits the player's view and can fire vertically or in
-       an unrelated direction. */
     if (packet->actor_id != 1 || packet->actor_kind != 1)
         return GWP89_PROVIDER_PASS;
 

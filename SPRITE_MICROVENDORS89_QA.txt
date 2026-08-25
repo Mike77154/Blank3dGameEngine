@@ -1,0 +1,50 @@
+Sprite microvendors89 foundation QA
+===================================
+
+Added vendors:
+- vendor/staticsprite89
+- vendor/imagesequencer89
+- vendor/renlist89
+- vendor/tilecell89
+
+Protocol:
+- strict C89: PASS
+- -pedantic-errors -Wall -Wextra -Werror: PASS
+- heap allocation in four cores: none
+- float/double in four cores: none
+- long long / explicit 64-bit types in four cores: none
+- renderer/filesystem/image-decoder dependencies in four cores: none
+
+Standalone tests:
+- StaticSprite89: PASS
+- ImageSequencer89 base sequence: PASS
+- ImageSequencer89 ping-pong modes: PASS
+- RenList89 recipe/list parse: PASS
+- RenList89 multiple animations: PASS
+- TileCell89 atlas/named cells/tilemap/strip: PASS
+- TileCell89 margin/spacing math: PASS
+
+Cross-vendor adapter test:
+RenList89 -> ImageSequencer89 -> StaticSprite89: PASS
+TileCell89 -> ImageSequencer89 -> StaticSprite89: PASS
+
+Standalone archive build:
+- libstaticsprite89.a: PASS
+- libimagesequencer89.a: PASS
+- librenlist89.a: PASS
+- libtilecell89.a: PASS
+
+Blank3D regression gates after vendor insertion:
+- whole-engine syntax-check: PASS
+- casing VPhysics regression: PASS
+
+Preservation audit against previous full Blank3D baseline:
+- baseline files: 6561
+- missing previous files: 0
+- common files changed besides root Makefile: 0
+- new files: 48 (four vendors + integration test/docs)
+
+Runtime status:
+The four vendors are present and testable, but are intentionally NOT yet wired
+into weapon/billboard gameplay. They are the agnostic foundation for the next
+integration step.

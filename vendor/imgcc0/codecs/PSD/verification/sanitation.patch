@@ -1,0 +1,4437 @@
+--- /mnt/data/psd_work/orig/PSD/Makefile	2026-06-04 05:51:56.000000000 +0000
++++ Makefile	2026-08-20 02:07:55.439019431 +0000
+@@ -84,6 +84,6 @@
+ 	./tests/corpus_runner
+ 
+ clean:
+-	rm -f $(OBJ) $(LIB) $(EXAMPLES) $(TESTS) tests/test_v12_roundtrip.psd tests/test_v13_roundtrip.psd tests/test_v14_shifted_mask.psd tests/test_v14_real_mask.psd tests/test_v15_zip.psd tests/test_v15_zip_pred.psd tests/test_v20_roundtrip.psd tests/corpus/*.psd example_file_roundtrip.psd example_layer_mask_roundtrip.psd examples/example_advanced_roundtrip.psd examples/example_fidelity_roundtrip.psd examples/example_fidelity_roundtrip_v23.psd
++	rm -f $(OBJ) $(LIB) $(EXAMPLES) $(TESTS)
+ 
+ .PHONY: all test clean
+--- /mnt/data/psd_work/orig/PSD/include/psd89/psd89.h	2026-06-04 05:51:56.000000000 +0000
++++ include/psd89/psd89.h	2026-08-20 02:05:51.328555081 +0000
+@@ -15,15 +15,11 @@
+ #error "psd89 requires 16-bit unsigned short"
+ #endif
+ 
+-#if UINT_MAX == 0xFFFFFFFFU
+-typedef unsigned int  psd89_u32;
+-typedef signed int    psd89_s32;
+-#elif ULONG_MAX == 0xFFFFFFFFUL
+-typedef unsigned long psd89_u32;
+-typedef signed long   psd89_s32;
+-#else
+-#error "psd89 requires a 32-bit unsigned int or unsigned long"
++#if UINT_MAX != 0xFFFFFFFFU
++#error "psd89 requires a 32-bit unsigned int"
+ #endif
++typedef unsigned int psd89_u32;
++typedef signed int   psd89_s32;
+ 
+ typedef unsigned char  psd89_u8;
+ typedef signed char    psd89_s8;
+@@ -33,8 +29,8 @@
+ typedef psd89_s32 psd89_fx16;
+ typedef psd89_s32 psd89_fx24;
+ 
+-#define PSD89_FX16_ONE ((psd89_fx16)0x00010000L)
+-#define PSD89_FX24_ONE ((psd89_fx24)0x01000000L)
++#define PSD89_FX16_ONE ((psd89_fx16)0x00010000)
++#define PSD89_FX24_ONE ((psd89_fx24)0x01000000)
+ 
+ #ifndef PSD89_MAX_LAYERS
+ #define PSD89_MAX_LAYERS 64
+@@ -98,8 +94,8 @@
+ #define PSD89_MAX_LRFX_COLOR_COMPONENTS 5
+ #endif
+ 
+-#define PSD89_SIG_8BPS 0x38425053UL
+-#define PSD89_SIG_8BIM 0x3842494DUL
++#define PSD89_SIG_8BPS 0x38425053U
++#define PSD89_SIG_8BIM 0x3842494DU
+ 
+ #define PSD89_FALSE 0
+ #define PSD89_TRUE  1
+@@ -153,31 +149,31 @@
+ };
+ 
+ typedef struct psd89_io {
+-    int (*read)(void *user, void *dst, unsigned long size);
+-    int (*write)(void *user, const void *src, unsigned long size);
+-    int (*seek)(void *user, unsigned long offset);
+-    unsigned long (*tell)(void *user);
++    int (*read)(void *user, void *dst, psd89_u32 size);
++    int (*write)(void *user, const void *src, psd89_u32 size);
++    int (*seek)(void *user, psd89_u32 offset);
++    psd89_u32 (*tell)(void *user);
+     void *user;
+ } psd89_io;
+ 
+ typedef struct psd89_memio {
+     psd89_u8 *data;
+-    unsigned long size;
+-    unsigned long capacity;
+-    unsigned long pos;
++    psd89_u32 size;
++    psd89_u32 capacity;
++    psd89_u32 pos;
+     int writable;
+ } psd89_memio;
+ 
+ typedef struct psd89_resource_ref {
+     psd89_u16 id;
+     char name[PSD89_MAX_RESOURCE_NAME_CHARS + 1];
+-    unsigned long raw_offset;
++    psd89_u32 raw_offset;
+     psd89_u32 raw_size;
+ } psd89_resource_ref;
+ 
+ typedef struct psd89_tag_ref {
+     char key[4];
+-    unsigned long raw_offset;
++    psd89_u32 raw_offset;
+     psd89_u32 raw_size;
+ } psd89_tag_ref;
+ 
+@@ -185,14 +181,14 @@
+     psd89_s16 id;
+     psd89_u16 compression;
+     psd89_u32 data_length;
+-    unsigned long data_offset;
++    psd89_u32 data_offset;
+     const psd89_u8 *plane;
+     psd89_u32 stride;
+ } psd89_layer_channel;
+ 
+ typedef struct psd89_layer_mask_ref {
+     int present;
+-    unsigned long raw_offset;
++    psd89_u32 raw_offset;
+     psd89_u32 raw_size;
+ } psd89_layer_mask_ref;
+ 
+@@ -408,7 +404,7 @@
+ 
+ typedef struct psd89_text_engine_data {
+     psd89_u8 present;
+-    unsigned long raw_offset;
++    psd89_u32 raw_offset;
+     psd89_u32 raw_size;
+     const psd89_u8 *authored_raw;
+     psd89_u32 authored_raw_size;
+@@ -441,7 +437,7 @@
+ } psd89_smart_object;
+ 
+ typedef struct psd89_layer_blend_ranges_ref {
+-    unsigned long raw_offset;
++    psd89_u32 raw_offset;
+     psd89_u32 raw_size;
+ } psd89_layer_blend_ranges_ref;
+ 
+@@ -504,10 +500,10 @@
+     psd89_u16 global_tag_count;
+     psd89_tag_ref global_tags[PSD89_MAX_GLOBAL_TAG_BLOCKS];
+ 
+-    unsigned long global_mask_raw_offset;
++    psd89_u32 global_mask_raw_offset;
+     psd89_u32 global_mask_raw_size;
+ 
+-    unsigned long composite_data_offset;
++    psd89_u32 composite_data_offset;
+     psd89_u16 composite_compression;
+ 
+     const psd89_u8 *composite_planes[56];
+@@ -539,8 +535,8 @@
+ int psd89_fx24_to_int(psd89_fx24 v);
+ psd89_fx24 psd89_fx24_mul(psd89_fx24 a, psd89_fx24 b);
+ 
+-void psd89_memio_init_read(psd89_memio *m, const void *data, unsigned long size);
+-void psd89_memio_init_write(psd89_memio *m, void *data, unsigned long capacity);
++void psd89_memio_init_read(psd89_memio *m, const void *data, psd89_u32 size);
++void psd89_memio_init_write(psd89_memio *m, void *data, psd89_u32 capacity);
+ void psd89_memio_make_io(psd89_memio *m, psd89_io *io);
+ 
+ int psd89_read(psd89_doc *doc, psd89_io *io);
+@@ -592,9 +588,9 @@
+     psd89_u32 rows;
+     psd89_u32 cols;
+     psd89_u16 channels;
+-    unsigned long compressed_bytes;
+-    unsigned long decoded_bytes;
+-    unsigned long expected_bytes;
++    psd89_u32 compressed_bytes;
++    psd89_u32 decoded_bytes;
++    psd89_u32 expected_bytes;
+ } psd89_zip_diag;
+ 
+ void psd89_vector_flatten_options_init(psd89_vector_flatten_options *opt);
+@@ -617,15 +613,15 @@
+ void psd89_mask_global_bool_write(psd89_u8 raw[4], psd89_u8 value);
+ 
+ void psd89_zip_diag_init(psd89_zip_diag *diag);
+-unsigned long psd89_zip_expected_planar_bytes(psd89_u32 rows,
++psd89_u32 psd89_zip_expected_planar_bytes(psd89_u32 rows,
+                                               psd89_u32 cols,
+                                               psd89_u16 channels);
+ int psd89_zip_diag_check_planar(psd89_u16 compression,
+                                 psd89_u32 rows,
+                                 psd89_u32 cols,
+                                 psd89_u16 channels,
+-                                unsigned long compressed_bytes,
+-                                unsigned long decoded_bytes,
++                                psd89_u32 compressed_bytes,
++                                psd89_u32 decoded_bytes,
+                                 int zlib_status,
+                                 psd89_zip_diag *diag);
+ const char *psd89_zip_diag_string(int code);
+--- /mnt/data/psd_work/orig/PSD/src/psd89_core.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_core.c	2026-08-20 02:05:51.316623812 +0000
+@@ -2,7 +2,7 @@
+ 
+ #include <string.h>
+ 
+-static int psd89_memio_read_fn(void *user, void *dst, unsigned long size)
++static int psd89_memio_read_fn(void *user, void *dst, psd89_u32 size)
+ {
+     psd89_memio *m;
+     if (user == 0 || dst == 0) {
+@@ -17,7 +17,7 @@
+     return 1;
+ }
+ 
+-static int psd89_memio_write_fn(void *user, const void *src, unsigned long size)
++static int psd89_memio_write_fn(void *user, const void *src, psd89_u32 size)
+ {
+     psd89_memio *m;
+     if (user == 0 || src == 0) {
+@@ -35,14 +35,14 @@
+     return 1;
+ }
+ 
+-static int psd89_memio_seek_fn(void *user, unsigned long offset)
++static int psd89_memio_seek_fn(void *user, psd89_u32 offset)
+ {
+     psd89_memio *m;
+     if (user == 0) {
+         return 0;
+     }
+     m = (psd89_memio *)user;
+-    if (offset == 0xFFFFFFFFUL) {
++    if (offset == 0xFFFFFFFFU) {
+         m->pos = m->writable ? m->size : m->size;
+         return 1;
+     }
+@@ -56,11 +56,11 @@
+     return 1;
+ }
+ 
+-static unsigned long psd89_memio_tell_fn(void *user)
++static psd89_u32 psd89_memio_tell_fn(void *user)
+ {
+     psd89_memio *m;
+     if (user == 0) {
+-        return 0UL;
++        return 0U;
+     }
+     m = (psd89_memio *)user;
+     return m->pos;
+@@ -109,61 +109,173 @@
+ int psd89_fx16_to_int(psd89_fx16 v)
+ {
+     if (v >= 0) {
+-        return (int)((v + 0x8000L) >> 16);
++        return (int)((v + 0x8000) >> 16);
+     }
+-    return (int)(-(((-v) + 0x8000L) >> 16));
++    return (int)(-(((-v) + 0x8000) >> 16));
++}
++
++typedef struct psd89_pair32 {
++    psd89_u32 hi;
++    psd89_u32 lo;
++} psd89_pair32;
++
++static psd89_u32 psd89_abs_s32_u32(psd89_s32 v)
++{
++    psd89_u32 u;
++    u = (psd89_u32)v;
++    if (v < 0) {
++        u = (psd89_u32)(0U - u);
++    }
++    return u;
++}
++
++static psd89_pair32 psd89_mul_u32_pair(psd89_u32 a, psd89_u32 b)
++{
++    psd89_u32 a0;
++    psd89_u32 a1;
++    psd89_u32 b0;
++    psd89_u32 b1;
++    psd89_u32 p0;
++    psd89_u32 p1;
++    psd89_u32 p2;
++    psd89_u32 p3;
++    psd89_u32 middle;
++    psd89_pair32 r;
++
++    a0 = a & 0xFFFFU;
++    a1 = a >> 16;
++    b0 = b & 0xFFFFU;
++    b1 = b >> 16;
++    p0 = a0 * b0;
++    p1 = a0 * b1;
++    p2 = a1 * b0;
++    p3 = a1 * b1;
++    middle = (p0 >> 16) + (p1 & 0xFFFFU) + (p2 & 0xFFFFU);
++    r.lo = (p0 & 0xFFFFU) | (middle << 16);
++    r.hi = p3 + (p1 >> 16) + (p2 >> 16) + (middle >> 16);
++    return r;
++}
++
++static void psd89_pair_add_u32(psd89_pair32 *v, psd89_u32 add)
++{
++    psd89_u32 old;
++    old = v->lo;
++    v->lo += add;
++    if (v->lo < old) {
++        v->hi += 1U;
++    }
++}
++
++static psd89_u32 psd89_pair_shr_low32(psd89_pair32 v, unsigned int shift)
++{
++    if (shift == 0U) {
++        return v.lo;
++    }
++    if (shift < 32U) {
++        return (v.hi << (32U - shift)) | (v.lo >> shift);
++    }
++    if (shift < 64U) {
++        return v.hi >> (shift - 32U);
++    }
++    return 0U;
++}
++
++static psd89_pair32 psd89_pair_from_u32_shift16(psd89_u32 v)
++{
++    psd89_pair32 r;
++    r.hi = v >> 16;
++    r.lo = v << 16;
++    return r;
++}
++
++static psd89_pair32 psd89_pair_div_u32(psd89_pair32 n, psd89_u32 d)
++{
++    psd89_pair32 q;
++    psd89_u32 rem;
++    unsigned int i;
++    psd89_u32 bit;
++    psd89_u32 carry;
++    int qbit;
++
++    q.hi = 0U;
++    q.lo = 0U;
++    if (d == 0U) {
++        return q;
++    }
++    rem = 0U;
++    for (i = 0U; i < 64U; ++i) {
++        if (i < 32U) {
++            bit = (n.hi >> (31U - i)) & 1U;
++        } else {
++            bit = (n.lo >> (63U - i)) & 1U;
++        }
++        qbit = 0;
++        if (rem >= (d >> 1) + (d & 1U)) {
++            rem = (psd89_u32)(rem - ((d >> 1) + (d & 1U)));
++            rem = (psd89_u32)((rem << 1) + bit);
++            rem = (psd89_u32)(rem + (d & 1U));
++            qbit = 1;
++        } else {
++            rem = (psd89_u32)((rem << 1) | bit);
++            if (rem >= d) {
++                rem -= d;
++                qbit = 1;
++            }
++        }
++        carry = q.lo >> 31;
++        q.lo <<= 1;
++        q.hi = (q.hi << 1) | carry;
++        if (qbit) {
++            q.lo |= 1U;
++        }
++    }
++    return q;
+ }
+ 
+ psd89_fx16 psd89_fx16_mul(psd89_fx16 a, psd89_fx16 b)
+ {
+-#if defined(LLONG_MAX) || defined(_MSC_VER)
+-    long long t;
+-    t = (long long)a * (long long)b;
+-    if (t >= 0) {
+-        t += 0x8000LL;
+-    } else {
+-        t -= 0x8000LL;
+-    }
+-    return (psd89_fx16)(t >> 16);
+-#else
+-    double da;
+-    double db;
+-    double dr;
+-    da = (double)a / 65536.0;
+-    db = (double)b / 65536.0;
+-    dr = da * db;
+-    if (dr >= 0.0) {
+-        dr += 0.5 / 65536.0;
+-    } else {
+-        dr -= 0.5 / 65536.0;
++    psd89_pair32 p;
++    psd89_u32 mag;
++    int negative;
++
++    negative = (a < 0) != (b < 0);
++    p = psd89_mul_u32_pair(psd89_abs_s32_u32(a), psd89_abs_s32_u32(b));
++    psd89_pair_add_u32(&p, 0x00008000U);
++    mag = psd89_pair_shr_low32(p, 16U);
++    if ((p.hi >> 16) != 0U || (!negative && mag > 0x7FFFFFFFU) ||
++        (negative && mag > 0x80000000U)) {
++        return (psd89_fx16)(-2147483647 - 1);
+     }
+-    return (psd89_fx16)(dr * 65536.0);
+-#endif
++    if (negative) {
++        return (psd89_fx16)(psd89_s32)(0U - mag);
++    }
++    return (psd89_fx16)(psd89_s32)mag;
+ }
+ 
+ psd89_fx16 psd89_fx16_div(psd89_fx16 a, psd89_fx16 b)
+ {
+-#if !defined(LLONG_MAX) && !defined(_MSC_VER)
+-    double da;
+-    double db;
+-#endif
++    psd89_pair32 n;
++    psd89_u32 den;
++    psd89_u32 mag;
++    psd89_pair32 q;
++    int negative;
++
+     if (b == 0) {
+         return 0;
+     }
+-#if defined(LLONG_MAX) || defined(_MSC_VER)
+-    long long t;
+-    t = ((long long)a << 16);
+-    if ((t >= 0 && b > 0) || (t < 0 && b < 0)) {
+-        t += (long long)(b / 2);
+-    } else {
+-        t -= (long long)(b / 2);
+-    }
+-    return (psd89_fx16)(t / (long long)b);
+-#else
+-    da = (double)a / 65536.0;
+-    db = (double)b / 65536.0;
+-    return (psd89_fx16)((da / db) * 65536.0);
+-#endif
++    negative = (a < 0) != (b < 0);
++    den = psd89_abs_s32_u32(b);
++    n = psd89_pair_from_u32_shift16(psd89_abs_s32_u32(a));
++    q = psd89_pair_div_u32(n, den);
++    mag = q.lo;
++    if (q.hi != 0U || (!negative && mag > 0x7FFFFFFFU) ||
++        (negative && mag > 0x80000000U)) {
++        return (psd89_fx16)(-2147483647 - 1);
++    }
++    if (negative) {
++        return (psd89_fx16)(psd89_s32)(0U - mag);
++    }
++    return (psd89_fx16)(psd89_s32)mag;
+ }
+ 
+ psd89_fx24 psd89_fx24_from_int(int v)
+@@ -174,32 +286,31 @@
+ int psd89_fx24_to_int(psd89_fx24 v)
+ {
+     if (v >= 0) {
+-        return (int)((v + 0x800000L) >> 24);
++        return (int)((v + 0x800000) >> 24);
+     }
+-    return (int)(-(((-v) + 0x800000L) >> 24));
++    return (int)(-(((-v) + 0x800000) >> 24));
+ }
+ 
+ psd89_fx24 psd89_fx24_mul(psd89_fx24 a, psd89_fx24 b)
+ {
+-#if defined(LLONG_MAX) || defined(_MSC_VER)
+-    long long t;
+-    t = (long long)a * (long long)b;
+-    if (t >= 0) {
+-        t += 0x800000LL;
+-    } else {
+-        t -= 0x800000LL;
+-    }
+-    return (psd89_fx24)(t >> 24);
+-#else
+-    double da;
+-    double db;
+-    da = (double)a / 16777216.0;
+-    db = (double)b / 16777216.0;
+-    return (psd89_fx24)((da * db) * 16777216.0);
+-#endif
++    psd89_pair32 p;
++    psd89_u32 mag;
++    int negative;
++
++    negative = (a < 0) != (b < 0);
++    p = psd89_mul_u32_pair(psd89_abs_s32_u32(a), psd89_abs_s32_u32(b));
++    mag = psd89_pair_shr_low32(p, 24U);
++    if ((p.hi >> 24) != 0U || (!negative && mag > 0x7FFFFFFFU) ||
++        (negative && mag > 0x80000000U)) {
++        return (psd89_fx24)(-2147483647 - 1);
++    }
++    if (negative) {
++        return (psd89_fx24)(psd89_s32)(0U - mag);
++    }
++    return (psd89_fx24)(psd89_s32)mag;
+ }
+ 
+-void psd89_memio_init_read(psd89_memio *m, const void *data, unsigned long size)
++void psd89_memio_init_read(psd89_memio *m, const void *data, psd89_u32 size)
+ {
+     if (m == 0) {
+         return;
+@@ -207,19 +318,19 @@
+     m->data = (psd89_u8 *)data;
+     m->size = size;
+     m->capacity = size;
+-    m->pos = 0UL;
++    m->pos = 0U;
+     m->writable = 0;
+ }
+ 
+-void psd89_memio_init_write(psd89_memio *m, void *data, unsigned long capacity)
++void psd89_memio_init_write(psd89_memio *m, void *data, psd89_u32 capacity)
+ {
+     if (m == 0) {
+         return;
+     }
+     m->data = (psd89_u8 *)data;
+-    m->size = 0UL;
++    m->size = 0U;
+     m->capacity = capacity;
+-    m->pos = 0UL;
++    m->pos = 0U;
+     m->writable = 1;
+ }
+ 
+--- /mnt/data/psd_work/orig/PSD/src/psd89_internal.h	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_internal.h	2026-08-20 02:05:51.316053003 +0000
+@@ -9,10 +9,10 @@
+ extern "C" {
+ #endif
+ 
+-int psd89_io_read(psd89_io *io, void *dst, unsigned long size);
+-int psd89_io_write(psd89_io *io, const void *src, unsigned long size);
+-int psd89_io_seek(psd89_io *io, unsigned long offset);
+-unsigned long psd89_io_tell(psd89_io *io);
++int psd89_io_read(psd89_io *io, void *dst, psd89_u32 size);
++int psd89_io_write(psd89_io *io, const void *src, psd89_u32 size);
++int psd89_io_seek(psd89_io *io, psd89_u32 offset);
++psd89_u32 psd89_io_tell(psd89_io *io);
+ 
+ int psd89_rd_u8(psd89_io *io, psd89_u8 *v);
+ int psd89_rd_be16(psd89_io *io, psd89_u16 *v);
+@@ -24,31 +24,31 @@
+ int psd89_wr_be16(psd89_io *io, psd89_u16 v);
+ int psd89_wr_be32(psd89_io *io, psd89_u32 v);
+ 
+-int psd89_skip(psd89_io *io, unsigned long size);
+-int psd89_read_pascal_string(psd89_io *io, char *dst, unsigned long dst_size, unsigned long pad_multiple);
+-int psd89_write_pascal_string(psd89_io *io, const char *src, unsigned long pad_multiple);
+-int psd89_copy_bytes(psd89_io *dst, psd89_io *src, unsigned long src_offset, unsigned long size);
+-int psd89_patch_be32(psd89_io *io, unsigned long offset, psd89_u32 value);
+-
+-int psd89_packbits_decode_row(psd89_io *io, psd89_u8 *dst, unsigned long row_bytes, unsigned long encoded_size);
+-unsigned long psd89_packbits_encoded_len(const psd89_u8 *src, unsigned long row_bytes);
+-int psd89_packbits_write_row(psd89_io *io, const psd89_u8 *src, unsigned long row_bytes);
+-int psd89_packbits_write_zero_row(psd89_io *io, unsigned long row_bytes);
++int psd89_skip(psd89_io *io, psd89_u32 size);
++int psd89_read_pascal_string(psd89_io *io, char *dst, psd89_u32 dst_size, psd89_u32 pad_multiple);
++int psd89_write_pascal_string(psd89_io *io, const char *src, psd89_u32 pad_multiple);
++int psd89_copy_bytes(psd89_io *dst, psd89_io *src, psd89_u32 src_offset, psd89_u32 size);
++int psd89_patch_be32(psd89_io *io, psd89_u32 offset, psd89_u32 value);
++
++int psd89_packbits_decode_row(psd89_io *io, psd89_u8 *dst, psd89_u32 row_bytes, psd89_u32 encoded_size);
++psd89_u32 psd89_packbits_encoded_len(const psd89_u8 *src, psd89_u32 row_bytes);
++int psd89_packbits_write_row(psd89_io *io, const psd89_u8 *src, psd89_u32 row_bytes);
++int psd89_packbits_write_zero_row(psd89_io *io, psd89_u32 row_bytes);
+ 
+-int psd89_rd_be64_double_q16(psd89_io *io, psd89_fx16 *out);
+-int psd89_wr_be64_double_from_q16(psd89_io *io, psd89_fx16 value);
++int psd89_rd_ieee8_q16(psd89_io *io, psd89_fx16 *out);
++int psd89_wr_ieee8_from_q16(psd89_io *io, psd89_fx16 value);
+ 
+ int psd89_zip_decode_plane(psd89_io *io,
+-                           unsigned long data_offset,
+-                           unsigned long encoded_size,
++                           psd89_u32 data_offset,
++                           psd89_u32 encoded_size,
+                            psd89_u8 *dst,
+                            psd89_u32 stride,
+                            psd89_u32 rows,
+                            psd89_u32 cols,
+                            int prediction);
+ int psd89_zip_decode_composite(psd89_io *io,
+-                               unsigned long data_offset,
+-                               unsigned long encoded_size,
++                               psd89_u32 data_offset,
++                               psd89_u32 encoded_size,
+                                psd89_u8 **planes,
+                                psd89_u32 stride,
+                                psd89_u16 channels,
+--- /mnt/data/psd_work/orig/PSD/src/psd89_util.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_util.c	2026-08-20 02:05:51.318329239 +0000
+@@ -2,7 +2,7 @@
+ 
+ #include <string.h>
+ 
+-int psd89_io_read(psd89_io *io, void *dst, unsigned long size)
++int psd89_io_read(psd89_io *io, void *dst, psd89_u32 size)
+ {
+     if (io == 0 || io->read == 0) {
+         return 0;
+@@ -10,7 +10,7 @@
+     return io->read(io->user, dst, size);
+ }
+ 
+-int psd89_io_write(psd89_io *io, const void *src, unsigned long size)
++int psd89_io_write(psd89_io *io, const void *src, psd89_u32 size)
+ {
+     if (io == 0 || io->write == 0) {
+         return 0;
+@@ -18,7 +18,7 @@
+     return io->write(io->user, src, size);
+ }
+ 
+-int psd89_io_seek(psd89_io *io, unsigned long offset)
++int psd89_io_seek(psd89_io *io, psd89_u32 offset)
+ {
+     if (io == 0 || io->seek == 0) {
+         return 0;
+@@ -26,23 +26,23 @@
+     return io->seek(io->user, offset);
+ }
+ 
+-unsigned long psd89_io_tell(psd89_io *io)
++psd89_u32 psd89_io_tell(psd89_io *io)
+ {
+     if (io == 0 || io->tell == 0) {
+-        return 0UL;
++        return 0U;
+     }
+     return io->tell(io->user);
+ }
+ 
+ int psd89_rd_u8(psd89_io *io, psd89_u8 *v)
+ {
+-    return psd89_io_read(io, v, 1UL);
++    return psd89_io_read(io, v, 1U);
+ }
+ 
+ int psd89_rd_be16(psd89_io *io, psd89_u16 *v)
+ {
+     psd89_u8 b[2];
+-    if (!psd89_io_read(io, b, 2UL)) {
++    if (!psd89_io_read(io, b, 2U)) {
+         return 0;
+     }
+     *v = (psd89_u16)(((psd89_u16)b[0] << 8) | (psd89_u16)b[1]);
+@@ -62,7 +62,7 @@
+ int psd89_rd_be32(psd89_io *io, psd89_u32 *v)
+ {
+     psd89_u8 b[4];
+-    if (!psd89_io_read(io, b, 4UL)) {
++    if (!psd89_io_read(io, b, 4U)) {
+         return 0;
+     }
+     *v = ((psd89_u32)b[0] << 24) |
+@@ -84,7 +84,7 @@
+ 
+ int psd89_wr_u8(psd89_io *io, psd89_u8 v)
+ {
+-    return psd89_io_write(io, &v, 1UL);
++    return psd89_io_write(io, &v, 1U);
+ }
+ 
+ int psd89_wr_be16(psd89_io *io, psd89_u16 v)
+@@ -92,33 +92,33 @@
+     psd89_u8 b[2];
+     b[0] = (psd89_u8)((v >> 8) & 0xFFU);
+     b[1] = (psd89_u8)(v & 0xFFU);
+-    return psd89_io_write(io, b, 2UL);
++    return psd89_io_write(io, b, 2U);
+ }
+ 
+ int psd89_wr_be32(psd89_io *io, psd89_u32 v)
+ {
+     psd89_u8 b[4];
+-    b[0] = (psd89_u8)((v >> 24) & 0xFFUL);
+-    b[1] = (psd89_u8)((v >> 16) & 0xFFUL);
+-    b[2] = (psd89_u8)((v >> 8) & 0xFFUL);
+-    b[3] = (psd89_u8)(v & 0xFFUL);
+-    return psd89_io_write(io, b, 4UL);
++    b[0] = (psd89_u8)((v >> 24) & 0xFFU);
++    b[1] = (psd89_u8)((v >> 16) & 0xFFU);
++    b[2] = (psd89_u8)((v >> 8) & 0xFFU);
++    b[3] = (psd89_u8)(v & 0xFFU);
++    return psd89_io_write(io, b, 4U);
+ }
+ 
+-int psd89_skip(psd89_io *io, unsigned long size)
++int psd89_skip(psd89_io *io, psd89_u32 size)
+ {
+-    unsigned long pos;
++    psd89_u32 pos;
+     psd89_u8 buf[256];
+-    unsigned long chunk;
+-    if (size == 0UL) {
++    psd89_u32 chunk;
++    if (size == 0U) {
+         return 1;
+     }
+     if (io != 0 && io->seek != 0 && io->tell != 0) {
+         pos = psd89_io_tell(io);
+         return psd89_io_seek(io, pos + size);
+     }
+-    while (size != 0UL) {
+-        chunk = size > (unsigned long)sizeof(buf) ? (unsigned long)sizeof(buf) : size;
++    while (size != 0U) {
++        chunk = size > (psd89_u32)sizeof(buf) ? (psd89_u32)sizeof(buf) : size;
+         if (!psd89_io_read(io, buf, chunk)) {
+             return 0;
+         }
+@@ -127,64 +127,64 @@
+     return 1;
+ }
+ 
+-int psd89_read_pascal_string(psd89_io *io, char *dst, unsigned long dst_size, unsigned long pad_multiple)
++int psd89_read_pascal_string(psd89_io *io, char *dst, psd89_u32 dst_size, psd89_u32 pad_multiple)
+ {
+     psd89_u8 len;
+-    unsigned long total;
+-    unsigned long padded;
+-    unsigned long i;
++    psd89_u32 total;
++    psd89_u32 padded;
++    psd89_u32 i;
+     psd89_u8 buf[256];
+ 
+     if (!psd89_rd_u8(io, &len)) {
+         return 0;
+     }
+-    total = 1UL + (unsigned long)len;
+-    if (len != 0U && !psd89_io_read(io, buf, (unsigned long)len)) {
++    total = 1U + (psd89_u32)len;
++    if (len != 0U && !psd89_io_read(io, buf, (psd89_u32)len)) {
+         return 0;
+     }
+-    if (dst != 0 && dst_size != 0UL) {
+-        unsigned long copy_n;
+-        copy_n = (unsigned long)len;
++    if (dst != 0 && dst_size != 0U) {
++        psd89_u32 copy_n;
++        copy_n = (psd89_u32)len;
+         if (copy_n >= dst_size) {
+-            copy_n = dst_size - 1UL;
++            copy_n = dst_size - 1U;
+         }
+-        for (i = 0UL; i < copy_n; ++i) {
++        for (i = 0U; i < copy_n; ++i) {
+             dst[i] = (char)buf[i];
+         }
+         dst[copy_n] = '\0';
+     }
+-    if (pad_multiple == 0UL) {
+-        pad_multiple = 1UL;
++    if (pad_multiple == 0U) {
++        pad_multiple = 1U;
+     }
+     padded = total;
+-    while ((padded % pad_multiple) != 0UL) {
++    while ((padded % pad_multiple) != 0U) {
+         ++padded;
+     }
+     return psd89_skip(io, padded - total);
+ }
+ 
+-int psd89_write_pascal_string(psd89_io *io, const char *src, unsigned long pad_multiple)
++int psd89_write_pascal_string(psd89_io *io, const char *src, psd89_u32 pad_multiple)
+ {
+-    unsigned long len;
+-    unsigned long total;
++    psd89_u32 len;
++    psd89_u32 total;
+     if (src == 0) {
+         src = "";
+     }
+-    len = 0UL;
+-    while (src[len] != '\0' && len < 255UL) {
++    len = 0U;
++    while (src[len] != '\0' && len < 255U) {
+         ++len;
+     }
+     if (!psd89_wr_u8(io, (psd89_u8)len)) {
+         return 0;
+     }
+-    if (len != 0UL && !psd89_io_write(io, src, len)) {
++    if (len != 0U && !psd89_io_write(io, src, len)) {
+         return 0;
+     }
+-    if (pad_multiple == 0UL) {
+-        pad_multiple = 1UL;
++    if (pad_multiple == 0U) {
++        pad_multiple = 1U;
+     }
+-    total = 1UL + len;
+-    while ((total % pad_multiple) != 0UL) {
++    total = 1U + len;
++    while ((total % pad_multiple) != 0U) {
+         if (!psd89_wr_u8(io, 0U)) {
+             return 0;
+         }
+@@ -193,15 +193,15 @@
+     return 1;
+ }
+ 
+-int psd89_copy_bytes(psd89_io *dst, psd89_io *src, unsigned long src_offset, unsigned long size)
++int psd89_copy_bytes(psd89_io *dst, psd89_io *src, psd89_u32 src_offset, psd89_u32 size)
+ {
+     psd89_u8 buf[4096];
+-    unsigned long chunk;
++    psd89_u32 chunk;
+     if (!psd89_io_seek(src, src_offset)) {
+         return 0;
+     }
+-    while (size != 0UL) {
+-        chunk = size > (unsigned long)sizeof(buf) ? (unsigned long)sizeof(buf) : size;
++    while (size != 0U) {
++        chunk = size > (psd89_u32)sizeof(buf) ? (psd89_u32)sizeof(buf) : size;
+         if (!psd89_io_read(src, buf, chunk) || !psd89_io_write(dst, buf, chunk)) {
+             return 0;
+         }
+@@ -210,9 +210,9 @@
+     return 1;
+ }
+ 
+-int psd89_patch_be32(psd89_io *io, unsigned long offset, psd89_u32 value)
++int psd89_patch_be32(psd89_io *io, psd89_u32 offset, psd89_u32 value)
+ {
+-    unsigned long pos;
++    psd89_u32 pos;
+     pos = psd89_io_tell(io);
+     if (!psd89_io_seek(io, offset) || !psd89_wr_be32(io, value) || !psd89_io_seek(io, pos)) {
+         return 0;
+@@ -220,25 +220,25 @@
+     return 1;
+ }
+ 
+-int psd89_packbits_decode_row(psd89_io *io, psd89_u8 *dst, unsigned long row_bytes, unsigned long encoded_size)
++int psd89_packbits_decode_row(psd89_io *io, psd89_u8 *dst, psd89_u32 row_bytes, psd89_u32 encoded_size)
+ {
+-    unsigned long out;
+-    unsigned long used;
++    psd89_u32 out;
++    psd89_u32 used;
+     psd89_u8 ctrl;
+     psd89_s8 sc;
+-    unsigned long count;
++    psd89_u32 count;
+     psd89_u8 val;
+ 
+-    out = 0UL;
+-    used = 0UL;
++    out = 0U;
++    used = 0U;
+     while (used < encoded_size && out < row_bytes) {
+-        if (!psd89_io_read(io, &ctrl, 1UL)) {
++        if (!psd89_io_read(io, &ctrl, 1U)) {
+             return 0;
+         }
+         ++used;
+         sc = (psd89_s8)ctrl;
+         if (sc >= 0) {
+-            count = (unsigned long)sc + 1UL;
++            count = (psd89_u32)sc + 1U;
+             if (used + count > encoded_size || out + count > row_bytes) {
+                 return 0;
+             }
+@@ -248,15 +248,15 @@
+             used += count;
+             out += count;
+         } else if (sc >= -127) {
+-            count = (unsigned long)(1 - sc);
++            count = (psd89_u32)(1 - sc);
+             if (out + count > row_bytes) {
+                 return 0;
+             }
+-            if (!psd89_io_read(io, &val, 1UL)) {
++            if (!psd89_io_read(io, &val, 1U)) {
+                 return 0;
+             }
+             ++used;
+-            while (count-- != 0UL) {
++            while (count-- != 0U) {
+                 dst[out++] = val;
+             }
+         }
+@@ -264,41 +264,41 @@
+     return used == encoded_size && out == row_bytes;
+ }
+ 
+-static unsigned long psd89_packbits_literal_len(unsigned long count)
++static psd89_u32 psd89_packbits_literal_len(psd89_u32 count)
+ {
+-    return 1UL + count;
++    return 1U + count;
+ }
+ 
+-unsigned long psd89_packbits_encoded_len(const psd89_u8 *src, unsigned long row_bytes)
++psd89_u32 psd89_packbits_encoded_len(const psd89_u8 *src, psd89_u32 row_bytes)
+ {
+-    unsigned long i;
+-    unsigned long len;
+-    unsigned long run;
+-    unsigned long lit;
++    psd89_u32 i;
++    psd89_u32 len;
++    psd89_u32 run;
++    psd89_u32 lit;
+ 
+     if (src == 0) {
+-        return ((row_bytes + 127UL) / 128UL) * 2UL;
++        return ((row_bytes + 127U) / 128U) * 2U;
+     }
+ 
+-    i = 0UL;
+-    len = 0UL;
++    i = 0U;
++    len = 0U;
+     while (i < row_bytes) {
+-        run = 1UL;
+-        while (i + run < row_bytes && run < 128UL && src[i + run] == src[i]) {
++        run = 1U;
++        while (i + run < row_bytes && run < 128U && src[i + run] == src[i]) {
+             ++run;
+         }
+-        if (run >= 3UL) {
+-            len += 2UL;
++        if (run >= 3U) {
++            len += 2U;
+             i += run;
+             continue;
+         }
+-        lit = 0UL;
++        lit = 0U;
+         while (i + lit < row_bytes) {
+-            run = 1UL;
+-            while (i + lit + run < row_bytes && run < 128UL && src[i + lit + run] == src[i + lit]) {
++            run = 1U;
++            while (i + lit + run < row_bytes && run < 128U && src[i + lit + run] == src[i + lit]) {
+                 ++run;
+             }
+-            if (run >= 3UL || lit == 128UL) {
++            if (run >= 3U || lit == 128U) {
+                 break;
+             }
+             ++lit;
+@@ -309,44 +309,44 @@
+     return len;
+ }
+ 
+-int psd89_packbits_write_row(psd89_io *io, const psd89_u8 *src, unsigned long row_bytes)
++int psd89_packbits_write_row(psd89_io *io, const psd89_u8 *src, psd89_u32 row_bytes)
+ {
+-    unsigned long i;
+-    unsigned long run;
+-    unsigned long lit;
++    psd89_u32 i;
++    psd89_u32 run;
++    psd89_u32 lit;
+     psd89_u8 hdr;
+ 
+     if (src == 0) {
+         return psd89_packbits_write_zero_row(io, row_bytes);
+     }
+ 
+-    i = 0UL;
++    i = 0U;
+     while (i < row_bytes) {
+-        run = 1UL;
+-        while (i + run < row_bytes && run < 128UL && src[i + run] == src[i]) {
++        run = 1U;
++        while (i + run < row_bytes && run < 128U && src[i + run] == src[i]) {
+             ++run;
+         }
+-        if (run >= 3UL) {
+-            hdr = (psd89_u8)(257UL - run);
+-            if (!psd89_io_write(io, &hdr, 1UL) || !psd89_io_write(io, src + i, 1UL)) {
++        if (run >= 3U) {
++            hdr = (psd89_u8)(257U - run);
++            if (!psd89_io_write(io, &hdr, 1U) || !psd89_io_write(io, src + i, 1U)) {
+                 return 0;
+             }
+             i += run;
+             continue;
+         }
+-        lit = 0UL;
++        lit = 0U;
+         while (i + lit < row_bytes) {
+-            run = 1UL;
+-            while (i + lit + run < row_bytes && run < 128UL && src[i + lit + run] == src[i + lit]) {
++            run = 1U;
++            while (i + lit + run < row_bytes && run < 128U && src[i + lit + run] == src[i + lit]) {
+                 ++run;
+             }
+-            if (run >= 3UL || lit == 128UL) {
++            if (run >= 3U || lit == 128U) {
+                 break;
+             }
+             ++lit;
+         }
+-        hdr = (psd89_u8)(lit - 1UL);
+-        if (!psd89_io_write(io, &hdr, 1UL) || !psd89_io_write(io, src + i, lit)) {
++        hdr = (psd89_u8)(lit - 1U);
++        if (!psd89_io_write(io, &hdr, 1U) || !psd89_io_write(io, src + i, lit)) {
+             return 0;
+         }
+         i += lit;
+@@ -354,16 +354,16 @@
+     return 1;
+ }
+ 
+-int psd89_packbits_write_zero_row(psd89_io *io, unsigned long row_bytes)
++int psd89_packbits_write_zero_row(psd89_io *io, psd89_u32 row_bytes)
+ {
+     psd89_u8 hdr;
+     psd89_u8 zero;
+-    unsigned long run;
++    psd89_u32 run;
+     zero = 0U;
+-    while (row_bytes != 0UL) {
+-        run = row_bytes > 128UL ? 128UL : row_bytes;
+-        hdr = (psd89_u8)(257UL - run);
+-        if (!psd89_io_write(io, &hdr, 1UL) || !psd89_io_write(io, &zero, 1UL)) {
++    while (row_bytes != 0U) {
++        run = row_bytes > 128U ? 128U : row_bytes;
++        hdr = (psd89_u8)(257U - run);
++        if (!psd89_io_write(io, &hdr, 1U) || !psd89_io_write(io, &zero, 1U)) {
+             return 0;
+         }
+         row_bytes -= run;
+@@ -371,84 +371,174 @@
+     return 1;
+ }
+ 
+-static int psd89_host_is_little_endian(void)
++static psd89_u32 psd89_be32_from_bytes(const psd89_u8 *p)
+ {
+-    psd89_u16 v;
+-    v = 1U;
+-    return *((psd89_u8 *)&v) == 1U;
++    return ((psd89_u32)p[0] << 24) |
++           ((psd89_u32)p[1] << 16) |
++           ((psd89_u32)p[2] << 8) |
++           (psd89_u32)p[3];
+ }
+ 
+-int psd89_rd_be64_double_q16(psd89_io *io, psd89_fx16 *out)
++static void psd89_be32_to_bytes(psd89_u8 *p, psd89_u32 v)
++{
++    p[0] = (psd89_u8)(v >> 24);
++    p[1] = (psd89_u8)(v >> 16);
++    p[2] = (psd89_u8)(v >> 8);
++    p[3] = (psd89_u8)v;
++}
++
++static psd89_u32 psd89_ieee_q16_round_mantissa(psd89_u32 mh,
++                                                psd89_u32 ml,
++                                                unsigned int shift)
++{
++    psd89_u32 q;
++    psd89_u32 mask;
++    psd89_u32 remh;
++    psd89_u32 halfh;
++
++    if (shift < 32U) {
++        q = (mh << (32U - shift)) | (ml >> shift);
++        mask = ((psd89_u32)1U << shift) - 1U;
++        if ((ml & mask) >= ((psd89_u32)1U << (shift - 1U))) {
++            q += 1U;
++        }
++        return q;
++    }
++    if (shift == 32U) {
++        q = mh;
++        if (ml >= 0x80000000U) {
++            q += 1U;
++        }
++        return q;
++    }
++
++    q = mh >> (shift - 32U);
++    if (shift - 32U >= 32U) {
++        remh = mh;
++    } else {
++        mask = ((psd89_u32)1U << (shift - 32U)) - 1U;
++        remh = mh & mask;
++    }
++    halfh = (psd89_u32)1U << (shift - 33U);
++    if (remh >= halfh) {
++        q += 1U;
++    }
++    return q;
++}
++
++int psd89_rd_ieee8_q16(psd89_io *io, psd89_fx16 *out)
+ {
+     psd89_u8 be[8];
+-    union {
+-        double d;
+-        psd89_u8 b[8];
+-    } u;
+-    double scaled;
+-    int i;
++    psd89_u32 hi;
++    psd89_u32 lo;
++    psd89_u32 mh;
++    psd89_u32 mag;
++    unsigned int exp;
++    int e;
++    unsigned int shift;
++    int negative;
+ 
+     if (out != 0) {
+         *out = 0;
+     }
+-    if (!psd89_io_read(io, be, 8UL)) {
++    if (!psd89_io_read(io, be, 8U)) {
+         return 0;
+     }
+-    if (sizeof(double) != 8U) {
+-        return 1;
+-    }
+-    if (psd89_host_is_little_endian()) {
+-        for (i = 0; i < 8; ++i) {
+-            u.b[i] = be[7 - i];
++    hi = psd89_be32_from_bytes(be);
++    lo = psd89_be32_from_bytes(be + 4);
++    negative = (hi & 0x80000000U) != 0U;
++    exp = (unsigned int)((hi >> 20) & 0x7FFU);
++
++    if (exp == 0x7FFU) {
++        if ((hi & 0x000FFFFFU) != 0U || lo != 0U) {
++            return 1;
+         }
+-    } else {
+-        memcpy(u.b, be, 8U);
+-    }
+-    scaled = u.d * 65536.0;
+-    if (scaled > 2147483647.0) {
+         if (out != 0) {
+-            *out = (psd89_fx16)2147483647L;
++            *out = negative ? (psd89_fx16)(-2147483647 - 1) : (psd89_fx16)2147483647;
+         }
+         return 1;
+     }
+-    if (scaled < -2147483648.0) {
++    if (exp == 0U) {
++        return 1;
++    }
++
++    e = (int)exp - 1023;
++    if (e < -17) {
++        return 1;
++    }
++    if (e >= 15) {
+         if (out != 0) {
+-            *out = (psd89_fx16)(-2147483647L - 1L);
++            *out = negative ? (psd89_fx16)(-2147483647 - 1) : (psd89_fx16)2147483647;
+         }
+         return 1;
+     }
+-    if (scaled >= 0.0) {
+-        scaled += 0.5;
++
++    mh = (hi & 0x000FFFFFU) | 0x00100000U;
++    shift = (unsigned int)(36 - e);
++    mag = psd89_ieee_q16_round_mantissa(mh, lo, shift);
++
++    if (!negative) {
++        if (mag > 0x7FFFFFFFU) {
++            mag = 0x7FFFFFFFU;
++        }
++        if (out != 0) {
++            *out = (psd89_fx16)(psd89_s32)mag;
++        }
+     } else {
+-        scaled -= 0.5;
+-    }
+-    if (out != 0) {
+-        *out = (psd89_fx16)scaled;
++        if (mag >= 0x80000000U) {
++            if (out != 0) {
++                *out = (psd89_fx16)(-2147483647 - 1);
++            }
++        } else if (out != 0) {
++            *out = (psd89_fx16)(psd89_s32)(0U - mag);
++        }
+     }
+     return 1;
+ }
+ 
+-int psd89_wr_be64_double_from_q16(psd89_io *io, psd89_fx16 value)
++int psd89_wr_ieee8_from_q16(psd89_io *io, psd89_fx16 value)
+ {
+     psd89_u8 be[8];
+-    unsigned int i;
+-    union {
+-        double d;
+-        psd89_u8 b[8];
+-    } u;
++    psd89_u32 mag;
++    psd89_u32 hi_mant;
++    psd89_u32 lo_mant;
++    psd89_u32 hi;
++    unsigned int top;
++    unsigned int shift;
++    unsigned int exp;
++    int negative;
+ 
+     memset(be, 0, sizeof(be));
+-    if (sizeof(double) == 8U) {
+-        u.d = (double)value / 65536.0;
+-        if (psd89_host_is_little_endian()) {
+-            for (i = 0U; i < 8U; ++i) {
+-                be[i] = u.b[7U - i];
+-            }
+-        } else {
+-            memcpy(be, u.b, 8U);
+-        }
++    if (value == 0) {
++        return psd89_io_write(io, be, 8U);
++    }
++
++    negative = value < 0;
++    mag = (psd89_u32)value;
++    if (negative) {
++        mag = (psd89_u32)(0U - mag);
++    }
++
++    top = 31U;
++    while (top != 0U && ((mag >> top) & 1U) == 0U) {
++        --top;
++    }
++    exp = top + 1007U;
++    shift = 52U - top;
++    if (shift >= 32U) {
++        hi_mant = mag << (shift - 32U);
++        lo_mant = 0U;
++    } else {
++        hi_mant = mag >> (32U - shift);
++        lo_mant = mag << shift;
+     }
+-    return psd89_io_write(io, be, 8UL);
++    hi = ((psd89_u32)exp << 20) | (hi_mant & 0x000FFFFFU);
++    if (negative) {
++        hi |= 0x80000000U;
++    }
++    psd89_be32_to_bytes(be, hi);
++    psd89_be32_to_bytes(be + 4, lo_mant);
++    return psd89_io_write(io, be, 8U);
+ }
+ 
+ static void psd89_resolve_mask_rect(const psd89_layer *layer,
+--- /mnt/data/psd_work/orig/PSD/src/psd89_compose.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_compose.c	2026-08-20 02:05:51.327322848 +0000
+@@ -8,9 +8,9 @@
+     psd89_u16 compression;
+     const psd89_u8 *mem_plane;
+     psd89_u32 mem_stride;
+-    unsigned long raw_base;
+-    unsigned long counts_offset;
+-    unsigned long data_pos;
++    psd89_u32 raw_base;
++    psd89_u32 counts_offset;
++    psd89_u32 data_pos;
+     psd89_u32 current_row;
+     psd89_u32 cols;
+     psd89_u32 rows;
+@@ -151,7 +151,7 @@
+ 
+ static psd89_fx16 psd89_fx16_from_u8(psd89_u8 v)
+ {
+-    return (psd89_fx16)((((psd89_u32)v) * 65536UL + 127UL) / 255UL);
++    return (psd89_fx16)((((psd89_u32)v) * 65536U + 127U) / 255U);
+ }
+ 
+ static psd89_u8 psd89_fx16_to_u8_sat(psd89_fx16 v)
+@@ -163,9 +163,9 @@
+     if (v >= PSD89_FX16_ONE) {
+         return 255U;
+     }
+-    t = ((psd89_u32)v * 255UL + 32768UL) >> 16;
+-    if (t > 255UL) {
+-        t = 255UL;
++    t = ((psd89_u32)v * 255U + 32768U) >> 16;
++    if (t > 255U) {
++        t = 255U;
+     }
+     return (psd89_u8)t;
+ }
+@@ -243,7 +243,7 @@
+     memset(dst, (int)v, (size_t)n);
+ }
+ 
+-static int psd89_io_read_bytes(psd89_io *io, void *dst, unsigned long size)
++static int psd89_io_read_bytes(psd89_io *io, void *dst, psd89_u32 size)
+ {
+     if (io == 0 || io->read == 0) {
+         return 0;
+@@ -251,7 +251,7 @@
+     return io->read(io->user, dst, size);
+ }
+ 
+-static int psd89_io_seek_abs(psd89_io *io, unsigned long off)
++static int psd89_io_seek_abs(psd89_io *io, psd89_u32 off)
+ {
+     if (io == 0 || io->seek == 0) {
+         return 0;
+@@ -262,32 +262,32 @@
+ static int psd89_rd_u16_be(psd89_io *io, psd89_u16 *v)
+ {
+     psd89_u8 b[2];
+-    if (!psd89_io_read_bytes(io, b, 2UL)) {
++    if (!psd89_io_read_bytes(io, b, 2U)) {
+         return 0;
+     }
+     *v = (psd89_u16)(((psd89_u16)b[0] << 8) | (psd89_u16)b[1]);
+     return 1;
+ }
+ 
+-static int psd89_packbits_decode_row_local(psd89_io *io, psd89_u8 *dst, unsigned long row_bytes, unsigned long encoded_size)
++static int psd89_packbits_decode_row_local(psd89_io *io, psd89_u8 *dst, psd89_u32 row_bytes, psd89_u32 encoded_size)
+ {
+-    unsigned long out;
+-    unsigned long used;
++    psd89_u32 out;
++    psd89_u32 used;
+     psd89_u8 ctrl;
+     psd89_s8 sc;
+-    unsigned long count;
++    psd89_u32 count;
+     psd89_u8 val;
+ 
+-    out = 0UL;
+-    used = 0UL;
++    out = 0U;
++    used = 0U;
+     while (used < encoded_size && out < row_bytes) {
+-        if (!psd89_io_read_bytes(io, &ctrl, 1UL)) {
++        if (!psd89_io_read_bytes(io, &ctrl, 1U)) {
+             return 0;
+         }
+         ++used;
+         sc = (psd89_s8)ctrl;
+         if (sc >= 0) {
+-            count = (unsigned long)sc + 1UL;
++            count = (psd89_u32)sc + 1U;
+             if (used + count > encoded_size || out + count > row_bytes) {
+                 return 0;
+             }
+@@ -297,15 +297,15 @@
+             used += count;
+             out += count;
+         } else if (sc >= -127) {
+-            count = (unsigned long)(1 - sc);
++            count = (psd89_u32)(1 - sc);
+             if (out + count > row_bytes) {
+                 return 0;
+             }
+-            if (!psd89_io_read_bytes(io, &val, 1UL)) {
++            if (!psd89_io_read_bytes(io, &val, 1U)) {
+                 return 0;
+             }
+             ++used;
+-            while (count-- != 0UL) {
++            while (count-- != 0U) {
+                 dst[out++] = val;
+             }
+         }
+@@ -320,11 +320,11 @@
+ {
+     psd89_u16 count16;
+     while (st->current_row < target_row) {
+-        if (!psd89_io_seek_abs(io, st->counts_offset + (unsigned long)st->current_row * 2UL) ||
++        if (!psd89_io_seek_abs(io, st->counts_offset + (psd89_u32)st->current_row * 2U) ||
+             !psd89_rd_u16_be(io, &count16)) {
+             return 0;
+         }
+-        st->data_pos += (unsigned long)count16;
++        st->data_pos += (psd89_u32)count16;
+         ++st->current_row;
+     }
+     return 1;
+@@ -346,7 +346,7 @@
+     }
+     if (st->from_memory) {
+         memcpy(dst,
+-               st->mem_plane + (unsigned long)row_index * st->mem_stride,
++               st->mem_plane + (psd89_u32)row_index * st->mem_stride,
+                (size_t)st->cols);
+         return 1;
+     }
+@@ -354,10 +354,10 @@
+         return 0;
+     }
+     if (st->compression == PSD89_COMP_RAW) {
+-        if (!psd89_io_seek_abs(io, st->raw_base + (unsigned long)row_index * (unsigned long)st->cols)) {
++        if (!psd89_io_seek_abs(io, st->raw_base + (psd89_u32)row_index * (psd89_u32)st->cols)) {
+             return 0;
+         }
+-        return psd89_io_read_bytes(io, dst, (unsigned long)st->cols);
++        return psd89_io_read_bytes(io, dst, (psd89_u32)st->cols);
+     }
+     if (st->compression != PSD89_COMP_RLE) {
+         return 0;
+@@ -365,13 +365,13 @@
+     if (!psd89_compose_advance_rle(io, st, row_index)) {
+         return 0;
+     }
+-    if (!psd89_io_seek_abs(io, st->counts_offset + (unsigned long)row_index * 2UL) ||
++    if (!psd89_io_seek_abs(io, st->counts_offset + (psd89_u32)row_index * 2U) ||
+         !psd89_rd_u16_be(io, &count16) ||
+         !psd89_io_seek_abs(io, st->data_pos) ||
+-        !psd89_packbits_decode_row_local(io, dst, (unsigned long)st->cols, (unsigned long)count16)) {
++        !psd89_packbits_decode_row_local(io, dst, (psd89_u32)st->cols, (psd89_u32)count16)) {
+         return 0;
+     }
+-    st->data_pos += (unsigned long)count16;
++    st->data_pos += (psd89_u32)count16;
+     st->current_row = row_index + 1U;
+     return 1;
+ }
+@@ -402,22 +402,22 @@
+         return 0;
+     }
+     if (ch->compression == PSD89_COMP_RAW) {
+-        st->raw_base = ch->data_offset + 2UL;
++        st->raw_base = ch->data_offset + 2U;
+         st->current_row = start_row;
+         return 1;
+     }
+     if (ch->compression != PSD89_COMP_RLE) {
+         return 0;
+     }
+-    st->counts_offset = ch->data_offset + 2UL;
+-    st->data_pos = st->counts_offset + (unsigned long)rows * 2UL;
++    st->counts_offset = ch->data_offset + 2U;
++    st->data_pos = st->counts_offset + (psd89_u32)rows * 2U;
+     st->current_row = 0U;
+     for (r = 0U; r < start_row; ++r) {
+-        if (!psd89_io_seek_abs(io, st->counts_offset + (unsigned long)r * 2UL) ||
++        if (!psd89_io_seek_abs(io, st->counts_offset + (psd89_u32)r * 2U) ||
+             !psd89_rd_u16_be(io, &count16)) {
+             return 0;
+         }
+-        st->data_pos += (unsigned long)count16;
++        st->data_pos += (psd89_u32)count16;
+         st->current_row = r + 1U;
+     }
+     return 1;
+@@ -548,9 +548,83 @@
+     return 0;
+ }
+ 
+-static double psd89_fx24_to_double_local(psd89_fx24 v)
++typedef struct psd89_comp_pair32 {
++    psd89_u32 hi;
++    psd89_u32 lo;
++} psd89_comp_pair32;
++
++static psd89_comp_pair32 psd89_comp_mul_u32_pair(psd89_u32 a, psd89_u32 b)
++{
++    psd89_u32 a0;
++    psd89_u32 a1;
++    psd89_u32 b0;
++    psd89_u32 b1;
++    psd89_u32 p0;
++    psd89_u32 p1;
++    psd89_u32 p2;
++    psd89_u32 p3;
++    psd89_u32 middle;
++    psd89_comp_pair32 r;
++
++    a0 = a & 0xFFFFU;
++    a1 = a >> 16;
++    b0 = b & 0xFFFFU;
++    b1 = b >> 16;
++    p0 = a0 * b0;
++    p1 = a0 * b1;
++    p2 = a1 * b0;
++    p3 = a1 * b1;
++    middle = (p0 >> 16) + (p1 & 0xFFFFU) + (p2 & 0xFFFFU);
++    r.lo = (p0 & 0xFFFFU) | (middle << 16);
++    r.hi = p3 + (p1 >> 16) + (p2 >> 16) + (middle >> 16);
++    return r;
++}
++
++static psd89_u32 psd89_comp_abs_s32(psd89_s32 v)
+ {
+-    return (double)v / 16777216.0;
++    psd89_u32 u;
++    u = (psd89_u32)v;
++    if (v < 0) {
++        u = (psd89_u32)(0U - u);
++    }
++    return u;
++}
++
++static psd89_u32 psd89_comp_pair_shr24(psd89_comp_pair32 p)
++{
++    return (p.hi << 8) | (p.lo >> 24);
++}
++
++static int psd89_comp_pair_lt_scale24(psd89_comp_pair32 p)
++{
++    return p.hi == 0U && p.lo < 0x01000000U;
++}
++
++static psd89_s32 psd89_fx24_scale_trunc(psd89_fx24 v, psd89_u32 scale)
++{
++    psd89_comp_pair32 p;
++    psd89_u32 q;
++    p = psd89_comp_mul_u32_pair(psd89_comp_abs_s32(v), scale);
++    q = psd89_comp_pair_shr24(p);
++    if (v < 0) {
++        return (psd89_s32)(0U - q);
++    }
++    return (psd89_s32)q;
++}
++
++static psd89_s32 psd89_fx24_scale_plus_one_trunc(psd89_fx24 v, psd89_u32 scale)
++{
++    psd89_comp_pair32 p;
++    psd89_u32 q;
++    p = psd89_comp_mul_u32_pair(psd89_comp_abs_s32(v), scale);
++    q = psd89_comp_pair_shr24(p);
++    if (v >= 0) {
++        return (psd89_s32)(q + 1U);
++    }
++    if (psd89_comp_pair_lt_scale24(p)) {
++        return 0;
++    }
++    return (psd89_s32)(1 - (psd89_s32)q);
+ }
+ 
+ static void psd89_vector_mask_bounds_doc(const psd89_doc *doc,
+@@ -562,12 +636,12 @@
+ {
+     unsigned int i;
+     int have;
+-    double minx;
+-    double miny;
+-    double maxx;
+-    double maxy;
+-    double x;
+-    double y;
++    psd89_fx24 minx;
++    psd89_fx24 miny;
++    psd89_fx24 maxx;
++    psd89_fx24 maxy;
++    psd89_fx24 x;
++    psd89_fx24 y;
+ 
+     if (left != 0) *left = 0;
+     if (top != 0) *top = 0;
+@@ -577,10 +651,10 @@
+         return;
+     }
+     have = 0;
+-    minx = miny = maxx = maxy = 0.0;
++    minx = miny = maxx = maxy = 0;
+     for (i = 0U; i < vm->knot_count; ++i) {
+-        x = psd89_fx24_to_double_local(vm->knots[i].anchor_h) * (double)doc->width;
+-        y = psd89_fx24_to_double_local(vm->knots[i].anchor_v) * (double)doc->height;
++        x = vm->knots[i].anchor_h;
++        y = vm->knots[i].anchor_v;
+         if (!have) {
+             minx = maxx = x;
+             miny = maxy = y;
+@@ -595,10 +669,10 @@
+     if (!have) {
+         return;
+     }
+-    if (left != 0) *left = (psd89_s32)minx;
+-    if (top != 0) *top = (psd89_s32)miny;
+-    if (right != 0) *right = (psd89_s32)(maxx + 1.0);
+-    if (bottom != 0) *bottom = (psd89_s32)(maxy + 1.0);
++    if (left != 0) *left = psd89_fx24_scale_trunc(minx, doc->width);
++    if (top != 0) *top = psd89_fx24_scale_trunc(miny, doc->height);
++    if (right != 0) *right = psd89_fx24_scale_plus_one_trunc(maxx, doc->width);
++    if (bottom != 0) *bottom = psd89_fx24_scale_plus_one_trunc(maxy, doc->height);
+ }
+ 
+ static psd89_fx16 psd89_compose_vector_feather_fx(const psd89_compose_layer_state *st,
+@@ -1182,7 +1256,7 @@
+     }
+     if (!tmp.from_memory && tmp.compression == PSD89_COMP_RLE) {
+         tmp.current_row = 0U;
+-        tmp.data_pos = tmp.counts_offset + (unsigned long)tmp.rows * 2UL;
++        tmp.data_pos = tmp.counts_offset + (psd89_u32)tmp.rows * 2U;
+     }
+     return psd89_compose_decode_row(io, &tmp, row_index, dst);
+ }
+@@ -2454,11 +2528,11 @@
+     if (opt->clear_output) {
+         for (y = 0U; y < doc->height; ++y) {
+             for (c = 0U; c < color_channels; ++c) {
+-                psd89_fill_row(dst_color[c] + (unsigned long)y * dst_stride,
++                psd89_fill_row(dst_color[c] + (psd89_u32)y * dst_stride,
+                                doc->width,
+                                opt->backdrop_values[c]);
+             }
+-            psd89_fill_row(dst_alpha + (unsigned long)y * dst_stride,
++            psd89_fill_row(dst_alpha + (psd89_u32)y * dst_stride,
+                            doc->width,
+                            opt->backdrop_alpha);
+         }
+@@ -2577,7 +2651,7 @@
+                                              &states[i].vector_right,
+                                              &states[i].vector_bottom);
+                 psd89_vector_flatten_options_init(&flat_opt);
+-                flat_opt.flatness = (psd89_fx16)(1L << 15);
++                flat_opt.flatness = (psd89_fx16)(1 << 15);
+                 frc = psd89_vector_flatten_mask(doc->width,
+                                                 doc->height,
+                                                 &layer->vector_mask,
+@@ -2602,9 +2676,9 @@
+         for (y = 0U; y < doc->height; ++y) {
+             psd89_u8 *row_alpha;
+             for (c = 0U; c < color_channels; ++c) {
+-                dst_c_row[c] = dst_color[c] + (unsigned long)y * dst_stride;
++                dst_c_row[c] = dst_color[c] + (psd89_u32)y * dst_stride;
+             }
+-            row_alpha = dst_alpha + (unsigned long)y * dst_stride;
++            row_alpha = dst_alpha + (psd89_u32)y * dst_stride;
+             rc = psd89_compose_span_grouped(doc,
+                                             io,
+                                             states,
+@@ -2681,10 +2755,10 @@
+                 psd89_fill_row(clip_mask_row, doc->width, 0U);
+                 for (c = 0U; c < color_channels; ++c) {
+                     psd89_fill_row(group_color[c], doc->width, 0U);
+-                    dst_c_row[c] = dst_color[c] + (unsigned long)y * dst_stride;
++                    dst_c_row[c] = dst_color[c] + (psd89_u32)y * dst_stride;
+                 }
+                 psd89_fill_row(group_alpha_row, doc->width, 0U);
+-                dst_a_row = dst_alpha + (unsigned long)y * dst_stride;
++                dst_a_row = dst_alpha + (psd89_u32)y * dst_stride;
+ 
+                 for (gj = li; ; gj += step) {
+                     psd89_compose_layer_state *gst;
+@@ -2835,7 +2909,7 @@
+                 }
+ 
+                 for (c = 0U; c < color_channels; ++c) {
+-                    dst_c_row[c] = dst_color[c] + (unsigned long)y * dst_stride;
++                    dst_c_row[c] = dst_color[c] + (psd89_u32)y * dst_stride;
+                 }
+                 for (probe = 0; probe < (int)doc->width; ++probe) {
+                     psd89_fx16 as;
+@@ -2905,7 +2979,7 @@
+                     } else {
+                         psd89_fill_row(scratch_color[c], st->cols, 0U);
+                     }
+-                    dst_c_row[c] = dst_color[c] + (unsigned long)y * dst_stride;
++                    dst_c_row[c] = dst_color[c] + (psd89_u32)y * dst_stride;
+                 }
+                 if (st->alpha.present) {
+                     if (!psd89_compose_decode_row(io, &st->alpha, layer_row, scratch_alpha)) {
+@@ -2914,7 +2988,7 @@
+                 } else {
+                     psd89_fill_row(scratch_alpha, st->cols, 255U);
+                 }
+-                dst_a_row = dst_alpha + (unsigned long)y * dst_stride;
++                dst_a_row = dst_alpha + (psd89_u32)y * dst_stride;
+                 opacity_fx = psd89_fx16_from_u8(st->layer->opacity);
+                 tsly_false = st->layer->transparency_shapes_layer_present && !st->layer->transparency_shapes_layer;
+                 mask_row_valid = 0;
+--- /mnt/data/psd_work/orig/PSD/src/psd89_advanced.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_advanced.c	2026-08-20 02:06:22.455480387 +0000
+@@ -23,41 +23,41 @@
+     return key[0] == lit4[0] && key[1] == lit4[1] && key[2] == lit4[2] && key[3] == lit4[3];
+ }
+ 
+-static int psd89_rd_be64_raw(psd89_io *io, psd89_u8 out[8])
++static int psd89_rd_be8_raw(psd89_io *io, psd89_u8 out[8])
+ {
+-    return psd89_io_read(io, out, 8UL);
++    return psd89_io_read(io, out, 8U);
+ }
+ 
+ static int psd89_skip_unicode_string(psd89_io *io)
+ {
+     psd89_u32 count;
+-    unsigned long total_bytes;
++    psd89_u32 total_bytes;
+     if (!psd89_rd_be32(io, &count)) {
+         return 0;
+     }
+-    total_bytes = (unsigned long)count * 2UL + 2UL;
++    total_bytes = (psd89_u32)count * 2U + 2U;
+     return psd89_skip(io, total_bytes);
+ }
+ 
+-static int psd89_read_unicode_ascii(psd89_io *io, char *dst, unsigned long dst_size)
++static int psd89_read_unicode_ascii(psd89_io *io, char *dst, psd89_u32 dst_size)
+ {
+     psd89_u32 count;
+-    unsigned long i;
++    psd89_u32 i;
+     psd89_u16 ch;
+-    unsigned long copy_n;
++    psd89_u32 copy_n;
+ 
+     if (!psd89_rd_be32(io, &count)) {
+         return 0;
+     }
+-    copy_n = (unsigned long)count;
+-    if (dst != 0 && dst_size != 0UL) {
++    copy_n = (psd89_u32)count;
++    if (dst != 0 && dst_size != 0U) {
+         if (copy_n >= dst_size) {
+-            copy_n = dst_size - 1UL;
++            copy_n = dst_size - 1U;
+         }
+     } else {
+-        copy_n = 0UL;
++        copy_n = 0U;
+     }
+-    for (i = 0UL; i < (unsigned long)count; ++i) {
++    for (i = 0U; i < (psd89_u32)count; ++i) {
+         if (!psd89_rd_be16(io, &ch)) {
+             return 0;
+         }
+@@ -68,7 +68,7 @@
+     if (!psd89_rd_be16(io, &ch)) {
+         return 0;
+     }
+-    if (dst != 0 && dst_size != 0UL) {
++    if (dst != 0 && dst_size != 0U) {
+         dst[copy_n] = '\0';
+     }
+     return 1;
+@@ -77,32 +77,32 @@
+ static int psd89_read_desc_id(psd89_io *io, psd89_descriptor_id *id)
+ {
+     psd89_u32 len;
+-    unsigned long copy_n;
++    psd89_u32 copy_n;
+     psd89_u8 buf[256];
+     if (!psd89_rd_be32(io, &len)) {
+         return 0;
+     }
+     psd89_desc_id_init(id);
+-    if (len == 0UL) {
+-        if (!psd89_io_read(io, id->fourcc, 4UL)) {
++    if (len == 0U) {
++        if (!psd89_io_read(io, id->fourcc, 4U)) {
+             return 0;
+         }
+         id->is_fourcc = 1U;
+         return 1;
+     }
+-    copy_n = (unsigned long)len;
++    copy_n = (psd89_u32)len;
+     if (copy_n > PSD89_MAX_DESCRIPTOR_NAME_CHARS) {
+         copy_n = PSD89_MAX_DESCRIPTOR_NAME_CHARS;
+     }
+-    if ((unsigned long)len > sizeof(buf)) {
++    if ((psd89_u32)len > sizeof(buf)) {
+         if (!psd89_io_read(io, buf, copy_n)) {
+             return 0;
+         }
+         id->text[copy_n] = '\0';
+         memcpy(id->text, buf, copy_n);
+-        return psd89_skip(io, (unsigned long)len - copy_n);
++        return psd89_skip(io, (psd89_u32)len - copy_n);
+     }
+-    if (!psd89_io_read(io, buf, (unsigned long)len)) {
++    if (!psd89_io_read(io, buf, (psd89_u32)len)) {
+         return 0;
+     }
+     memcpy(id->text, buf, copy_n);
+@@ -116,10 +116,10 @@
+     if (!psd89_rd_be32(io, &len)) {
+         return 0;
+     }
+-    if (len == 0UL) {
+-        return psd89_skip(io, 4UL);
++    if (len == 0U) {
++        return psd89_skip(io, 4U);
+     }
+-    return psd89_skip(io, (unsigned long)len);
++    return psd89_skip(io, (psd89_u32)len);
+ }
+ 
+ static int psd89_skip_reference_item(psd89_io *io, const char ref_type[4])
+@@ -134,7 +134,7 @@
+         return psd89_skip_unicode_string(io) && psd89_skip_desc_id(io) && psd89_skip_desc_id(io) && psd89_skip_desc_id(io);
+     }
+     if (psd89_desc_key_eq(ref_type, "rele") || psd89_desc_key_eq(ref_type, "Idnt") || psd89_desc_key_eq(ref_type, "indx")) {
+-        return psd89_skip_unicode_string(io) && psd89_skip_desc_id(io) && psd89_skip(io, 4UL);
++        return psd89_skip_unicode_string(io) && psd89_skip_desc_id(io) && psd89_skip(io, 4U);
+     }
+     if (psd89_desc_key_eq(ref_type, "name")) {
+         return psd89_skip_unicode_string(io) && psd89_skip_desc_id(io) && psd89_skip_unicode_string(io);
+@@ -144,10 +144,10 @@
+ 
+ static void psd89_desc_id_copy_ascii(const psd89_descriptor_id *id,
+                                       char *dst,
+-                                      unsigned long dst_size)
++                                      psd89_u32 dst_size)
+ {
+-    unsigned long i;
+-    if (dst == 0 || dst_size == 0UL) {
++    psd89_u32 i;
++    if (dst == 0 || dst_size == 0U) {
+         return;
+     }
+     dst[0] = '\0';
+@@ -155,19 +155,19 @@
+         return;
+     }
+     if (id->is_fourcc) {
+-        if (dst_size > 5UL) {
+-            memcpy(dst, id->fourcc, 4UL);
++        if (dst_size > 5U) {
++            memcpy(dst, id->fourcc, 4U);
+             dst[4] = '\0';
+         } else {
+-            for (i = 0UL; i + 1UL < dst_size && i < 4UL; ++i) {
++            for (i = 0U; i + 1U < dst_size && i < 4U; ++i) {
+                 dst[i] = id->fourcc[i];
+             }
+             dst[i] = '\0';
+         }
+         return;
+     }
+-    strncpy(dst, id->text, dst_size - 1UL);
+-    dst[dst_size - 1UL] = '\0';
++    strncpy(dst, id->text, dst_size - 1U);
++    dst[dst_size - 1U] = '\0';
+ }
+ 
+ static int psd89_skip_descriptor_value(psd89_io *io,
+@@ -210,7 +210,7 @@
+     if (summary != 0) {
+         summary->item_count = count;
+     }
+-    for (i = 0UL; i < count; ++i) {
++    for (i = 0U; i < count; ++i) {
+         item = 0;
+         if (summary != 0 && summary->parsed_item_count < PSD89_MAX_DESCRIPTOR_ITEMS) {
+             item = &summary->items[summary->parsed_item_count];
+@@ -225,11 +225,11 @@
+                 return 0;
+             }
+         }
+-        if (!psd89_io_read(io, type, 4UL)) {
++        if (!psd89_io_read(io, type, 4U)) {
+             return 0;
+         }
+         if (item != 0) {
+-            memcpy(item->type, type, 4UL);
++            memcpy(item->type, type, 4U);
+         }
+         if (!psd89_skip_descriptor_value(io, type, item, depth + 1)) {
+             return 0;
+@@ -268,8 +268,8 @@
+         item->list_count_valid = 1U;
+         item->list_count = count;
+     }
+-    for (i = 0UL; i < count; ++i) {
+-        if (!psd89_io_read(io, type, 4UL)) {
++    for (i = 0U; i < count; ++i) {
++        if (!psd89_io_read(io, type, 4U)) {
+             return 0;
+         }
+         if (!psd89_skip_descriptor_value(io, type, 0, depth + 1)) {
+@@ -291,8 +291,8 @@
+         item->ref_count_valid = 1U;
+         item->ref_count = count;
+     }
+-    for (i = 0UL; i < count; ++i) {
+-        if (!psd89_io_read(io, type, 4UL)) {
++    for (i = 0U; i < count; ++i) {
++        if (!psd89_io_read(io, type, 4U)) {
+             return 0;
+         }
+         if (!psd89_skip_reference_item(io, type)) {
+@@ -313,7 +313,7 @@
+     psd89_descriptor_id id1;
+     psd89_descriptor_id id2;
+     char units[4];
+-    psd89_u8 raw64[8];
++    psd89_u8 raw8[8];
+     psd89_u32 len;
+     psd89_descriptor_summary nested;
+     char tmp_text[PSD89_MAX_DESCRIPTOR_NAME_CHARS + 1];
+@@ -339,20 +339,20 @@
+         return 1;
+     }
+     if (psd89_desc_key_eq(type, "comp")) {
+-        if (!psd89_rd_be64_raw(io, raw64)) {
++        if (!psd89_rd_be8_raw(io, raw8)) {
+             return 0;
+         }
+         if (item != 0) {
+             item->comp_valid = 1U;
+-            item->comp_hi = ((psd89_u32)raw64[0] << 24) | ((psd89_u32)raw64[1] << 16) |
+-                            ((psd89_u32)raw64[2] << 8) | (psd89_u32)raw64[3];
+-            item->comp_lo = ((psd89_u32)raw64[4] << 24) | ((psd89_u32)raw64[5] << 16) |
+-                            ((psd89_u32)raw64[6] << 8) | (psd89_u32)raw64[7];
++            item->comp_hi = ((psd89_u32)raw8[0] << 24) | ((psd89_u32)raw8[1] << 16) |
++                            ((psd89_u32)raw8[2] << 8) | (psd89_u32)raw8[3];
++            item->comp_lo = ((psd89_u32)raw8[4] << 24) | ((psd89_u32)raw8[5] << 16) |
++                            ((psd89_u32)raw8[6] << 8) | (psd89_u32)raw8[7];
+         }
+         return 1;
+     }
+     if (psd89_desc_key_eq(type, "doub")) {
+-        if (!psd89_rd_be64_double_q16(io, &fxv)) {
++        if (!psd89_rd_ieee8_q16(io, &fxv)) {
+             return 0;
+         }
+         if (item != 0) {
+@@ -362,14 +362,14 @@
+         return 1;
+     }
+     if (psd89_desc_key_eq(type, "UntF")) {
+-        if (!psd89_io_read(io, units, 4UL) || !psd89_rd_be64_double_q16(io, &fxv)) {
++        if (!psd89_io_read(io, units, 4U) || !psd89_rd_ieee8_q16(io, &fxv)) {
+             return 0;
+         }
+         if (item != 0) {
+             item->fx_valid = 1U;
+             item->fx_value = fxv;
+             item->unit_valid = 1U;
+-            memcpy(item->unit, units, 4UL);
++            memcpy(item->unit, units, 4U);
+         }
+         return 1;
+     }
+@@ -441,7 +441,7 @@
+             item->length_valid = 1U;
+             item->data_length = len;
+         }
+-        return psd89_skip(io, (unsigned long)len);
++        return psd89_skip(io, (psd89_u32)len);
+     }
+     if (psd89_desc_key_eq(type, "obj ")) {
+         return psd89_skip_reference(io, item);
+@@ -456,20 +456,20 @@
+ 
+ static int psd89_wr_unicode_ascii(psd89_io *io, const char *s)
+ {
+-    unsigned long len;
+-    unsigned long i;
++    psd89_u32 len;
++    psd89_u32 i;
+     psd89_u16 ch;
+     if (s == 0) {
+         s = "";
+     }
+-    len = 0UL;
++    len = 0U;
+     while (s[len] != '\0') {
+         ++len;
+     }
+     if (!psd89_wr_be32(io, (psd89_u32)len)) {
+         return 0;
+     }
+-    for (i = 0UL; i < len; ++i) {
++    for (i = 0U; i < len; ++i) {
+         ch = (psd89_u16)(unsigned char)s[i];
+         if (!psd89_wr_be16(io, ch)) {
+             return 0;
+@@ -481,9 +481,9 @@
+ static int psd89_write_empty_descriptor(psd89_io *io)
+ {
+     return psd89_wr_unicode_ascii(io, "") &&
+-           psd89_wr_be32(io, 0UL) &&
+-           psd89_io_write(io, "null", 4UL) &&
+-           psd89_wr_be32(io, 0UL);
++           psd89_wr_be32(io, 0U) &&
++           psd89_io_write(io, "null", 4U) &&
++           psd89_wr_be32(io, 0U);
+ }
+ 
+ 
+@@ -512,7 +512,7 @@
+ static int psd89_read_blend_mode_sig_key(psd89_io *io, char key[4])
+ {
+     psd89_u32 sig;
+-    if (!psd89_rd_be32(io, &sig) || !psd89_io_read(io, key, 4UL)) {
++    if (!psd89_rd_be32(io, &sig) || !psd89_io_read(io, key, 4U)) {
+         return 0;
+     }
+     return sig == PSD89_SIG_8BIM;
+@@ -525,9 +525,9 @@
+         return 0;
+     }
+     if (key[0] != '\0' || key[1] != '\0' || key[2] != '\0' || key[3] != '\0') {
+-        return psd89_io_write(io, key, 4UL);
++        return psd89_io_write(io, key, 4U);
+     }
+-    return psd89_io_write(io, norm, 4UL);
++    return psd89_io_write(io, norm, 4U);
+ }
+ 
+ static int psd89_parse_lrfx_common(psd89_layer *layer, psd89_io *io, psd89_u32 size)
+@@ -535,13 +535,13 @@
+     psd89_u32 version;
+     psd89_u8 visible;
+     psd89_u16 unused;
+-    if (size < 7UL) {
++    if (size < 7U) {
+         return 0;
+     }
+     if (!psd89_rd_be32(io, &version) || !psd89_rd_u8(io, &visible) || !psd89_rd_be16(io, &unused)) {
+         return 0;
+     }
+-    if (size > 7UL && !psd89_skip(io, (unsigned long)(size - 7UL))) {
++    if (size > 7U && !psd89_skip(io, (psd89_u32)(size - 7U))) {
+         return 0;
+     }
+     layer->lrfx.common_state_present = 1U;
+@@ -551,7 +551,7 @@
+ 
+ static int psd89_parse_lrfx_shadow(psd89_lrfx_shadow *fx, psd89_io *io, psd89_u32 size)
+ {
+-    if (fx == 0 || size < 41UL) {
++    if (fx == 0 || size < 41U) {
+         return 0;
+     }
+     memset(fx, 0, sizeof(*fx));
+@@ -569,15 +569,15 @@
+         !psd89_rd_u8(io, &fx->opacity)) {
+         return 0;
+     }
+-    if (fx->version >= 2UL) {
+-        if (size < 51UL || !psd89_read_color5(io, fx->native_color)) {
++    if (fx->version >= 2U) {
++        if (size < 51U || !psd89_read_color5(io, fx->native_color)) {
+             return 0;
+         }
+         fx->native_color_present = 1U;
+-        if (size > 51UL && !psd89_skip(io, (unsigned long)(size - 51UL))) {
++        if (size > 51U && !psd89_skip(io, (psd89_u32)(size - 51U))) {
+             return 0;
+         }
+-    } else if (size > 41UL && !psd89_skip(io, (unsigned long)(size - 41UL))) {
++    } else if (size > 41U && !psd89_skip(io, (psd89_u32)(size - 41U))) {
+         return 0;
+     }
+     return 1;
+@@ -585,7 +585,7 @@
+ 
+ static int psd89_parse_lrfx_glow(psd89_lrfx_glow *fx, psd89_io *io, psd89_u32 size, int inner)
+ {
+-    if (fx == 0 || size < (inner ? 33UL : 32UL)) {
++    if (fx == 0 || size < (inner ? 33U : 32U)) {
+         return 0;
+     }
+     memset(fx, 0, sizeof(*fx));
+@@ -600,25 +600,25 @@
+         !psd89_rd_u8(io, &fx->opacity)) {
+         return 0;
+     }
+-    if (inner && fx->version >= 2UL) {
+-        if (size < 43UL || !psd89_rd_u8(io, &fx->invert) || !psd89_read_color5(io, fx->native_color)) {
++    if (inner && fx->version >= 2U) {
++        if (size < 43U || !psd89_rd_u8(io, &fx->invert) || !psd89_read_color5(io, fx->native_color)) {
+             return 0;
+         }
+         fx->native_color_present = 1U;
+-        if (size > 43UL && !psd89_skip(io, (unsigned long)(size - 43UL))) {
++        if (size > 43U && !psd89_skip(io, (psd89_u32)(size - 43U))) {
+             return 0;
+         }
+-    } else if (!inner && fx->version >= 2UL) {
+-        if (size < 42UL || !psd89_read_color5(io, fx->native_color)) {
++    } else if (!inner && fx->version >= 2U) {
++        if (size < 42U || !psd89_read_color5(io, fx->native_color)) {
+             return 0;
+         }
+         fx->native_color_present = 1U;
+-        if (size > 42UL && !psd89_skip(io, (unsigned long)(size - 42UL))) {
++        if (size > 42U && !psd89_skip(io, (psd89_u32)(size - 42U))) {
+             return 0;
+         }
+     } else {
+-        psd89_u32 base = inner ? 33UL : 32UL;
+-        if (size > base && !psd89_skip(io, (unsigned long)(size - base))) {
++        psd89_u32 base = inner ? 33U : 32U;
++        if (size > base && !psd89_skip(io, (psd89_u32)(size - base))) {
+             return 0;
+         }
+     }
+@@ -627,7 +627,7 @@
+ 
+ static int psd89_parse_lrfx_bevel(psd89_lrfx_bevel *fx, psd89_io *io, psd89_u32 size)
+ {
+-    if (fx == 0 || size < 58UL) {
++    if (fx == 0 || size < 58U) {
+         return 0;
+     }
+     memset(fx, 0, sizeof(*fx));
+@@ -649,15 +649,15 @@
+         !psd89_rd_u8(io, &fx->up)) {
+         return 0;
+     }
+-    if (fx->version >= 2UL) {
+-        if (size < 78UL || !psd89_read_color5(io, fx->real_highlight_color) || !psd89_read_color5(io, fx->real_shadow_color)) {
++    if (fx->version >= 2U) {
++        if (size < 78U || !psd89_read_color5(io, fx->real_highlight_color) || !psd89_read_color5(io, fx->real_shadow_color)) {
+             return 0;
+         }
+         fx->real_colors_present = 1U;
+-        if (size > 78UL && !psd89_skip(io, (unsigned long)(size - 78UL))) {
++        if (size > 78U && !psd89_skip(io, (psd89_u32)(size - 78U))) {
+             return 0;
+         }
+-    } else if (size > 58UL && !psd89_skip(io, (unsigned long)(size - 58UL))) {
++    } else if (size > 58U && !psd89_skip(io, (psd89_u32)(size - 58U))) {
+         return 0;
+     }
+     return 1;
+@@ -669,7 +669,7 @@
+     psd89_lrfx_solid_fill *sf;
+     psd89_u32 version;
+ 
+-    if (size < 34UL) {
++    if (size < 34U) {
+         return 0;
+     }
+     sf = &layer->lrfx.solid_fill;
+@@ -680,7 +680,7 @@
+         return 0;
+     }
+     sf->version = version;
+-    if (!psd89_io_read(io, sf->blend_mode, 4UL)) {
++    if (!psd89_io_read(io, sf->blend_mode, 4U)) {
+         return 0;
+     }
+     for (i = 0U; i < PSD89_MAX_LRFX_COLOR_COMPONENTS; ++i) {
+@@ -696,7 +696,7 @@
+             return 0;
+         }
+     }
+-    if (size > 34UL && !psd89_skip(io, (unsigned long)(size - 34UL))) {
++    if (size > 34U && !psd89_skip(io, (psd89_u32)(size - 34U))) {
+         return 0;
+     }
+     return 1;
+@@ -712,7 +712,7 @@
+     psd89_u32 size;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     memset(&layer->lrfx, 0, sizeof(layer->lrfx));
+     layer->lrfx.present = 1U;
+@@ -722,7 +722,7 @@
+     layer->lrfx.version = version;
+     layer->lrfx.effect_count = count;
+     for (i = 0U; i < count; ++i) {
+-        if (!psd89_rd_be32(io, &sig) || !psd89_io_read(io, effect_key, 4UL) || !psd89_rd_be32(io, &size)) {
++        if (!psd89_rd_be32(io, &sig) || !psd89_io_read(io, effect_key, 4U) || !psd89_rd_be32(io, &size)) {
+             return PSD89_E_TRUNCATED;
+         }
+         if (sig != PSD89_SIG_8BIM) {
+@@ -762,7 +762,7 @@
+                 return PSD89_E_TRUNCATED;
+             }
+         } else {
+-            if (!psd89_skip(io, (unsigned long)size)) {
++            if (!psd89_skip(io, (psd89_u32)size)) {
+                 return PSD89_E_TRUNCATED;
+             }
+         }
+@@ -773,8 +773,8 @@
+ static int psd89_write_lrfx_common_block(psd89_io *io, const psd89_lrfx *lrfx)
+ {
+     static const char cmnS[4] = { 'c', 'm', 'n', 'S' };
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, cmnS, 4UL) || !psd89_wr_be32(io, 7UL) ||
+-        !psd89_wr_be32(io, 0UL) || !psd89_wr_u8(io, lrfx->common_visible ? 1U : 0U) || !psd89_wr_be16(io, 0U)) {
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, cmnS, 4U) || !psd89_wr_be32(io, 7U) ||
++        !psd89_wr_be32(io, 0U) || !psd89_wr_u8(io, lrfx->common_visible ? 1U : 0U) || !psd89_wr_be16(io, 0U)) {
+         return 0;
+     }
+     return 1;
+@@ -784,9 +784,9 @@
+ {
+     psd89_u32 size;
+     psd89_u32 version;
+-    version = fx->version != 0UL ? fx->version : (fx->native_color_present ? 2UL : 0UL);
+-    size = version >= 2UL ? 51UL : 41UL;
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4UL) || !psd89_wr_be32(io, size) ||
++    version = fx->version != 0U ? fx->version : (fx->native_color_present ? 2U : 0U);
++    size = version >= 2U ? 51U : 41U;
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4U) || !psd89_wr_be32(io, size) ||
+         !psd89_wr_be32(io, version) ||
+         !psd89_wr_be32(io, (psd89_u32)fx->blur) ||
+         !psd89_wr_be32(io, (psd89_u32)fx->intensity) ||
+@@ -799,7 +799,7 @@
+         !psd89_wr_u8(io, fx->opacity)) {
+         return 0;
+     }
+-    if (version >= 2UL && !psd89_write_color5(io, fx->native_color_present ? fx->native_color : fx->color)) {
++    if (version >= 2U && !psd89_write_color5(io, fx->native_color_present ? fx->native_color : fx->color)) {
+         return 0;
+     }
+     return 1;
+@@ -809,9 +809,9 @@
+ {
+     psd89_u32 size;
+     psd89_u32 version;
+-    version = fx->version != 0UL ? fx->version : (fx->native_color_present || fx->invert ? 2UL : 0UL);
+-    size = inner ? (version >= 2UL ? 43UL : 33UL) : (version >= 2UL ? 42UL : 32UL);
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4UL) || !psd89_wr_be32(io, size) ||
++    version = fx->version != 0U ? fx->version : (fx->native_color_present || fx->invert ? 2U : 0U);
++    size = inner ? (version >= 2U ? 43U : 33U) : (version >= 2U ? 42U : 32U);
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4U) || !psd89_wr_be32(io, size) ||
+         !psd89_wr_be32(io, version) ||
+         !psd89_wr_be32(io, (psd89_u32)fx->blur) ||
+         !psd89_wr_be32(io, (psd89_u32)fx->intensity) ||
+@@ -821,12 +821,12 @@
+         !psd89_wr_u8(io, fx->opacity)) {
+         return 0;
+     }
+-    if (inner && version >= 2UL) {
++    if (inner && version >= 2U) {
+         if (!psd89_wr_u8(io, fx->invert ? 1U : 0U) ||
+             !psd89_write_color5(io, fx->native_color_present ? fx->native_color : fx->color)) {
+             return 0;
+         }
+-    } else if (!inner && version >= 2UL) {
++    } else if (!inner && version >= 2U) {
+         if (!psd89_write_color5(io, fx->native_color_present ? fx->native_color : fx->color)) {
+             return 0;
+         }
+@@ -839,9 +839,9 @@
+     static const char key[4] = { 'b', 'e', 'v', 'l' };
+     psd89_u32 version;
+     psd89_u32 size;
+-    version = fx->version != 0UL ? fx->version : (fx->real_colors_present ? 2UL : 0UL);
+-    size = version >= 2UL ? 78UL : 58UL;
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4UL) || !psd89_wr_be32(io, size) ||
++    version = fx->version != 0U ? fx->version : (fx->real_colors_present ? 2U : 0U);
++    size = version >= 2U ? 78U : 58U;
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4U) || !psd89_wr_be32(io, size) ||
+         !psd89_wr_be32(io, version) ||
+         !psd89_wr_be32(io, (psd89_u32)fx->angle) ||
+         !psd89_wr_be32(io, (psd89_u32)fx->strength) ||
+@@ -858,7 +858,7 @@
+         !psd89_wr_u8(io, fx->up ? 1U : 0U)) {
+         return 0;
+     }
+-    if (version >= 2UL) {
++    if (version >= 2U) {
+         if (!psd89_write_color5(io, fx->real_colors_present ? fx->real_highlight_color : fx->highlight_color) ||
+             !psd89_write_color5(io, fx->real_colors_present ? fx->real_shadow_color : fx->shadow_color)) {
+             return 0;
+@@ -872,15 +872,15 @@
+     static const char sofi[4] = { 's', 'o', 'f', 'i' };
+     unsigned int i;
+     const char norm[4] = { 'n', 'o', 'r', 'm' };
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, sofi, 4UL) || !psd89_wr_be32(io, 34UL) ||
+-        !psd89_wr_be32(io, sf->version != 0U ? sf->version : 2UL)) {
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, sofi, 4U) || !psd89_wr_be32(io, 34U) ||
++        !psd89_wr_be32(io, sf->version != 0U ? sf->version : 2U)) {
+         return 0;
+     }
+     if (sf->blend_mode[0] != '\0' || sf->blend_mode[1] != '\0' || sf->blend_mode[2] != '\0' || sf->blend_mode[3] != '\0') {
+-        if (!psd89_io_write(io, sf->blend_mode, 4UL)) {
++        if (!psd89_io_write(io, sf->blend_mode, 4U)) {
+             return 0;
+         }
+-    } else if (!psd89_io_write(io, norm, 4UL)) {
++    } else if (!psd89_io_write(io, norm, 4U)) {
+         return 0;
+     }
+     for (i = 0U; i < PSD89_MAX_LRFX_COLOR_COMPONENTS; ++i) {
+@@ -906,8 +906,8 @@
+     static const char isdw[4] = { 'i', 's', 'd', 'w' };
+     static const char oglw[4] = { 'o', 'g', 'l', 'w' };
+     static const char iglw[4] = { 'i', 'g', 'l', 'w' };
+-    unsigned long len_pos;
+-    unsigned long start;
++    psd89_u32 len_pos;
++    psd89_u32 start;
+     psd89_u16 count;
+     const psd89_lrfx *lrfx;
+ 
+@@ -940,11 +940,11 @@
+     if (count == 0U) {
+         return 1;
+     }
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, lrfx_key, 4UL)) {
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, lrfx_key, 4U)) {
+         return 0;
+     }
+     len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     start = psd89_io_tell(io);
+@@ -979,7 +979,7 @@
+ {
+     unsigned int i;
+     for (i = 0U; i < count; ++i) {
+-        if (!psd89_rd_be64_double_q16(io, &dst[i])) {
++        if (!psd89_rd_ieee8_q16(io, &dst[i])) {
+             return 0;
+         }
+     }
+@@ -990,7 +990,7 @@
+ {
+     unsigned int i;
+     for (i = 0U; i < count; ++i) {
+-        if (!psd89_wr_be64_double_from_q16(io, src[i])) {
++        if (!psd89_wr_ieee8_from_q16(io, src[i])) {
+             return 0;
+         }
+     }
+@@ -999,15 +999,15 @@
+ 
+ int psd89_parse_tysh_tag(psd89_layer *layer, psd89_io *io, psd89_u32 len)
+ {
+-    unsigned long start;
+-    unsigned long end;
++    psd89_u32 start;
++    psd89_u32 end;
+     psd89_type_tool *tt;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     start = psd89_io_tell(io);
+-    end = start + (unsigned long)len;
++    end = start + (psd89_u32)len;
+     tt = &layer->type_tool;
+     memset(tt, 0, sizeof(*tt));
+     tt->present = 1U;
+@@ -1040,40 +1040,40 @@
+ {
+     static const char tysh_key[4] = { 'T', 'y', 'S', 'h' };
+     const psd89_type_tool *tt;
+-    unsigned long len_pos;
+-    unsigned long start;
++    psd89_u32 len_pos;
++    psd89_u32 start;
+ 
+     if (layer == 0 || !layer->type_tool.present) {
+         return 1;
+     }
+     tt = &layer->type_tool;
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, tysh_key, 4UL)) {
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, tysh_key, 4U)) {
+         return 0;
+     }
+     len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     start = psd89_io_tell(io);
+     if (!psd89_wr_be16(io, tt->version != 0U ? tt->version : 1U) ||
+         !psd89_write_q16_doubles(io, tt->transform, 6U) ||
+         !psd89_wr_be16(io, tt->text_version != 0U ? tt->text_version : 50U) ||
+-        !psd89_wr_be32(io, tt->text_descriptor_version != 0UL ? tt->text_descriptor_version : 16UL)) {
++        !psd89_wr_be32(io, tt->text_descriptor_version != 0U ? tt->text_descriptor_version : 16U)) {
+         return 0;
+     }
+-    if (tt->text.authored_raw_size != 0UL) {
+-        if (!psd89_io_write(io, tt->text.authored_raw, (unsigned long)tt->text.authored_raw_size)) {
++    if (tt->text.authored_raw_size != 0U) {
++        if (!psd89_io_write(io, tt->text.authored_raw, (psd89_u32)tt->text.authored_raw_size)) {
+             return 0;
+         }
+     } else if (!psd89_write_empty_descriptor(io)) {
+         return 0;
+     }
+     if (!psd89_wr_be16(io, tt->warp_version != 0U ? tt->warp_version : 1U) ||
+-        !psd89_wr_be32(io, tt->warp_descriptor_version != 0UL ? tt->warp_descriptor_version : 16UL)) {
++        !psd89_wr_be32(io, tt->warp_descriptor_version != 0U ? tt->warp_descriptor_version : 16U)) {
+         return 0;
+     }
+-    if (tt->warp.authored_raw_size != 0UL) {
+-        if (!psd89_io_write(io, tt->warp.authored_raw, (unsigned long)tt->warp.authored_raw_size)) {
++    if (tt->warp.authored_raw_size != 0U) {
++        if (!psd89_io_write(io, tt->warp.authored_raw, (psd89_u32)tt->warp.authored_raw_size)) {
+             return 0;
+         }
+     } else if (!psd89_write_empty_descriptor(io)) {
+@@ -1088,11 +1088,11 @@
+ int psd89_parse_txt2_tag(psd89_layer *layer, psd89_io *io, psd89_u32 len)
+ {
+     psd89_u32 raw_len;
+-    unsigned long start;
+-    unsigned long raw_off;
++    psd89_u32 start;
++    psd89_u32 raw_off;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     start = psd89_io_tell(io);
+     memset(&layer->text_engine, 0, sizeof(layer->text_engine));
+@@ -1101,16 +1101,16 @@
+         return PSD89_E_TRUNCATED;
+     }
+     raw_off = psd89_io_tell(io);
+-    if ((unsigned long)raw_len > (unsigned long)len - 4UL) {
+-        raw_len = len >= 4UL ? (psd89_u32)(len - 4UL) : 0UL;
++    if ((psd89_u32)raw_len > (psd89_u32)len - 4U) {
++        raw_len = len >= 4U ? (psd89_u32)(len - 4U) : 0U;
+     }
+     layer->text_engine.raw_offset = raw_off;
+     layer->text_engine.raw_size = raw_len;
+-    if (!psd89_skip(io, (unsigned long)raw_len)) {
++    if (!psd89_skip(io, (psd89_u32)raw_len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (psd89_io_tell(io) < start + (unsigned long)len) {
+-        if (!psd89_skip(io, start + (unsigned long)len - psd89_io_tell(io))) {
++    if (psd89_io_tell(io) < start + (psd89_u32)len) {
++        if (!psd89_skip(io, start + (psd89_u32)len - psd89_io_tell(io))) {
+             return PSD89_E_TRUNCATED;
+         }
+     }
+@@ -1121,14 +1121,14 @@
+ {
+     static const char txt2_key[4] = { 'T', 'x', 't', '2' };
+     const psd89_text_engine_data *te;
+-    if (layer == 0 || !layer->text_engine.present || layer->text_engine.authored_raw == 0 || layer->text_engine.authored_raw_size == 0UL) {
++    if (layer == 0 || !layer->text_engine.present || layer->text_engine.authored_raw == 0 || layer->text_engine.authored_raw_size == 0U) {
+         return 1;
+     }
+     te = &layer->text_engine;
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, txt2_key, 4UL) ||
+-        !psd89_wr_be32(io, 4UL + te->authored_raw_size) ||
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, txt2_key, 4U) ||
++        !psd89_wr_be32(io, 4U + te->authored_raw_size) ||
+         !psd89_wr_be32(io, te->authored_raw_size) ||
+-        !psd89_io_write(io, te->authored_raw, (unsigned long)te->authored_raw_size)) {
++        !psd89_io_write(io, te->authored_raw, (psd89_u32)te->authored_raw_size)) {
+         return 0;
+     }
+     return 1;
+@@ -1137,15 +1137,15 @@
+ 
+ int psd89_parse_lfx2_tag(psd89_layer *layer, psd89_io *io, psd89_u32 len)
+ {
+-    unsigned long start;
+-    unsigned long end;
++    psd89_u32 start;
++    psd89_u32 end;
+     psd89_object_effects *fx;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     start = psd89_io_tell(io);
+-    end = start + (unsigned long)len;
++    end = start + (psd89_u32)len;
+     fx = &layer->object_effects;
+     memset(fx, 0, sizeof(*fx));
+     fx->present = 1U;
+@@ -1169,25 +1169,25 @@
+ {
+     static const char key[4] = { 'l', 'f', 'x', '2' };
+     const psd89_object_effects *fx;
+-    unsigned long len_pos;
+-    unsigned long start;
++    psd89_u32 len_pos;
++    psd89_u32 start;
+     if (layer == 0 || !layer->object_effects.present) {
+         return 1;
+     }
+     fx = &layer->object_effects;
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4UL)) {
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, key, 4U)) {
+         return 0;
+     }
+     len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     start = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, fx->object_version) || !psd89_wr_be32(io, fx->descriptor_version != 0UL ? fx->descriptor_version : 16UL)) {
++    if (!psd89_wr_be32(io, fx->object_version) || !psd89_wr_be32(io, fx->descriptor_version != 0U ? fx->descriptor_version : 16U)) {
+         return 0;
+     }
+-    if (fx->descriptor.authored_raw_size != 0UL) {
+-        if (!psd89_io_write(io, fx->descriptor.authored_raw, (unsigned long)fx->descriptor.authored_raw_size)) {
++    if (fx->descriptor.authored_raw_size != 0U) {
++        if (!psd89_io_write(io, fx->descriptor.authored_raw, (psd89_u32)fx->descriptor.authored_raw_size)) {
+             return 0;
+         }
+     } else if (!psd89_write_empty_descriptor(io)) {
+@@ -1198,20 +1198,20 @@
+ 
+ static int psd89_parse_plld_tag(psd89_smart_object *so, psd89_io *io, psd89_u32 len)
+ {
+-    unsigned long start;
+-    unsigned long end;
++    psd89_u32 start;
++    psd89_u32 end;
+     psd89_u32 desc_version;
+ 
+     start = psd89_io_tell(io);
+-    end = start + (unsigned long)len;
++    end = start + (psd89_u32)len;
+     memset(so, 0, sizeof(*so));
+     so->present = 1U;
+     so->placed_info_present = 1U;
+-    memcpy(so->tag_key, "plLd", 4UL);
+-    if (!psd89_io_read(io, so->type, 4UL) || !psd89_rd_be32(io, &so->version)) {
++    memcpy(so->tag_key, "plLd", 4U);
++    if (!psd89_io_read(io, so->type, 4U) || !psd89_rd_be32(io, &so->version)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (!psd89_read_pascal_string(io, so->unique_id, sizeof(so->unique_id), 2UL) ||
++    if (!psd89_read_pascal_string(io, so->unique_id, sizeof(so->unique_id), 2U) ||
+         !psd89_rd_be32(io, &so->page_number) ||
+         !psd89_rd_be32(io, &so->total_pages) ||
+         !psd89_rd_be32(io, &so->anti_alias_policy) ||
+@@ -1238,23 +1238,23 @@
+ 
+ int psd89_parse_smart_object_tag(psd89_layer *layer, const char key[4], psd89_io *io, psd89_u32 len)
+ {
+-    unsigned long start;
+-    unsigned long end;
++    psd89_u32 start;
++    psd89_u32 end;
+     psd89_smart_object *so;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     if (psd89_desc_key_eq(key, "plLd")) {
+         return psd89_parse_plld_tag(&layer->smart_object, io, len);
+     }
+     start = psd89_io_tell(io);
+-    end = start + (unsigned long)len;
++    end = start + (psd89_u32)len;
+     so = &layer->smart_object;
+     memset(so, 0, sizeof(*so));
+     so->present = 1U;
+-    memcpy(so->tag_key, key, 4UL);
+-    if (!psd89_io_read(io, so->type, 4UL) || !psd89_rd_be32(io, &so->version)) {
++    memcpy(so->tag_key, key, 4U);
++    if (!psd89_io_read(io, so->type, 4U) || !psd89_rd_be32(io, &so->version)) {
+         return PSD89_E_TRUNCATED;
+     }
+     if (psd89_desc_key_eq(key, "SoLd") || psd89_desc_key_eq(key, "SoLE")) {
+@@ -1272,14 +1272,14 @@
+         }
+         return PSD89_OK;
+     }
+-    return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++    return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+ }
+ 
+ int psd89_write_smart_object_tag(psd89_io *io, const psd89_layer *layer)
+ {
+     const psd89_smart_object *so;
+-    unsigned long len_pos;
+-    unsigned long start;
++    psd89_u32 len_pos;
++    psd89_u32 start;
+     const char soLD[4] = { 's', 'o', 'L', 'D' };
+     const char SoLd[4] = { 'S', 'o', 'L', 'd' };
+     const char plcL[4] = { 'p', 'l', 'c', 'L' };
+@@ -1290,28 +1290,28 @@
+     }
+     so = &layer->smart_object;
+     if (psd89_desc_key_eq(so->tag_key, "plLd")) {
+-        if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, plLd, 4UL)) {
++        if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, plLd, 4U)) {
+             return 0;
+         }
+         len_pos = psd89_io_tell(io);
+-        if (!psd89_wr_be32(io, 0UL)) {
++        if (!psd89_wr_be32(io, 0U)) {
+             return 0;
+         }
+         start = psd89_io_tell(io);
+-        if (!psd89_io_write(io, so->type[0] != '\0' ? so->type : plcL, 4UL) ||
+-            !psd89_wr_be32(io, so->version != 0UL ? so->version : 3UL) ||
+-            !psd89_write_pascal_string(io, so->unique_id, 2UL) ||
++        if (!psd89_io_write(io, so->type[0] != '\0' ? so->type : plcL, 4U) ||
++            !psd89_wr_be32(io, so->version != 0U ? so->version : 3U) ||
++            !psd89_write_pascal_string(io, so->unique_id, 2U) ||
+             !psd89_wr_be32(io, so->page_number) ||
+             !psd89_wr_be32(io, so->total_pages) ||
+             !psd89_wr_be32(io, so->anti_alias_policy) ||
+             !psd89_wr_be32(io, so->placed_layer_type) ||
+             !psd89_write_q16_doubles(io, so->transform, 8U) ||
+             !psd89_wr_be32(io, so->warp_version) ||
+-            !psd89_wr_be32(io, so->warp_descriptor_version != 0UL ? so->warp_descriptor_version : 16UL)) {
++            !psd89_wr_be32(io, so->warp_descriptor_version != 0U ? so->warp_descriptor_version : 16U)) {
+             return 0;
+         }
+-        if (so->warp_descriptor.authored_raw_size != 0UL) {
+-            if (!psd89_io_write(io, so->warp_descriptor.authored_raw, (unsigned long)so->warp_descriptor.authored_raw_size)) {
++        if (so->warp_descriptor.authored_raw_size != 0U) {
++            if (!psd89_io_write(io, so->warp_descriptor.authored_raw, (psd89_u32)so->warp_descriptor.authored_raw_size)) {
+                 return 0;
+             }
+         } else if (!psd89_write_empty_descriptor(io)) {
+@@ -1322,21 +1322,21 @@
+     if (!(psd89_desc_key_eq(so->tag_key, "SoLd") || psd89_desc_key_eq(so->tag_key, "SoLE"))) {
+         return 1;
+     }
+-    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, so->tag_key[0] != '\0' ? so->tag_key : SoLd, 4UL)) {
++    if (!psd89_wr_be32(io, PSD89_SIG_8BIM) || !psd89_io_write(io, so->tag_key[0] != '\0' ? so->tag_key : SoLd, 4U)) {
+         return 0;
+     }
+     len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     start = psd89_io_tell(io);
+-    if (!psd89_io_write(io, so->type[0] != '\0' ? so->type : soLD, 4UL) ||
+-        !psd89_wr_be32(io, so->version != 0UL ? so->version : 4UL) ||
+-        !psd89_wr_be32(io, so->descriptor_version != 0UL ? so->descriptor_version : 16UL)) {
++    if (!psd89_io_write(io, so->type[0] != '\0' ? so->type : soLD, 4U) ||
++        !psd89_wr_be32(io, so->version != 0U ? so->version : 4U) ||
++        !psd89_wr_be32(io, so->descriptor_version != 0U ? so->descriptor_version : 16U)) {
+         return 0;
+     }
+-    if (so->descriptor.authored_raw_size != 0UL) {
+-        if (!psd89_io_write(io, so->descriptor.authored_raw, (unsigned long)so->descriptor.authored_raw_size)) {
++    if (so->descriptor.authored_raw_size != 0U) {
++        if (!psd89_io_write(io, so->descriptor.authored_raw, (psd89_u32)so->descriptor.authored_raw_size)) {
+             return 0;
+         }
+     } else if (!psd89_write_empty_descriptor(io)) {
+--- /mnt/data/psd_work/orig/PSD/src/psd89_read.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_read.c	2026-08-20 02:05:51.312514994 +0000
+@@ -49,51 +49,51 @@
+     psd89_u32 subtype;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+-    if (len < 4UL) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++    if (len < 4U) {
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     if (!psd89_rd_be32(io, &type)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    layer->section_divider_type = (psd89_u8)(type & 0xFFUL);
++    layer->section_divider_type = (psd89_u8)(type & 0xFFU);
+     layer->section_divider_present = 1U;
+-    if (len >= 12UL) {
+-        if (!psd89_rd_be32(io, &sig) || !psd89_io_read(io, layer->section_divider_blend_mode, 4UL)) {
++    if (len >= 12U) {
++        if (!psd89_rd_be32(io, &sig) || !psd89_io_read(io, layer->section_divider_blend_mode, 4U)) {
+             return PSD89_E_TRUNCATED;
+         }
+         if (sig != PSD89_SIG_8BIM) {
+             return PSD89_E_BAD_LAYER;
+         }
+     }
+-    if (len >= 16UL) {
++    if (len >= 16U) {
+         if (!psd89_rd_be32(io, &subtype)) {
+             return PSD89_E_TRUNCATED;
+         }
+-        layer->section_divider_subtype = (psd89_u8)(subtype & 0xFFUL);
++        layer->section_divider_subtype = (psd89_u8)(subtype & 0xFFU);
+         layer->section_divider_subtype_present = 1U;
+     }
+-    if (len > 16UL && !psd89_skip(io, (unsigned long)(len - 16UL))) {
++    if (len > 16U && !psd89_skip(io, (psd89_u32)(len - 16U))) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (len > 4UL && len < 12UL && !psd89_skip(io, (unsigned long)(len - 4UL))) {
++    if (len > 4U && len < 12U && !psd89_skip(io, (psd89_u32)(len - 4U))) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (len > 12UL && len < 16UL && !psd89_skip(io, (unsigned long)(len - 12UL))) {
++    if (len > 12U && len < 16U && !psd89_skip(io, (psd89_u32)(len - 12U))) {
+         return PSD89_E_TRUNCATED;
+     }
+     return PSD89_OK;
+ }
+ 
+-static int psd89_parse_mask_parameters(psd89_layer_user_mask *mask, psd89_io *io, unsigned long *remain)
++static int psd89_parse_mask_parameters(psd89_layer_user_mask *mask, psd89_io *io, psd89_u32 *remain)
+ {
+     psd89_u8 param_flags;
+ 
+     if (mask == 0 || io == 0 || remain == 0) {
+         return PSD89_E_BAD_ARGUMENT;
+     }
+-    if (*remain == 0UL) {
++    if (*remain == 0U) {
+         return PSD89_OK;
+     }
+     if (!psd89_rd_u8(io, &param_flags)) {
+@@ -103,49 +103,49 @@
+     mask->params_flags = param_flags;
+ 
+     if ((param_flags & 0x01U) != 0U) {
+-        if (*remain < 1UL || !psd89_rd_u8(io, &mask->user_density)) {
++        if (*remain < 1U || !psd89_rd_u8(io, &mask->user_density)) {
+             return PSD89_E_TRUNCATED;
+         }
+         mask->user_density_present = 1U;
+         --(*remain);
+     }
+     if ((param_flags & 0x02U) != 0U) {
+-        if (*remain < 8UL || !psd89_rd_be64_double_q16(io, &mask->user_feather)) {
++        if (*remain < 8U || !psd89_rd_ieee8_q16(io, &mask->user_feather)) {
+             return PSD89_E_TRUNCATED;
+         }
+         mask->user_feather_present = 1U;
+-        *remain -= 8UL;
++        *remain -= 8U;
+     }
+     if ((param_flags & 0x04U) != 0U) {
+-        if (*remain < 1UL || !psd89_rd_u8(io, &mask->vector_density)) {
++        if (*remain < 1U || !psd89_rd_u8(io, &mask->vector_density)) {
+             return PSD89_E_TRUNCATED;
+         }
+         mask->vector_density_present = 1U;
+         --(*remain);
+     }
+     if ((param_flags & 0x08U) != 0U) {
+-        if (*remain < 8UL || !psd89_rd_be64_double_q16(io, &mask->vector_feather)) {
++        if (*remain < 8U || !psd89_rd_ieee8_q16(io, &mask->vector_feather)) {
+             return PSD89_E_TRUNCATED;
+         }
+         mask->vector_feather_present = 1U;
+-        *remain -= 8UL;
++        *remain -= 8U;
+     }
+     return PSD89_OK;
+ }
+ 
+ static int psd89_parse_layer_mask_data(psd89_layer *layer, psd89_io *io, psd89_u32 mask_len)
+ {
+-    unsigned long remain;
++    psd89_u32 remain;
+     int rc;
+ 
+     if (layer == 0) {
+-        return mask_len == 0UL ? PSD89_OK : (psd89_skip(io, (unsigned long)mask_len) ? PSD89_OK : PSD89_E_TRUNCATED);
++        return mask_len == 0U ? PSD89_OK : (psd89_skip(io, (psd89_u32)mask_len) ? PSD89_OK : PSD89_E_TRUNCATED);
+     }
+-    if (mask_len == 0UL) {
++    if (mask_len == 0U) {
+         return PSD89_OK;
+     }
+-    if (mask_len < 18UL) {
+-        return psd89_skip(io, (unsigned long)mask_len) ? PSD89_OK : PSD89_E_TRUNCATED;
++    if (mask_len < 18U) {
++        return psd89_skip(io, (psd89_u32)mask_len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     if (!psd89_rd_be32s(io, &layer->user_mask.top) ||
+         !psd89_rd_be32s(io, &layer->user_mask.left) ||
+@@ -156,17 +156,17 @@
+         return PSD89_E_TRUNCATED;
+     }
+     layer->user_mask.present = 1U;
+-    remain = (unsigned long)mask_len - 18UL;
++    remain = (psd89_u32)mask_len - 18U;
+     if ((layer->user_mask.flags & 0x10U) != 0U) {
+         rc = psd89_parse_mask_parameters(&layer->user_mask, io, &remain);
+         if (rc != PSD89_OK) {
+             return rc;
+         }
+     }
+-    if (remain == 2UL) {
+-        return psd89_skip(io, 2UL) ? PSD89_OK : PSD89_E_TRUNCATED;
++    if (remain == 2U) {
++        return psd89_skip(io, 2U) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+-    if (remain >= 18UL) {
++    if (remain >= 18U) {
+         if (!psd89_rd_u8(io, &layer->user_mask.real_flags) ||
+             !psd89_rd_u8(io, &layer->user_mask.real_background) ||
+             !psd89_rd_be32s(io, &layer->user_mask.real_top) ||
+@@ -176,7 +176,7 @@
+             return PSD89_E_TRUNCATED;
+         }
+         layer->user_mask.real_present = 1U;
+-        remain -= 18UL;
++        remain -= 18U;
+     }
+     return psd89_skip(io, remain) ? PSD89_OK : PSD89_E_TRUNCATED;
+ }
+@@ -186,16 +186,16 @@
+     psd89_vector_mask *vm;
+     psd89_u32 version;
+     psd89_u32 flags;
+-    unsigned long remain;
++    psd89_u32 remain;
+     psd89_u16 selector;
+     psd89_u8 rec[24];
+     int current_subpath;
+ 
+     if (layer == 0) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+-    if (len < 8UL) {
+-        return psd89_skip(io, (unsigned long)len) ? PSD89_OK : PSD89_E_TRUNCATED;
++    if (len < 8U) {
++        return psd89_skip(io, (psd89_u32)len) ? PSD89_OK : PSD89_E_TRUNCATED;
+     }
+     vm = &layer->vector_mask;
+     memset(vm, 0, sizeof(*vm));
+@@ -205,23 +205,23 @@
+     vm->present = 1U;
+     vm->use_vsms = (psd89_u8)(use_vsms != 0);
+     vm->version = (psd89_u8)version;
+-    vm->flags = (psd89_u8)(flags & 0xFFUL);
+-    vm->invert = (psd89_u8)((flags & 0x01UL) != 0UL);
+-    vm->not_link = (psd89_u8)((flags & 0x02UL) != 0UL);
+-    vm->disabled = (psd89_u8)((flags & 0x04UL) != 0UL);
+-    remain = (unsigned long)len - 8UL;
++    vm->flags = (psd89_u8)(flags & 0xFFU);
++    vm->invert = (psd89_u8)((flags & 0x01U) != 0U);
++    vm->not_link = (psd89_u8)((flags & 0x02U) != 0U);
++    vm->disabled = (psd89_u8)((flags & 0x04U) != 0U);
++    remain = (psd89_u32)len - 8U;
+     current_subpath = -1;
+-    while (remain >= 26UL) {
++    while (remain >= 26U) {
+         if (!psd89_rd_be16(io, &selector)) {
+             return PSD89_E_TRUNCATED;
+         }
+-        remain -= 2UL;
++        remain -= 2U;
+         if (selector == 0U || selector == 3U) {
+             psd89_u16 count;
+-            if (!psd89_rd_be16(io, &count) || !psd89_skip(io, 22UL)) {
++            if (!psd89_rd_be16(io, &count) || !psd89_skip(io, 22U)) {
+                 return PSD89_E_TRUNCATED;
+             }
+-            remain -= 24UL;
++            remain -= 24U;
+             if (vm->subpath_count < PSD89_MAX_VECTOR_SUBPATHS) {
+                 vm->subpaths[vm->subpath_count].closed = (psd89_u8)(selector == 0U);
+                 vm->subpaths[vm->subpath_count].knot_count = 0U;
+@@ -241,7 +241,7 @@
+                 !psd89_rd_be32s(io, &knot.leaving_h)) {
+                 return PSD89_E_TRUNCATED;
+             }
+-            remain -= 24UL;
++            remain -= 24U;
+             knot.linked = (psd89_u8)(selector == 1U || selector == 4U);
+             if (current_subpath >= 0 && vm->knot_count < PSD89_MAX_VECTOR_KNOTS) {
+                 vm->knots[vm->knot_count] = knot;
+@@ -249,10 +249,10 @@
+                 ++vm->knot_count;
+             }
+         } else {
+-            if (!psd89_io_read(io, rec, 24UL)) {
++            if (!psd89_io_read(io, rec, 24U)) {
+                 return PSD89_E_TRUNCATED;
+             }
+-            remain -= 24UL;
++            remain -= 24U;
+             if (selector == 6U) {
+                 vm->path_fill_rule_present = 1U;
+             } else if (selector == 8U) {
+@@ -261,20 +261,20 @@
+             }
+         }
+     }
+-    if (remain != 0UL && !psd89_skip(io, remain)) {
++    if (remain != 0U && !psd89_skip(io, remain)) {
+         return PSD89_E_TRUNCATED;
+     }
+     return PSD89_OK;
+ }
+ 
+ 
+-static int psd89_parse_image_resources(psd89_doc *doc, psd89_io *io, unsigned long end)
++static int psd89_parse_image_resources(psd89_doc *doc, psd89_io *io, psd89_u32 end)
+ {
+     psd89_u32 sig;
+     psd89_u16 id;
+     psd89_u32 size;
+-    unsigned long block_start;
+-    unsigned long block_end;
++    psd89_u32 block_start;
++    psd89_u32 block_end;
+     while (psd89_io_tell(io) < end) {
+         block_start = psd89_io_tell(io);
+         if (!psd89_rd_be32(io, &sig) || !psd89_rd_be16(io, &id)) {
+@@ -292,7 +292,7 @@
+         if (!psd89_rd_be32(io, &size)) {
+             return PSD89_E_TRUNCATED;
+         }
+-        if (!psd89_skip(io, (unsigned long)size + (unsigned long)(size & 1UL))) {
++        if (!psd89_skip(io, (psd89_u32)size + (psd89_u32)(size & 1U))) {
+             return PSD89_E_TRUNCATED;
+         }
+         block_end = psd89_io_tell(io);
+@@ -313,23 +313,23 @@
+ {
+     psd89_u32 sig;
+     psd89_u32 len;
+-    unsigned long start;
++    psd89_u32 start;
+     psd89_u8 bool_v;
+ 
+     start = psd89_io_tell(io);
+     if (!psd89_rd_be32(io, &sig)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (sig != PSD89_SIG_8BIM && sig != 0x38423634UL) {
++    if (sig != PSD89_SIG_8BIM && sig != 0x38423634U) {
+         return PSD89_E_BAD_LAYER;
+     }
+-    if (!psd89_io_read(io, ref->key, 4UL)) {
++    if (!psd89_io_read(io, ref->key, 4U)) {
+         return PSD89_E_TRUNCATED;
+     }
+     if (!psd89_rd_be32(io, &len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (layer != 0 && len != 0UL && (psd89_tag_key_eq(ref->key, "vmsk") || psd89_tag_key_eq(ref->key, "vsms"))) {
++    if (layer != 0 && len != 0U && (psd89_tag_key_eq(ref->key, "vmsk") || psd89_tag_key_eq(ref->key, "vsms"))) {
+         int use_vsms;
+         use_vsms = psd89_tag_key_eq(ref->key, "vsms");
+         {
+@@ -339,34 +339,34 @@
+                 return vrc;
+             }
+         }
+-    } else if (layer != 0 && len != 0UL && psd89_tag_key_eq(ref->key, "lsct")) {
++    } else if (layer != 0 && len != 0U && psd89_tag_key_eq(ref->key, "lsct")) {
+         int lrc;
+         lrc = psd89_parse_section_divider_tag(layer, io, len);
+         if (lrc != PSD89_OK) {
+             return lrc;
+         }
+-    } else if (layer != 0 && len != 0UL && (psd89_tag_key_eq(ref->key, "clbl") || psd89_tag_key_eq(ref->key, "infx") || psd89_tag_key_eq(ref->key, "knko") || psd89_tag_key_eq(ref->key, "lmgm") || psd89_tag_key_eq(ref->key, "vmgm") || psd89_tag_key_eq(ref->key, "tsly"))) {
++    } else if (layer != 0 && len != 0U && (psd89_tag_key_eq(ref->key, "clbl") || psd89_tag_key_eq(ref->key, "infx") || psd89_tag_key_eq(ref->key, "knko") || psd89_tag_key_eq(ref->key, "lmgm") || psd89_tag_key_eq(ref->key, "vmgm") || psd89_tag_key_eq(ref->key, "tsly"))) {
+         if (!psd89_rd_u8(io, &bool_v)) {
+             return PSD89_E_TRUNCATED;
+         }
+         psd89_parse_known_layer_bool_tag(layer, ref->key, bool_v);
+-        if (len > 1UL && !psd89_skip(io, (unsigned long)(len - 1UL))) {
++        if (len > 1U && !psd89_skip(io, (psd89_u32)(len - 1U))) {
+             return PSD89_E_TRUNCATED;
+         }
+-    } else if (layer != 0 && len != 0UL && psd89_tag_key_eq(ref->key, "lrFX")) {
++    } else if (layer != 0 && len != 0U && psd89_tag_key_eq(ref->key, "lrFX")) {
+         return psd89_parse_lrfx_tag(layer, io, len);
+-    } else if (layer != 0 && len != 0UL && psd89_tag_key_eq(ref->key, "TySh")) {
++    } else if (layer != 0 && len != 0U && psd89_tag_key_eq(ref->key, "TySh")) {
+         return psd89_parse_tysh_tag(layer, io, len);
+-    } else if (layer != 0 && len != 0UL && psd89_tag_key_eq(ref->key, "Txt2")) {
++    } else if (layer != 0 && len != 0U && psd89_tag_key_eq(ref->key, "Txt2")) {
+         return psd89_parse_txt2_tag(layer, io, len);
+-    } else if (layer != 0 && len != 0UL && psd89_tag_key_eq(ref->key, "lfx2")) {
++    } else if (layer != 0 && len != 0U && psd89_tag_key_eq(ref->key, "lfx2")) {
+         return psd89_parse_lfx2_tag(layer, io, len);
+-    } else if (layer != 0 && len != 0UL && (psd89_tag_key_eq(ref->key, "SoLd") || psd89_tag_key_eq(ref->key, "SoLE") || psd89_tag_key_eq(ref->key, "plLd"))) {
++    } else if (layer != 0 && len != 0U && (psd89_tag_key_eq(ref->key, "SoLd") || psd89_tag_key_eq(ref->key, "SoLE") || psd89_tag_key_eq(ref->key, "plLd"))) {
+         return psd89_parse_smart_object_tag(layer, ref->key, io, len);
+-    } else if (!psd89_skip(io, (unsigned long)len)) {
++    } else if (!psd89_skip(io, (psd89_u32)len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if ((len & 1UL) != 0UL && !psd89_skip(io, 1UL)) {
++    if ((len & 1U) != 0U && !psd89_skip(io, 1U)) {
+         return PSD89_E_TRUNCATED;
+     }
+     ref->raw_offset = start;
+@@ -374,13 +374,13 @@
+     return PSD89_OK;
+ }
+ 
+-static int psd89_parse_layers(psd89_doc *doc, psd89_io *io, unsigned long layer_info_end)
++static int psd89_parse_layers(psd89_doc *doc, psd89_io *io, psd89_u32 layer_info_end)
+ {
+     psd89_s16 layer_count_s16;
+     unsigned int i;
+     unsigned int j;
+     int rc;
+-    unsigned long extra_end;
++    psd89_u32 extra_end;
+     psd89_u32 extra_len;
+     psd89_u32 mask_len;
+     psd89_u32 blend_len;
+@@ -428,7 +428,7 @@
+         if (blend_sig != PSD89_SIG_8BIM) {
+             return PSD89_E_BAD_LAYER;
+         }
+-        if (!psd89_io_read(io, layer->blend_mode, 4UL) ||
++        if (!psd89_io_read(io, layer->blend_mode, 4U) ||
+             !psd89_rd_u8(io, &layer->opacity) ||
+             !psd89_rd_u8(io, &layer->clipping) ||
+             !psd89_rd_u8(io, &layer->flags) ||
+@@ -436,14 +436,14 @@
+             !psd89_rd_be32(io, &extra_len)) {
+             return PSD89_E_TRUNCATED;
+         }
+-        extra_end = psd89_io_tell(io) + (unsigned long)extra_len;
++        extra_end = psd89_io_tell(io) + (psd89_u32)extra_len;
+         block_start = (psd89_u32)psd89_io_tell(io);
+         if (!psd89_rd_be32(io, &mask_len)) {
+             return PSD89_E_TRUNCATED;
+         }
+-        layer->mask_ref.present = mask_len != 0UL;
++        layer->mask_ref.present = mask_len != 0U;
+         layer->mask_ref.raw_offset = block_start;
+-        layer->mask_ref.raw_size = 4UL + mask_len;
++        layer->mask_ref.raw_size = 4U + mask_len;
+         rc = psd89_parse_layer_mask_data(layer, io, mask_len);
+         if (rc != PSD89_OK) {
+             return rc;
+@@ -453,8 +453,8 @@
+             return PSD89_E_TRUNCATED;
+         }
+         layer->blend_ranges_ref.raw_offset = block_start;
+-        layer->blend_ranges_ref.raw_size = 4UL + blend_len;
+-        if (!psd89_skip(io, (unsigned long)blend_len)) {
++        layer->blend_ranges_ref.raw_size = 4U + blend_len;
++        if (!psd89_skip(io, (psd89_u32)blend_len)) {
+             return PSD89_E_TRUNCATED;
+         }
+         if (!psd89_read_pascal_string(io, layer->name, PSD89_MAX_NAME_CHARS + 1U, 4U)) {
+@@ -483,14 +483,14 @@
+         psd89_layer *layer;
+         layer = &doc->layers[i];
+         for (j = 0U; j < layer->channel_count; ++j) {
+-            if (layer->channels[j].data_length < 2UL) {
++            if (layer->channels[j].data_length < 2U) {
+                 return PSD89_E_BAD_LAYER;
+             }
+             layer->channels[j].data_offset = psd89_io_tell(io);
+             if (!psd89_rd_be16(io, &layer->channels[j].compression)) {
+                 return PSD89_E_TRUNCATED;
+             }
+-            if (!psd89_skip(io, (unsigned long)(layer->channels[j].data_length - 2UL))) {
++            if (!psd89_skip(io, (psd89_u32)(layer->channels[j].data_length - 2U))) {
+                 return PSD89_E_TRUNCATED;
+             }
+         }
+@@ -505,11 +505,11 @@
+     return PSD89_OK;
+ }
+ 
+-static int psd89_parse_layer_and_mask(psd89_doc *doc, psd89_io *io, unsigned long end)
++static int psd89_parse_layer_and_mask(psd89_doc *doc, psd89_io *io, psd89_u32 end)
+ {
+     psd89_u32 layer_info_len;
+     psd89_u32 global_mask_len;
+-    unsigned long layer_info_end;
++    psd89_u32 layer_info_end;
+     int rc;
+ 
+     if (psd89_io_tell(io) == end) {
+@@ -518,11 +518,11 @@
+     if (!psd89_rd_be32(io, &layer_info_len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    layer_info_end = psd89_io_tell(io) + (unsigned long)layer_info_len;
++    layer_info_end = psd89_io_tell(io) + (psd89_u32)layer_info_len;
+     if (layer_info_end > end) {
+         return PSD89_E_BAD_LAYER;
+     }
+-    if (layer_info_len != 0UL) {
++    if (layer_info_len != 0U) {
+         rc = psd89_parse_layers(doc, io, layer_info_end);
+         if (rc != PSD89_OK) {
+             return rc;
+@@ -532,8 +532,8 @@
+     if (!psd89_rd_be32(io, &global_mask_len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    doc->global_mask_raw_size = 4UL + global_mask_len;
+-    if (!psd89_skip(io, (unsigned long)global_mask_len)) {
++    doc->global_mask_raw_size = 4U + global_mask_len;
++    if (!psd89_skip(io, (psd89_u32)global_mask_len)) {
+         return PSD89_E_TRUNCATED;
+     }
+     while (psd89_io_tell(io) < end) {
+@@ -559,7 +559,7 @@
+     psd89_u16 version;
+     psd89_u8 reserved[6];
+     psd89_u32 len;
+-    unsigned long section_end;
++    psd89_u32 section_end;
+     int rc;
+ 
+     if (doc == 0 || io == 0) {
+@@ -578,7 +578,7 @@
+     if (version != 1U) {
+         return PSD89_E_BAD_VERSION;
+     }
+-    if (!psd89_io_read(io, reserved, 6UL)) {
++    if (!psd89_io_read(io, reserved, 6U)) {
+         return PSD89_E_TRUNCATED;
+     }
+     if (reserved[0] != 0U || reserved[1] != 0U || reserved[2] != 0U ||
+@@ -605,14 +605,14 @@
+     if (!psd89_rd_be32(io, &len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    if (!psd89_skip(io, (unsigned long)len)) {
++    if (!psd89_skip(io, (psd89_u32)len)) {
+         return PSD89_E_TRUNCATED;
+     }
+ 
+     if (!psd89_rd_be32(io, &len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    section_end = psd89_io_tell(io) + (unsigned long)len;
++    section_end = psd89_io_tell(io) + (psd89_u32)len;
+     rc = psd89_parse_image_resources(doc, io, section_end);
+     if (rc != PSD89_OK) {
+         return rc;
+@@ -621,7 +621,7 @@
+     if (!psd89_rd_be32(io, &len)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    section_end = psd89_io_tell(io) + (unsigned long)len;
++    section_end = psd89_io_tell(io) + (psd89_u32)len;
+     rc = psd89_parse_layer_and_mask(doc, io, section_end);
+     if (rc != PSD89_OK) {
+         return rc;
+@@ -644,7 +644,7 @@
+ {
+     psd89_u32 y;
+     for (y = 0U; y < rows; ++y) {
+-        if (!psd89_io_read(io, dst + (unsigned long)y * stride, (unsigned long)row_bytes)) {
++        if (!psd89_io_read(io, dst + (psd89_u32)y * stride, (psd89_u32)row_bytes)) {
+             return 0;
+         }
+     }
+@@ -652,8 +652,8 @@
+ }
+ 
+ static int psd89_decode_plane_rle(psd89_io *io,
+-                                  unsigned long counts_offset,
+-                                  unsigned long data_offset,
++                                  psd89_u32 counts_offset,
++                                  psd89_u32 data_offset,
+                                   psd89_u8 *dst,
+                                   psd89_u32 stride,
+                                   psd89_u32 rows,
+@@ -661,11 +661,11 @@
+ {
+     psd89_u32 y;
+     psd89_u16 count16;
+-    unsigned long count_pos;
+-    unsigned long data_pos;
++    psd89_u32 count_pos;
++    psd89_u32 data_pos;
+     data_pos = data_offset;
+     for (y = 0U; y < rows; ++y) {
+-        count_pos = counts_offset + (unsigned long)y * 2UL;
++        count_pos = counts_offset + (psd89_u32)y * 2U;
+         if (!psd89_io_seek(io, count_pos) || !psd89_rd_be16(io, &count16)) {
+             return 0;
+         }
+@@ -673,31 +673,31 @@
+             return 0;
+         }
+         if (!psd89_packbits_decode_row(io,
+-                                       dst + (unsigned long)y * stride,
+-                                       (unsigned long)row_bytes,
+-                                       (unsigned long)count16)) {
++                                       dst + (psd89_u32)y * stride,
++                                       (psd89_u32)row_bytes,
++                                       (psd89_u32)count16)) {
+             return 0;
+         }
+-        data_pos += (unsigned long)count16;
++        data_pos += (psd89_u32)count16;
+     }
+     return 1;
+ }
+ 
+-static unsigned long psd89_io_length(psd89_io *io)
++static psd89_u32 psd89_io_length(psd89_io *io)
+ {
+-    unsigned long pos;
+-    unsigned long end;
++    psd89_u32 pos;
++    psd89_u32 end;
+ 
+     if (io == 0 || io->seek == 0 || io->tell == 0) {
+-        return 0UL;
++        return 0U;
+     }
+     pos = psd89_io_tell(io);
+-    if (!psd89_io_seek(io, 0xFFFFFFFFUL)) {
+-        return 0UL;
++    if (!psd89_io_seek(io, 0xFFFFFFFFU)) {
++        return 0U;
+     }
+     end = psd89_io_tell(io);
+     if (!psd89_io_seek(io, pos)) {
+-        return 0UL;
++        return 0U;
+     }
+     return end;
+ }
+@@ -705,14 +705,14 @@
+ int psd89_decode_composite_u8(const psd89_doc *doc, psd89_io *io, psd89_u8 **planes, psd89_u32 stride)
+ {
+     psd89_u16 comp;
+-    unsigned long base;
+-    unsigned long counts_offset;
+-    unsigned long data_offset;
++    psd89_u32 base;
++    psd89_u32 counts_offset;
++    psd89_u32 data_offset;
+     psd89_u32 c;
+     psd89_u32 y;
+     psd89_u16 count16;
+-    unsigned long count_pos;
+-    unsigned long row_data_pos;
++    psd89_u32 count_pos;
++    psd89_u32 row_data_pos;
+ 
+     if (doc == 0 || io == 0 || planes == 0) {
+         return PSD89_E_BAD_ARGUMENT;
+@@ -720,7 +720,7 @@
+     if (!psd89_io_seek(io, doc->composite_data_offset) || !psd89_rd_be16(io, &comp)) {
+         return PSD89_E_TRUNCATED;
+     }
+-    base = doc->composite_data_offset + 2UL;
++    base = doc->composite_data_offset + 2U;
+     if (comp == PSD89_COMP_RAW) {
+         for (c = 0U; c < doc->channels; ++c) {
+             if (planes[c] == 0) {
+@@ -734,14 +734,14 @@
+     }
+     if (comp == PSD89_COMP_RLE) {
+         counts_offset = base;
+-        data_offset = counts_offset + (unsigned long)doc->height * (unsigned long)doc->channels * 2UL;
++        data_offset = counts_offset + (psd89_u32)doc->height * (psd89_u32)doc->channels * 2U;
+         row_data_pos = data_offset;
+         for (c = 0U; c < doc->channels; ++c) {
+             if (planes[c] == 0) {
+                 return PSD89_E_BAD_ARGUMENT;
+             }
+             for (y = 0U; y < doc->height; ++y) {
+-                count_pos = counts_offset + ((unsigned long)c * (unsigned long)doc->height + (unsigned long)y) * 2UL;
++                count_pos = counts_offset + ((psd89_u32)c * (psd89_u32)doc->height + (psd89_u32)y) * 2U;
+                 if (!psd89_io_seek(io, count_pos) || !psd89_rd_be16(io, &count16)) {
+                     return PSD89_E_TRUNCATED;
+                 }
+@@ -749,18 +749,18 @@
+                     return PSD89_E_TRUNCATED;
+                 }
+                 if (!psd89_packbits_decode_row(io,
+-                                               planes[c] + (unsigned long)y * stride,
+-                                               (unsigned long)doc->width,
+-                                               (unsigned long)count16)) {
++                                               planes[c] + (psd89_u32)y * stride,
++                                               (psd89_u32)doc->width,
++                                               (psd89_u32)count16)) {
+                     return PSD89_E_RLE;
+                 }
+-                row_data_pos += (unsigned long)count16;
++                row_data_pos += (psd89_u32)count16;
+             }
+         }
+         return PSD89_OK;
+     }
+     if (comp == PSD89_COMP_ZIP || comp == PSD89_COMP_ZIP_PRED) {
+-        unsigned long file_size;
++        psd89_u32 file_size;
+         file_size = psd89_io_length(io);
+         if (file_size <= base) {
+             return PSD89_E_TRUNCATED;
+@@ -786,9 +786,9 @@
+     psd89_u32 cols;
+     psd89_u16 comp;
+     unsigned int i;
+-    unsigned long base;
+-    unsigned long counts_offset;
+-    unsigned long data_offset;
++    psd89_u32 base;
++    psd89_u32 counts_offset;
++    psd89_u32 data_offset;
+ 
+     if (doc == 0 || io == 0 || dst == 0) {
+         return PSD89_E_BAD_ARGUMENT;
+@@ -820,17 +820,17 @@
+         return PSD89_OK;
+     }
+     if (comp == PSD89_COMP_RLE) {
+-        base = ch->data_offset + 2UL;
++        base = ch->data_offset + 2U;
+         counts_offset = base;
+-        data_offset = base + (unsigned long)rows * 2UL;
++        data_offset = base + (psd89_u32)rows * 2U;
+         if (!psd89_decode_plane_rle(io, counts_offset, data_offset, dst, stride, rows, cols)) {
+             return PSD89_E_RLE;
+         }
+         return PSD89_OK;
+     }
+     if (comp == PSD89_COMP_ZIP || comp == PSD89_COMP_ZIP_PRED) {
+-        base = ch->data_offset + 2UL;
+-        if (!psd89_zip_decode_plane(io, base, (unsigned long)(ch->data_length - 2UL), dst, stride, rows, cols, comp == PSD89_COMP_ZIP_PRED)) {
++        base = ch->data_offset + 2U;
++        if (!psd89_zip_decode_plane(io, base, (psd89_u32)(ch->data_length - 2U), dst, stride, rows, cols, comp == PSD89_COMP_ZIP_PRED)) {
+             return PSD89_E_IO;
+         }
+         return PSD89_OK;
+--- /mnt/data/psd_work/orig/PSD/src/psd89_write.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_write.c	2026-08-20 02:05:51.319902279 +0000
+@@ -2,12 +2,12 @@
+ 
+ #include <string.h>
+ 
+-static int psd89_write_zeroes(psd89_io *io, unsigned long n)
++static int psd89_write_zeroes(psd89_io *io, psd89_u32 n)
+ {
+     static const psd89_u8 zeros[256] = { 0 };
+-    unsigned long chunk;
+-    while (n != 0UL) {
+-        chunk = n > (unsigned long)sizeof(zeros) ? (unsigned long)sizeof(zeros) : n;
++    psd89_u32 chunk;
++    while (n != 0U) {
++        chunk = n > (psd89_u32)sizeof(zeros) ? (psd89_u32)sizeof(zeros) : n;
+         if (!psd89_io_write(io, zeros, chunk)) {
+             return 0;
+         }
+@@ -63,7 +63,7 @@
+     if (layer->type_tool.present && psd89_tag_key_eq(tag->key, "TySh")) {
+         return 1;
+     }
+-    if (layer->text_engine.present && layer->text_engine.authored_raw != 0 && layer->text_engine.authored_raw_size != 0UL && psd89_tag_key_eq(tag->key, "Txt2")) {
++    if (layer->text_engine.present && layer->text_engine.authored_raw != 0 && layer->text_engine.authored_raw_size != 0U && psd89_tag_key_eq(tag->key, "Txt2")) {
+         return 1;
+     }
+     if (layer->object_effects.present && psd89_tag_key_eq(tag->key, "lfx2")) {
+@@ -77,7 +77,7 @@
+ 
+ static int psd89_layer_has_authored_mask(const psd89_layer *layer)
+ {
+-    return layer != 0 && layer->mask_ref.raw_size == 0UL && layer->user_mask.present;
++    return layer != 0 && layer->mask_ref.raw_size == 0U && layer->user_mask.present;
+ }
+ 
+ static int psd89_layer_has_raw_vector_tag(const psd89_layer *layer)
+@@ -129,20 +129,20 @@
+ 
+     param_flags = psd89_layer_mask_param_flags(mask);
+     if (param_flags == 0U) {
+-        return 0UL;
++        return 0U;
+     }
+-    len = 1UL;
++    len = 1U;
+     if ((param_flags & 0x01U) != 0U) {
+         ++len;
+     }
+     if ((param_flags & 0x02U) != 0U) {
+-        len += 8UL;
++        len += 8U;
+     }
+     if ((param_flags & 0x04U) != 0U) {
+         ++len;
+     }
+     if ((param_flags & 0x08U) != 0U) {
+-        len += 8UL;
++        len += 8U;
+     }
+     return len;
+ }
+@@ -161,13 +161,13 @@
+     if ((param_flags & 0x01U) != 0U && !psd89_wr_u8(io, mask->user_density)) {
+         return 0;
+     }
+-    if ((param_flags & 0x02U) != 0U && !psd89_wr_be64_double_from_q16(io, mask->user_feather)) {
++    if ((param_flags & 0x02U) != 0U && !psd89_wr_ieee8_from_q16(io, mask->user_feather)) {
+         return 0;
+     }
+     if ((param_flags & 0x04U) != 0U && !psd89_wr_u8(io, mask->vector_density)) {
+         return 0;
+     }
+-    if ((param_flags & 0x08U) != 0U && !psd89_wr_be64_double_from_q16(io, mask->vector_feather)) {
++    if ((param_flags & 0x08U) != 0U && !psd89_wr_ieee8_from_q16(io, mask->vector_feather)) {
+         return 0;
+     }
+     return 1;
+@@ -187,18 +187,18 @@
+     int emit_real;
+ 
+     if (layer == 0 || !layer->user_mask.present) {
+-        return psd89_wr_be32(io, 0UL);
++        return psd89_wr_be32(io, 0U);
+     }
+ 
+     param_len = psd89_layer_mask_param_len(&layer->user_mask);
+-    emit_real = layer->user_mask.real_present || param_len != 0UL;
++    emit_real = layer->user_mask.real_present || param_len != 0U;
+     flags = layer->user_mask.flags;
+-    if (param_len != 0UL) {
++    if (param_len != 0U) {
+         flags = (psd89_u8)(flags | 0x10U);
+     } else {
+         flags = (psd89_u8)(flags & (psd89_u8)~0x10U);
+     }
+-    size = 18UL + param_len + (emit_real ? 18UL : 2UL);
++    size = 18U + param_len + (emit_real ? 18U : 2U);
+ 
+     if (!psd89_wr_be32(io, size) ||
+         !psd89_wr_be32(io, (psd89_u32)layer->user_mask.top) ||
+@@ -253,7 +253,7 @@
+     if (doc == 0) {
+         return PSD89_E_BAD_ARGUMENT;
+     }
+-    if (doc->width == 0UL || doc->height == 0UL || doc->width > 30000UL || doc->height > 30000UL) {
++    if (doc->width == 0U || doc->height == 0U || doc->width > 30000U || doc->height > 30000U) {
+         return PSD89_E_BAD_ARGUMENT;
+     }
+     if (doc->depth != 8U) {
+@@ -272,7 +272,7 @@
+     if (doc->resource_count != 0U && !doc->has_passthrough_source) {
+         return PSD89_E_BAD_STATE;
+     }
+-    if ((doc->global_tag_count != 0U || doc->global_mask_raw_size != 0UL) && !doc->has_passthrough_source) {
++    if ((doc->global_tag_count != 0U || doc->global_mask_raw_size != 0U) && !doc->has_passthrough_source) {
+         return PSD89_E_BAD_STATE;
+     }
+     for (i = 0U; i < doc->layer_count; ++i) {
+@@ -284,8 +284,8 @@
+         if (layer->channel_count > PSD89_MAX_CHANNELS_PER_LAYER) {
+             return PSD89_E_LIMIT;
+         }
+-        if ((layer->tag_count != 0U || layer->blend_ranges_ref.raw_size != 0UL ||
+-             (layer->mask_ref.raw_size != 0UL && !psd89_layer_has_authored_mask(layer))) &&
++        if ((layer->tag_count != 0U || layer->blend_ranges_ref.raw_size != 0U ||
++             (layer->mask_ref.raw_size != 0U && !psd89_layer_has_authored_mask(layer))) &&
+             !doc->has_passthrough_source) {
+             return PSD89_E_BAD_STATE;
+         }
+@@ -307,7 +307,7 @@
+ {
+     if (!psd89_wr_be32(io, PSD89_SIG_8BPS) ||
+         !psd89_wr_be16(io, 1U) ||
+-        !psd89_write_zeroes(io, 6UL) ||
++        !psd89_write_zeroes(io, 6U) ||
+         !psd89_wr_be16(io, doc->channels) ||
+         !psd89_wr_be32(io, doc->height) ||
+         !psd89_wr_be32(io, doc->width) ||
+@@ -356,8 +356,8 @@
+ static int psd89_write_bool_tag(psd89_io *io, const char key[4], psd89_u8 value)
+ {
+     if (!psd89_wr_be32(io, PSD89_SIG_8BIM) ||
+-        !psd89_io_write(io, key, 4UL) ||
+-        !psd89_wr_be32(io, 4UL) ||
++        !psd89_io_write(io, key, 4U) ||
++        !psd89_wr_be32(io, 4U) ||
+         !psd89_wr_u8(io, (psd89_u8)(value != 0U)) ||
+         !psd89_wr_u8(io, 0U) ||
+         !psd89_wr_u8(io, 0U) ||
+@@ -373,14 +373,14 @@
+     unsigned int i;
+ 
+     if (vm == 0 || !vm->present) {
+-        return 0UL;
++        return 0U;
+     }
+-    count = 1UL;
++    count = 1U;
+     if (vm->initial_fill_rule_present) {
+         ++count;
+     }
+     for (i = 0U; i < vm->subpath_count; ++i) {
+-        count += 1UL + (psd89_u32)vm->subpaths[i].knot_count;
++        count += 1U + (psd89_u32)vm->subpaths[i].knot_count;
+     }
+     return count;
+ }
+@@ -394,9 +394,9 @@
+         if (!psd89_wr_be16(io, 1U)) {
+             return 0;
+         }
+-        return psd89_write_zeroes(io, 22UL);
++        return psd89_write_zeroes(io, 22U);
+     }
+-    return psd89_write_zeroes(io, 24UL);
++    return psd89_write_zeroes(io, 24U);
+ }
+ 
+ static int psd89_write_vector_mask_tag(psd89_io *io, const psd89_layer *layer)
+@@ -404,23 +404,23 @@
+     const psd89_vector_mask *vm;
+     unsigned int i;
+     unsigned int j;
+-    unsigned long len;
++    psd89_u32 len;
+     psd89_u32 flags;
+     const char vmsk[4] = { 'v', 'm', 's', 'k' };
+     const char vsms[4] = { 'v', 's', 'm', 's' };
+ 
+     vm = &layer->vector_mask;
+-    len = 8UL + 26UL * (unsigned long)psd89_vector_mask_record_count(vm);
++    len = 8U + 26U * (psd89_u32)psd89_vector_mask_record_count(vm);
+     flags = (psd89_u32)vm->flags;
+-    if (flags == 0UL) {
+-        if (vm->invert) { flags |= 0x01UL; }
+-        if (vm->not_link) { flags |= 0x02UL; }
+-        if (vm->disabled) { flags |= 0x04UL; }
++    if (flags == 0U) {
++        if (vm->invert) { flags |= 0x01U; }
++        if (vm->not_link) { flags |= 0x02U; }
++        if (vm->disabled) { flags |= 0x04U; }
+     }
+     if (!psd89_wr_be32(io, PSD89_SIG_8BIM) ||
+-        !psd89_io_write(io, vm->use_vsms ? vsms : vmsk, 4UL) ||
++        !psd89_io_write(io, vm->use_vsms ? vsms : vmsk, 4U) ||
+         !psd89_wr_be32(io, (psd89_u32)len) ||
+-        !psd89_wr_be32(io, vm->version != 0U ? (psd89_u32)vm->version : 3UL) ||
++        !psd89_wr_be32(io, vm->version != 0U ? (psd89_u32)vm->version : 3U) ||
+         !psd89_wr_be32(io, flags)) {
+         return 0;
+     }
+@@ -437,7 +437,7 @@
+         sp = &vm->subpaths[i];
+         if (!psd89_wr_be16(io, (psd89_u16)(sp->closed ? 0U : 3U)) ||
+             !psd89_wr_be16(io, sp->knot_count) ||
+-            !psd89_write_zeroes(io, 22UL)) {
++            !psd89_write_zeroes(io, 22U)) {
+             return 0;
+         }
+         for (j = 0U; j < sp->knot_count; ++j) {
+@@ -478,31 +478,31 @@
+     if (layer == 0 || !layer->section_divider_present) {
+         return 1;
+     }
+-    len = 4UL;
++    len = 4U;
+     blend_key = 0;
+     if (psd89_has_nonempty4(layer->section_divider_blend_mode)) {
+-        len = 12UL;
++        len = 12U;
+         blend_key = layer->section_divider_blend_mode;
+     }
+     if (layer->section_divider_subtype_present) {
+-        len = 16UL;
++        len = 16U;
+         if (blend_key == 0) {
+             blend_key = "norm";
+         }
+     }
+     if (!psd89_wr_be32(io, PSD89_SIG_8BIM) ||
+-        !psd89_io_write(io, lsct, 4UL) ||
++        !psd89_io_write(io, lsct, 4U) ||
+         !psd89_wr_be32(io, len) ||
+         !psd89_wr_be32(io, (psd89_u32)layer->section_divider_type)) {
+         return 0;
+     }
+-    if (len >= 12UL) {
++    if (len >= 12U) {
+         if (!psd89_wr_be32(io, PSD89_SIG_8BIM) ||
+-            !psd89_io_write(io, blend_key, 4UL)) {
++            !psd89_io_write(io, blend_key, 4U)) {
+             return 0;
+         }
+     }
+-    if (len >= 16UL) {
++    if (len >= 16U) {
+         if (!psd89_wr_be32(io, (psd89_u32)layer->section_divider_subtype)) {
+             return 0;
+         }
+@@ -549,7 +549,7 @@
+     if (layer->type_tool.present && !psd89_write_tysh_tag(io, layer)) {
+         return 0;
+     }
+-    if (layer->text_engine.present && layer->text_engine.authored_raw != 0 && layer->text_engine.authored_raw_size != 0UL && !psd89_write_txt2_tag(io, layer)) {
++    if (layer->text_engine.present && layer->text_engine.authored_raw != 0 && layer->text_engine.authored_raw_size != 0U && !psd89_write_txt2_tag(io, layer)) {
+         return 0;
+     }
+     if (layer->object_effects.present && !psd89_write_lfx2_tag(io, layer)) {
+@@ -563,10 +563,10 @@
+ 
+ static int psd89_write_image_resources(psd89_io *io, const psd89_doc *doc)
+ {
+-    unsigned long len_pos;
+-    unsigned long start;
++    psd89_u32 len_pos;
++    psd89_u32 start;
+     len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     start = psd89_io_tell(io);
+@@ -581,11 +581,11 @@
+ static int psd89_write_layer_record(psd89_io *io,
+                                     const psd89_doc *doc,
+                                     const psd89_layer *layer,
+-                                    unsigned long *channel_len_pos)
++                                    psd89_u32 *channel_len_pos)
+ {
+     unsigned int j;
+-    unsigned long extra_len_pos;
+-    unsigned long extra_start;
++    psd89_u32 extra_len_pos;
++    psd89_u32 extra_start;
+     psd89_u32 extra_len;
+     const char norm[4] = { 'n', 'o', 'r', 'm' };
+ 
+@@ -601,7 +601,7 @@
+             return 0;
+         }
+         channel_len_pos[j] = psd89_io_tell(io);
+-        if (!psd89_wr_be32(io, 0UL)) {
++        if (!psd89_wr_be32(io, 0U)) {
+             return 0;
+         }
+     }
+@@ -609,10 +609,10 @@
+         return 0;
+     }
+     if (psd89_has_nonempty4(layer->blend_mode)) {
+-        if (!psd89_io_write(io, layer->blend_mode, 4UL)) {
++        if (!psd89_io_write(io, layer->blend_mode, 4U)) {
+             return 0;
+         }
+-    } else if (!psd89_io_write(io, norm, 4UL)) {
++    } else if (!psd89_io_write(io, norm, 4U)) {
+         return 0;
+     }
+     if (!psd89_wr_u8(io, layer->opacity) ||
+@@ -622,12 +622,12 @@
+         return 0;
+     }
+     extra_len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     extra_start = psd89_io_tell(io);
+ 
+-    if (layer->mask_ref.raw_size != 0UL) {
++    if (layer->mask_ref.raw_size != 0U) {
+         if (!psd89_copy_bytes(io,
+                               (psd89_io *)&doc->passthrough_source,
+                               layer->mask_ref.raw_offset,
+@@ -638,18 +638,18 @@
+         if (!psd89_write_layer_mask_block(io, layer)) {
+             return 0;
+         }
+-    } else if (!psd89_wr_be32(io, 0UL)) {
++    } else if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+ 
+-    if (layer->blend_ranges_ref.raw_size != 0UL) {
++    if (layer->blend_ranges_ref.raw_size != 0U) {
+         if (!psd89_copy_bytes(io,
+                               (psd89_io *)&doc->passthrough_source,
+                               layer->blend_ranges_ref.raw_offset,
+                               layer->blend_ranges_ref.raw_size)) {
+             return 0;
+         }
+-    } else if (!psd89_wr_be32(io, 0UL)) {
++    } else if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+ 
+@@ -669,9 +669,9 @@
+     return psd89_patch_be32(io, extra_len_pos, extra_len);
+ }
+ 
+-static unsigned long psd89_rle_zero_row_len(unsigned long row_bytes)
++static psd89_u32 psd89_rle_zero_row_len(psd89_u32 row_bytes)
+ {
+-    return ((row_bytes + 127UL) / 128UL) * 2UL;
++    return ((row_bytes + 127U) / 128U) * 2U;
+ }
+ 
+ static int psd89_write_plane_raw(psd89_io *io,
+@@ -683,10 +683,10 @@
+     psd89_u32 y;
+     for (y = 0U; y < rows; ++y) {
+         if (plane != 0) {
+-            if (!psd89_io_write(io, plane + (unsigned long)y * stride, (unsigned long)cols)) {
++            if (!psd89_io_write(io, plane + (psd89_u32)y * stride, (psd89_u32)cols)) {
+                 return 0;
+             }
+-        } else if (!psd89_write_zeroes(io, (unsigned long)cols)) {
++        } else if (!psd89_write_zeroes(io, (psd89_u32)cols)) {
+             return 0;
+         }
+     }
+@@ -700,14 +700,14 @@
+                                  psd89_u32 cols)
+ {
+     psd89_u32 y;
+-    unsigned long row_len;
++    psd89_u32 row_len;
+     for (y = 0U; y < rows; ++y) {
+         if (plane != 0) {
+-            row_len = psd89_packbits_encoded_len(plane + (unsigned long)y * stride, (unsigned long)cols);
++            row_len = psd89_packbits_encoded_len(plane + (psd89_u32)y * stride, (psd89_u32)cols);
+         } else {
+-            row_len = psd89_rle_zero_row_len((unsigned long)cols);
++            row_len = psd89_rle_zero_row_len((psd89_u32)cols);
+         }
+-        if (row_len > 65535UL) {
++        if (row_len > 65535U) {
+             return 0;
+         }
+         if (!psd89_wr_be16(io, (psd89_u16)row_len)) {
+@@ -716,10 +716,10 @@
+     }
+     for (y = 0U; y < rows; ++y) {
+         if (plane != 0) {
+-            if (!psd89_packbits_write_row(io, plane + (unsigned long)y * stride, (unsigned long)cols)) {
++            if (!psd89_packbits_write_row(io, plane + (psd89_u32)y * stride, (psd89_u32)cols)) {
+                 return 0;
+             }
+-        } else if (!psd89_packbits_write_zero_row(io, (unsigned long)cols)) {
++        } else if (!psd89_packbits_write_zero_row(io, (psd89_u32)cols)) {
+             return 0;
+         }
+     }
+@@ -729,10 +729,10 @@
+ static int psd89_write_layer_channel_data(psd89_io *io,
+                                           const psd89_layer *layer,
+                                           const psd89_layer_channel *ch,
+-                                          unsigned long len_pos)
++                                          psd89_u32 len_pos)
+ {
+-    unsigned long start;
+-    unsigned long size;
++    psd89_u32 start;
++    psd89_u32 size;
+     psd89_u32 rows;
+     psd89_u32 cols;
+     if (!psd89_layer_channel_dims(layer, ch->id, &rows, &cols)) {
+@@ -758,7 +758,7 @@
+         return 0;
+     }
+     size = psd89_io_tell(io) - start;
+-    if ((size & 1UL) != 0UL) {
++    if ((size & 1U) != 0U) {
+         if (!psd89_wr_u8(io, 0U)) {
+             return 0;
+         }
+@@ -769,25 +769,25 @@
+ 
+ static int psd89_write_layers_section(psd89_io *io, const psd89_doc *doc)
+ {
+-    unsigned long section_len_pos;
+-    unsigned long section_start;
+-    unsigned long layer_info_len_pos;
+-    unsigned long layer_info_start;
+-    unsigned long channel_len_pos[PSD89_MAX_LAYERS][PSD89_MAX_CHANNELS_PER_LAYER];
++    psd89_u32 section_len_pos;
++    psd89_u32 section_start;
++    psd89_u32 layer_info_len_pos;
++    psd89_u32 layer_info_start;
++    psd89_u32 channel_len_pos[PSD89_MAX_LAYERS][PSD89_MAX_CHANNELS_PER_LAYER];
+     unsigned int i;
+     unsigned int j;
+-    unsigned long layer_info_len;
+-    unsigned long section_len;
++    psd89_u32 layer_info_len;
++    psd89_u32 section_len;
+     psd89_s16 layer_count_s16;
+ 
+     section_len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     section_start = psd89_io_tell(io);
+ 
+     layer_info_len_pos = psd89_io_tell(io);
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+     layer_info_start = psd89_io_tell(io);
+@@ -815,7 +815,7 @@
+             }
+         }
+     }
+-    if (((psd89_io_tell(io) - layer_info_start) & 1UL) != 0UL) {
++    if (((psd89_io_tell(io) - layer_info_start) & 1U) != 0U) {
+         if (!psd89_wr_u8(io, 0U)) {
+             return 0;
+         }
+@@ -825,14 +825,14 @@
+         return 0;
+     }
+ 
+-    if (doc->global_mask_raw_size != 0UL) {
++    if (doc->global_mask_raw_size != 0U) {
+         if (!psd89_copy_bytes(io,
+                               (psd89_io *)&doc->passthrough_source,
+                               doc->global_mask_raw_offset,
+                               doc->global_mask_raw_size)) {
+             return 0;
+         }
+-    } else if (!psd89_wr_be32(io, 0UL)) {
++    } else if (!psd89_wr_be32(io, 0U)) {
+         return 0;
+     }
+ 
+@@ -871,17 +871,17 @@
+     if (doc->composite_write_compression == PSD89_COMP_RLE) {
+         for (c = 0U; c < doc->channels; ++c) {
+             psd89_u32 y;
+-            unsigned long row_len;
++            psd89_u32 row_len;
+             const psd89_u8 *plane;
+             plane = doc->composite_planes[c];
+             for (y = 0U; y < rows; ++y) {
+                 if (plane != 0) {
+-                    row_len = psd89_packbits_encoded_len(plane + (unsigned long)y * (doc->composite_stride ? doc->composite_stride : cols),
+-                                                         (unsigned long)cols);
++                    row_len = psd89_packbits_encoded_len(plane + (psd89_u32)y * (doc->composite_stride ? doc->composite_stride : cols),
++                                                         (psd89_u32)cols);
+                 } else {
+-                    row_len = psd89_rle_zero_row_len((unsigned long)cols);
++                    row_len = psd89_rle_zero_row_len((psd89_u32)cols);
+                 }
+-                if (row_len > 65535UL) {
++                if (row_len > 65535U) {
+                     return 0;
+                 }
+                 if (!psd89_wr_be16(io, (psd89_u16)row_len)) {
+@@ -896,11 +896,11 @@
+             for (y = 0U; y < rows; ++y) {
+                 if (plane != 0) {
+                     if (!psd89_packbits_write_row(io,
+-                                                  plane + (unsigned long)y * (doc->composite_stride ? doc->composite_stride : cols),
+-                                                  (unsigned long)cols)) {
++                                                  plane + (psd89_u32)y * (doc->composite_stride ? doc->composite_stride : cols),
++                                                  (psd89_u32)cols)) {
+                         return 0;
+                     }
+-                } else if (!psd89_packbits_write_zero_row(io, (unsigned long)cols)) {
++                } else if (!psd89_packbits_write_zero_row(io, (psd89_u32)cols)) {
+                     return 0;
+                 }
+             }
+@@ -926,7 +926,7 @@
+     if (!psd89_write_header(io, doc)) {
+         return PSD89_E_IO;
+     }
+-    if (!psd89_wr_be32(io, 0UL)) {
++    if (!psd89_wr_be32(io, 0U)) {
+         return PSD89_E_IO;
+     }
+     if (!psd89_write_image_resources(io, doc)) {
+--- /mnt/data/psd_work/orig/PSD/src/psd89_stdio.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_stdio.c	2026-08-20 02:06:22.455021384 +0000
+@@ -1,42 +1,42 @@
+ #include "psd89/psd89_stdio.h"
+ 
+-static int psd89_stdio_read_fn(void *user, void *dst, unsigned long size)
++static int psd89_stdio_read_fn(void *user, void *dst, psd89_u32 size)
+ {
+     FILE *fp;
+     fp = (FILE *)user;
+     return fp != 0 && fread(dst, 1U, (size_t)size, fp) == (size_t)size;
+ }
+ 
+-static int psd89_stdio_write_fn(void *user, const void *src, unsigned long size)
++static int psd89_stdio_write_fn(void *user, const void *src, psd89_u32 size)
+ {
+     FILE *fp;
+     fp = (FILE *)user;
+     return fp != 0 && fwrite(src, 1U, (size_t)size, fp) == (size_t)size;
+ }
+ 
+-static int psd89_stdio_seek_fn(void *user, unsigned long offset)
++static int psd89_stdio_seek_fn(void *user, psd89_u32 offset)
+ {
+     FILE *fp;
+     fp = (FILE *)user;
+     if (fp == 0) {
+         return 0;
+     }
+-    if (offset == 0xFFFFFFFFUL) {
+-        return fseek(fp, 0L, SEEK_END) == 0;
++    if (offset == 0xFFFFFFFFU) {
++        return fseek(fp, 0, SEEK_END) == 0;
+     }
+-    return fseek(fp, (long)offset, SEEK_SET) == 0;
++    return fseek(fp, offset, SEEK_SET) == 0;
+ }
+ 
+-static unsigned long psd89_stdio_tell_fn(void *user)
++static psd89_u32 psd89_stdio_tell_fn(void *user)
+ {
+-    long pos;
++    psd89_s32 pos;
+     FILE *fp;
+     fp = (FILE *)user;
+     if (fp == 0) {
+-        return 0UL;
++        return 0U;
+     }
+-    pos = ftell(fp);
+-    return pos < 0 ? 0UL : (unsigned long)pos;
++    pos = (psd89_s32)ftell(fp);
++    return pos < 0 ? 0U : (psd89_u32)pos;
+ }
+ 
+ void psd89_stdio_make_io(FILE *fp, psd89_io *io)
+--- /mnt/data/psd_work/orig/PSD/src/psd89_vector_bezier.c	2026-06-04 05:51:56.000000000 +0000
++++ src/psd89_vector_bezier.c	2026-08-20 02:06:40.360892452 +0000
+@@ -14,22 +14,7 @@
+ 
+ static psd89_fx16 fx16_mul_local(psd89_fx16 a, psd89_fx16 b)
+ {
+-    long ah, al;
+-    long bh, bl;
+-    long mid;
+-    long lo;
+-    long hi;
+-
+-    ah = ((long)a) >> 16;
+-    al = ((long)a) & 0xFFFFL;
+-    bh = ((long)b) >> 16;
+-    bl = ((long)b) & 0xFFFFL;
+-
+-    hi = ah * bh;
+-    mid = ah * bl + al * bh;
+-    lo = al * bl;
+-
+-    return (psd89_fx16)((hi << 16) + mid + ((lo + 0x8000L) >> 16));
++    return psd89_fx16_mul(a, b);
+ }
+ 
+ static psd89_fx16 fx16_half(psd89_fx16 a, psd89_fx16 b)
+@@ -39,7 +24,7 @@
+ 
+ static psd89_fx16 fx16_from_px_center(psd89_s32 px)
+ {
+-    return (psd89_fx16)(((long)px << 16) + 32768L);
++    return (psd89_fx16)(((psd89_s32)px << 16) + 32768);
+ }
+ 
+ static psd89_fx16 fx24_rel_to_px_q16(psd89_fx24 rel, psd89_u32 dim)
+@@ -57,10 +42,10 @@
+     sign = rel < 0 ? -1 : 1;
+     mag = rel < 0 ? (psd89_fx24)(-rel) : rel;
+     int_part = (psd89_s32)(mag >> 24);
+-    frac_part = (psd89_u32)(mag & 0x00FFFFFFL);
++    frac_part = (psd89_u32)(mag & 0x00FFFFFF);
+ 
+-    whole = (psd89_s32)((long)int_part * (long)dim * 65536L);
+-    frac = (psd89_s32)(((unsigned long)frac_part * (unsigned long)dim + 128UL) >> 8);
++    whole = (psd89_s32)((psd89_s32)int_part * (psd89_s32)dim * 65536);
++    frac = (psd89_s32)(((psd89_u32)frac_part * (psd89_u32)dim + 128U) >> 8);
+ 
+     if (sign < 0) {
+         return (psd89_fx16)(-(whole + frac));
+@@ -180,7 +165,7 @@
+     if (opt == 0) {
+         return;
+     }
+-    opt->flatness = (psd89_fx16)(1L << 16);
++    opt->flatness = (psd89_fx16)(1 << 16);
+     opt->max_depth = 8U;
+     opt->honor_handles = 1;
+ }
+@@ -302,7 +287,7 @@
+ 
+     dy = (psd89_fx16)(y1 - y0);
+     num = (psd89_fx16)(py - y0);
+-    t = dy == 0 ? 0 : (psd89_fx16)(((long)num << 16) / (long)dy);
++    t = dy == 0 ? 0 : psd89_fx16_div(num, dy);
+     xhit = (psd89_fx16)(x0 + fx16_mul_local((psd89_fx16)(x1 - x0), t));
+     return xhit > px;
+ }
+--- /mnt/data/psd_work/orig/PSD/tests/test_v16.c	2026-06-04 05:51:56.000000000 +0000
++++ tests/test_v16.c	2026-08-20 02:06:40.361024838 +0000
+@@ -14,7 +14,8 @@
+     if (den == 0) {
+         return 0;
+     }
+-    return (psd89_fx24)(((long)num << 24) / den);
++    return (psd89_fx24)((num / den) * PSD89_FX24_ONE +
++                        ((num % den) << 24) / den);
+ }
+ 
+ static void set_knot(psd89_vector_knot *knot,
+@@ -60,7 +61,7 @@
+     set_knot(&vm.knots[3], fx24_frac(1, 4), fx24_frac(3, 4), fx24_frac(1, 4), fx24_frac(3, 4), fx24_frac(1, 4), fx24_frac(3, 4));
+ 
+     psd89_vector_flatten_options_init(&opt);
+-    opt.flatness = (psd89_fx16)(1L << 8);
++    opt.flatness = (psd89_fx16)(1 << 8);
+     psd89_vector_flatten_result_init(&flat);
+ 
+     rc = psd89_vector_flatten_mask(8U, 8U, &vm, &opt, &flat);
+@@ -107,7 +108,7 @@
+              fx24_frac(7, 8), fx24_frac(4, 8));
+ 
+     psd89_vector_flatten_options_init(&opt);
+-    opt.flatness = (psd89_fx16)(1L << 10);
++    opt.flatness = (psd89_fx16)(1 << 10);
+     psd89_vector_flatten_result_init(&flat);
+ 
+     rc = psd89_vector_flatten_mask(8U, 8U, &vm, &opt, &flat);
+@@ -142,15 +143,15 @@
+     psd89_zip_diag diag;
+     int rc;
+ 
+-    rc = psd89_zip_diag_check_planar(PSD89_COMP_ZIP, 4U, 5U, 3U, 11UL, 60UL, 0, &diag);
++    rc = psd89_zip_diag_check_planar(PSD89_COMP_ZIP, 4U, 5U, 3U, 11U, 60U, 0, &diag);
+     if (rc != PSD89_ZIP_DIAG_OK) {
+         return fail("zip diag ok");
+     }
+-    rc = psd89_zip_diag_check_planar(PSD89_COMP_ZIP_PRED, 4U, 5U, 3U, 11UL, 59UL, 0, &diag);
++    rc = psd89_zip_diag_check_planar(PSD89_COMP_ZIP_PRED, 4U, 5U, 3U, 11U, 59U, 0, &diag);
+     if (rc != PSD89_ZIP_DIAG_BAD_PREDICTED_SIZE) {
+         return fail("zip diag predicted mismatch");
+     }
+-    rc = psd89_zip_diag_check_planar(PSD89_COMP_ZIP, 4U, 5U, 3U, 11UL, 60UL, -5, &diag);
++    rc = psd89_zip_diag_check_planar(PSD89_COMP_ZIP, 4U, 5U, 3U, 11U, 60U, -5, &diag);
+     if (rc != PSD89_ZIP_DIAG_ZLIB_STATUS) {
+         return fail("zip diag zlib status");
+     }
+--- /mnt/data/psd_work/orig/PSD/tests/test_v21.c	2026-06-04 05:51:56.000000000 +0000
++++ tests/test_v21.c	2026-08-20 02:06:22.455608828 +0000
+@@ -81,16 +81,16 @@
+ 
+ typedef struct bw_t {
+     unsigned char *buf;
+-    unsigned long cap;
+-    unsigned long pos;
++    psd89_u32 cap;
++    psd89_u32 pos;
+     int ok;
+ } bw_t;
+ 
+-static void bw_init(bw_t *bw, unsigned char *buf, unsigned long cap)
++static void bw_init(bw_t *bw, unsigned char *buf, psd89_u32 cap)
+ {
+     bw->buf = buf;
+     bw->cap = cap;
+-    bw->pos = 0UL;
++    bw->pos = 0U;
+     bw->ok = 1;
+ }
+ 
+@@ -117,53 +117,29 @@
+     bw_put_u8(bw, (unsigned char)(v & 0xFFU));
+ }
+ 
+-static void bw_put_bytes(bw_t *bw, const void *src, unsigned long n)
++static void bw_put_bytes(bw_t *bw, const void *src, psd89_u32 n)
+ {
+     const unsigned char *p;
+-    unsigned long i;
++    psd89_u32 i;
+     p = (const unsigned char *)src;
+-    for (i = 0UL; i < n; ++i) {
++    for (i = 0U; i < n; ++i) {
+         bw_put_u8(bw, p[i]);
+     }
+ }
+ 
+-static void bw_put_be64_double(bw_t *bw, double d)
+-{
+-    union {
+-        double d;
+-        unsigned char b[8];
+-    } u;
+-    int little;
+-    unsigned short one;
+-    int i;
+-
+-    u.d = d;
+-    one = 1U;
+-    little = *((unsigned char *)&one) != 0U;
+-    if (little) {
+-        for (i = 7; i >= 0; --i) {
+-            bw_put_u8(bw, u.b[i]);
+-        }
+-    } else {
+-        for (i = 0; i < 8; ++i) {
+-            bw_put_u8(bw, u.b[i]);
+-        }
+-    }
+-}
+-
+ static void bw_put_unicode_ascii(bw_t *bw, const char *s)
+ {
+-    unsigned long i;
+-    unsigned long n;
++    psd89_u32 i;
++    psd89_u32 n;
+     if (s == 0) {
+         s = "";
+     }
+-    n = 0UL;
++    n = 0U;
+     while (s[n] != '\0') {
+         ++n;
+     }
+     bw_put_be32(bw, (psd89_u32)n);
+-    for (i = 0UL; i < n; ++i) {
++    for (i = 0U; i < n; ++i) {
+         bw_put_be16(bw, (unsigned short)(unsigned char)s[i]);
+     }
+     bw_put_be16(bw, 0U);
+@@ -171,11 +147,11 @@
+ 
+ static void bw_put_desc_id_fourcc(bw_t *bw, const char id4[4])
+ {
+-    bw_put_be32(bw, 0UL);
+-    bw_put_bytes(bw, id4, 4UL);
++    bw_put_be32(bw, 0U);
++    bw_put_bytes(bw, id4, 4U);
+ }
+ 
+-static unsigned long build_deep_descriptor(unsigned char *dst, unsigned long cap)
++static psd89_u32 build_deep_descriptor(unsigned char *dst, psd89_u32 cap)
+ {
+     static const char k_bool[4] = { 'f', 'l', 'a', 'g' };
+     static const char k_list[4] = { 'l', 'i', 's', 't' };
+@@ -213,61 +189,62 @@
+     bw_init(&bw, dst, cap);
+     bw_put_unicode_ascii(&bw, "root");
+     bw_put_desc_id_fourcc(&bw, class_null);
+-    bw_put_be32(&bw, 8UL);
++    bw_put_be32(&bw, 8U);
+ 
+     bw_put_desc_id_fourcc(&bw, k_bool);
+-    bw_put_bytes(&bw, type_bool, 4UL);
++    bw_put_bytes(&bw, type_bool, 4U);
+     bw_put_u8(&bw, 1U);
+ 
+     bw_put_desc_id_fourcc(&bw, k_list);
+-    bw_put_bytes(&bw, type_vlls, 4UL);
+-    bw_put_be32(&bw, 2UL);
+-    bw_put_bytes(&bw, type_long, 4UL);
+-    bw_put_be32(&bw, 5UL);
+-    bw_put_bytes(&bw, type_text, 4UL);
++    bw_put_bytes(&bw, type_vlls, 4U);
++    bw_put_be32(&bw, 2U);
++    bw_put_bytes(&bw, type_long, 4U);
++    bw_put_be32(&bw, 5U);
++    bw_put_bytes(&bw, type_text, 4U);
+     bw_put_unicode_ascii(&bw, "hi");
+ 
+     bw_put_desc_id_fourcc(&bw, k_obj1);
+-    bw_put_bytes(&bw, type_objc, 4UL);
++    bw_put_bytes(&bw, type_objc, 4U);
+     bw_put_unicode_ascii(&bw, "nest");
+     bw_put_desc_id_fourcc(&bw, nested_class);
+-    bw_put_be32(&bw, 1UL);
++    bw_put_be32(&bw, 1U);
+     bw_put_desc_id_fourcc(&bw, nested_key);
+-    bw_put_bytes(&bw, type_text, 4UL);
++    bw_put_bytes(&bw, type_text, 4U);
+     bw_put_unicode_ascii(&bw, "deep");
+ 
+     bw_put_desc_id_fourcc(&bw, k_ref1);
+-    bw_put_bytes(&bw, type_objref, 4UL);
+-    bw_put_be32(&bw, 1UL);
+-    bw_put_bytes(&bw, ref_type, 4UL);
++    bw_put_bytes(&bw, type_objref, 4U);
++    bw_put_be32(&bw, 1U);
++    bw_put_bytes(&bw, ref_type, 4U);
+     bw_put_unicode_ascii(&bw, "");
+     bw_put_desc_id_fourcc(&bw, ref_class);
+-    bw_put_be32(&bw, 7UL);
++    bw_put_be32(&bw, 7U);
+ 
+     bw_put_desc_id_fourcc(&bw, k_unit);
+-    bw_put_bytes(&bw, type_untf, 4UL);
+-    bw_put_bytes(&bw, units, 4UL);
+-    bw_put_be64_double(&bw, 12.5);
++    bw_put_bytes(&bw, type_untf, 4U);
++    bw_put_bytes(&bw, units, 4U);
++    bw_put_be32(&bw, 0x40290000U);
++    bw_put_be32(&bw, 0x00000000U);
+ 
+     bw_put_desc_id_fourcc(&bw, k_data);
+-    bw_put_bytes(&bw, type_tdta, 4UL);
+-    bw_put_be32(&bw, 3UL);
+-    bw_put_bytes(&bw, raw3, 3UL);
++    bw_put_bytes(&bw, type_tdta, 4U);
++    bw_put_be32(&bw, 3U);
++    bw_put_bytes(&bw, raw3, 3U);
+ 
+     bw_put_desc_id_fourcc(&bw, k_enum);
+-    bw_put_bytes(&bw, type_enum, 4UL);
++    bw_put_bytes(&bw, type_enum, 4U);
+     bw_put_desc_id_fourcc(&bw, ordn);
+     bw_put_desc_id_fourcc(&bw, trgt);
+ 
+     bw_put_desc_id_fourcc(&bw, k_comp);
+-    bw_put_bytes(&bw, type_comp, 4UL);
+-    bw_put_be32(&bw, 0UL);
+-    bw_put_be32(&bw, 9UL);
++    bw_put_bytes(&bw, type_comp, 4U);
++    bw_put_be32(&bw, 0U);
++    bw_put_be32(&bw, 9U);
+ 
+-    return bw.ok ? bw.pos : 0UL;
++    return bw.ok ? bw.pos : 0U;
+ }
+ 
+-static int roundtrip_doc(const psd89_doc *doc, psd89_doc *parsed, unsigned char *buf, unsigned long cap)
++static int roundtrip_doc(const psd89_doc *doc, psd89_doc *parsed, unsigned char *buf, psd89_u32 cap)
+ {
+     psd89_memio m;
+     psd89_io io;
+@@ -324,7 +301,7 @@
+     layer->lrfx.drop_shadow.enabled = 1U;
+     layer->lrfx.drop_shadow.use_global_angle = 1U;
+     layer->lrfx.drop_shadow.native_color_present = 1U;
+-    layer->lrfx.drop_shadow.version = 2UL;
++    layer->lrfx.drop_shadow.version = 2U;
+     layer->lrfx.drop_shadow.blur = 5;
+     layer->lrfx.drop_shadow.intensity = 60;
+     layer->lrfx.drop_shadow.angle = 120;
+@@ -340,7 +317,7 @@
+ 
+     layer->lrfx.inner_shadow.present = 1U;
+     layer->lrfx.inner_shadow.enabled = 1U;
+-    layer->lrfx.inner_shadow.version = 2UL;
++    layer->lrfx.inner_shadow.version = 2U;
+     layer->lrfx.inner_shadow.blur = 2;
+     layer->lrfx.inner_shadow.intensity = 30;
+     layer->lrfx.inner_shadow.angle = -45;
+@@ -351,7 +328,7 @@
+ 
+     layer->lrfx.outer_glow.present = 1U;
+     layer->lrfx.outer_glow.enabled = 1U;
+-    layer->lrfx.outer_glow.version = 2UL;
++    layer->lrfx.outer_glow.version = 2U;
+     layer->lrfx.outer_glow.blur = 7;
+     layer->lrfx.outer_glow.intensity = 55;
+     memcpy(layer->lrfx.outer_glow.blend_mode, "scrn", 4U);
+@@ -366,7 +343,7 @@
+ 
+     layer->lrfx.inner_glow.present = 1U;
+     layer->lrfx.inner_glow.enabled = 1U;
+-    layer->lrfx.inner_glow.version = 2UL;
++    layer->lrfx.inner_glow.version = 2U;
+     layer->lrfx.inner_glow.blur = 4;
+     layer->lrfx.inner_glow.intensity = 50;
+     memcpy(layer->lrfx.inner_glow.blend_mode, "scrn", 4U);
+@@ -379,7 +356,7 @@
+ 
+     layer->lrfx.bevel.present = 1U;
+     layer->lrfx.bevel.enabled = 1U;
+-    layer->lrfx.bevel.version = 2UL;
++    layer->lrfx.bevel.version = 2U;
+     layer->lrfx.bevel.angle = 90;
+     layer->lrfx.bevel.strength = 6;
+     layer->lrfx.bevel.blur = 3;
+@@ -430,7 +407,7 @@
+     unsigned char buf[131072];
+     unsigned char desc_buf[4096];
+     unsigned char txt2_buf[6];
+-    unsigned long desc_len;
++    psd89_u32 desc_len;
+     psd89_doc doc;
+     psd89_doc parsed;
+     psd89_layer *layer;
+@@ -445,7 +422,7 @@
+ 
+     txt2_buf[0] = 'E'; txt2_buf[1] = 'n'; txt2_buf[2] = 'g'; txt2_buf[3] = 'i'; txt2_buf[4] = 'n'; txt2_buf[5] = 'e';
+     desc_len = build_deep_descriptor(desc_buf, sizeof(desc_buf));
+-    if (desc_len == 0UL) {
++    if (desc_len == 0U) {
+         fprintf(stderr, "descriptor builder failed\n");
+         return 0;
+     }
+@@ -456,11 +433,11 @@
+     layer->type_tool.transform[0] = PSD89_FX16_ONE;
+     layer->type_tool.transform[3] = PSD89_FX16_ONE;
+     layer->type_tool.text_version = 50U;
+-    layer->type_tool.text_descriptor_version = 16UL;
++    layer->type_tool.text_descriptor_version = 16U;
+     layer->type_tool.text.authored_raw = desc_buf;
+     layer->type_tool.text.authored_raw_size = (psd89_u32)desc_len;
+     layer->type_tool.warp_version = 1U;
+-    layer->type_tool.warp_descriptor_version = 16UL;
++    layer->type_tool.warp_descriptor_version = 16U;
+     layer->type_tool.warp.authored_raw = desc_buf;
+     layer->type_tool.warp.authored_raw_size = (psd89_u32)desc_len;
+     layer->type_tool.bounds[2] = PSD89_FX16_ONE;
+@@ -468,19 +445,19 @@
+ 
+     layer->text_engine.present = 1U;
+     layer->text_engine.authored_raw = txt2_buf;
+-    layer->text_engine.authored_raw_size = 6UL;
++    layer->text_engine.authored_raw_size = 6U;
+ 
+     layer->object_effects.present = 1U;
+-    layer->object_effects.object_version = 0UL;
+-    layer->object_effects.descriptor_version = 16UL;
++    layer->object_effects.object_version = 0U;
++    layer->object_effects.descriptor_version = 16U;
+     layer->object_effects.descriptor.authored_raw = desc_buf;
+     layer->object_effects.descriptor.authored_raw_size = (psd89_u32)desc_len;
+ 
+     layer->smart_object.present = 1U;
+     memcpy(layer->smart_object.tag_key, "SoLd", 4U);
+     memcpy(layer->smart_object.type, "soLD", 4U);
+-    layer->smart_object.version = 4UL;
+-    layer->smart_object.descriptor_version = 16UL;
++    layer->smart_object.version = 4U;
++    layer->smart_object.descriptor_version = 16U;
+     layer->smart_object.descriptor.authored_raw = desc_buf;
+     layer->smart_object.descriptor.authored_raw_size = (psd89_u32)desc_len;
+ 
+@@ -492,7 +469,7 @@
+         fprintf(stderr, "deep descriptor parse missing\n");
+         return 0;
+     }
+-    if (!layer->text_engine.present || layer->text_engine.raw_size != 6UL) {
++    if (!layer->text_engine.present || layer->text_engine.raw_size != 6U) {
+         fprintf(stderr, "Txt2 missing after roundtrip\n");
+         return 0;
+     }
+@@ -503,27 +480,27 @@
+         return 0;
+     }
+     item = find_item(&layer->type_tool.text.summary, k_list);
+-    if (item == 0 || !item->list_count_valid || item->list_count != 2UL) {
++    if (item == 0 || !item->list_count_valid || item->list_count != 2U) {
+         fprintf(stderr, "list item parse missing\n");
+         return 0;
+     }
+     item = find_item(&layer->type_tool.text.summary, k_obj1);
+-    if (item == 0 || !item->nested_valid || item->nested_item_count != 1UL) {
++    if (item == 0 || !item->nested_valid || item->nested_item_count != 1U) {
+         fprintf(stderr, "nested object parse missing\n");
+         return 0;
+     }
+     item = find_item(&layer->type_tool.text.summary, k_ref1);
+-    if (item == 0 || !item->ref_count_valid || item->ref_count != 1UL) {
++    if (item == 0 || !item->ref_count_valid || item->ref_count != 1U) {
+         fprintf(stderr, "reference parse missing\n");
+         return 0;
+     }
+     item = find_item(&layer->type_tool.text.summary, k_unit);
+     if (item == 0 || !item->unit_valid || memcmp(item->unit, "Pxl ", 4U) != 0 || !item->fx_valid) {
+-        fprintf(stderr, "unit float parse missing\n");
++        fprintf(stderr, "unit scalar parse missing\n");
+         return 0;
+     }
+     item = find_item(&layer->type_tool.text.summary, k_data);
+-    if (item == 0 || !item->length_valid || item->data_length != 3UL) {
++    if (item == 0 || !item->length_valid || item->data_length != 3U) {
+         fprintf(stderr, "raw data length parse missing\n");
+         return 0;
+     }
+@@ -533,7 +510,7 @@
+         return 0;
+     }
+     item = find_item(&layer->type_tool.text.summary, k_comp);
+-    if (item == 0 || !item->comp_valid || item->comp_lo != 9UL) {
++    if (item == 0 || !item->comp_valid || item->comp_lo != 9U) {
+         fprintf(stderr, "comp parse missing\n");
+         return 0;
+     }
+@@ -548,13 +525,13 @@
+ {
+     unsigned char buf[131072];
+     unsigned char desc_buf[4096];
+-    unsigned long desc_len;
++    psd89_u32 desc_len;
+     psd89_doc doc;
+     psd89_doc parsed;
+     psd89_layer *layer;
+ 
+     desc_len = build_deep_descriptor(desc_buf, sizeof(desc_buf));
+-    if (desc_len == 0UL) {
++    if (desc_len == 0U) {
+         fprintf(stderr, "descriptor builder failed for plLd\n");
+         return 0;
+     }
+@@ -563,13 +540,13 @@
+     layer->smart_object.present = 1U;
+     memcpy(layer->smart_object.tag_key, "plLd", 4U);
+     memcpy(layer->smart_object.type, "plcL", 4U);
+-    layer->smart_object.version = 3UL;
++    layer->smart_object.version = 3U;
+     layer->smart_object.placed_info_present = 1U;
+     strcpy(layer->smart_object.unique_id, "placed-id");
+-    layer->smart_object.page_number = 2UL;
+-    layer->smart_object.total_pages = 5UL;
+-    layer->smart_object.anti_alias_policy = 1UL;
+-    layer->smart_object.placed_layer_type = 2UL;
++    layer->smart_object.page_number = 2U;
++    layer->smart_object.total_pages = 5U;
++    layer->smart_object.anti_alias_policy = 1U;
++    layer->smart_object.placed_layer_type = 2U;
+     layer->smart_object.transform[0] = 0;
+     layer->smart_object.transform[1] = 0;
+     layer->smart_object.transform[2] = PSD89_FX16_ONE;
+@@ -578,8 +555,8 @@
+     layer->smart_object.transform[5] = PSD89_FX16_ONE;
+     layer->smart_object.transform[6] = 0;
+     layer->smart_object.transform[7] = PSD89_FX16_ONE;
+-    layer->smart_object.warp_version = 0UL;
+-    layer->smart_object.warp_descriptor_version = 16UL;
++    layer->smart_object.warp_version = 0U;
++    layer->smart_object.warp_descriptor_version = 16U;
+     layer->smart_object.warp_descriptor.authored_raw = desc_buf;
+     layer->smart_object.warp_descriptor.authored_raw_size = (psd89_u32)desc_len;
+ 
+@@ -592,9 +569,9 @@
+         return 0;
+     }
+     if (strcmp(layer->smart_object.unique_id, "placed-id") != 0 ||
+-        layer->smart_object.page_number != 2UL ||
+-        layer->smart_object.total_pages != 5UL ||
+-        layer->smart_object.placed_layer_type != 2UL) {
++        layer->smart_object.page_number != 2U ||
++        layer->smart_object.total_pages != 5U ||
++        layer->smart_object.placed_layer_type != 2U) {
+         fprintf(stderr, "plLd fields lost\n");
+         return 0;
+     }

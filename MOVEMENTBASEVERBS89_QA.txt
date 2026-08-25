@@ -1,0 +1,22 @@
+3d_movementbaseverbs89 vendor integration QA
+
+PASS  core strict C89 test (-Wall -Wextra -Werror -pedantic)
+PASS  Gamlib3D adapter strict C89 test
+PASS  Q16.16 linear -> Q20.12 movement conversion
+PASS  Q16.16 quarter turn -> 90 degree Q20.12 rotation conversion
+PASS  Gamlib3D local forward convention (-Z)
+PASS  move_back / walk_back text aliases
+PASS  Blank3D full syntax-check
+PASS  existing four-head input stack
+PASS  existing vertical motion stack (fly89/jump89/airdiver89)
+
+Integration policy:
+- core movement vocabulary remains independent of Gamlib3D
+- Gamlib3D is an optional base provider
+- player installs flat Gamlib3D movement to preserve prior FPS behavior
+- semantic fly/turn remain owned by Blank3D vertical/camera systems
+- no heap introduced by movementbaseverbs89 or its Gamlib3D adapter
+PASS  canonical Win32 four-head input syntax-check after integration
+NOTE  full fake-Win32 tree syntax-check is limited by unrelated camera-profile
+      Win32 filesystem declarations absent from the test stub; the new movement
+      library/adapter itself is platform-neutral and strict-C89 tested.

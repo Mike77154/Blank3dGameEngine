@@ -1,0 +1,38 @@
+WEAPON_RUNTIME_QA
+=================
+
+Scope
+-----
+Five reusable Weapon System runtime concerns were moved behind vendor boundaries:
+- gplayerprojectileaim89
+- gtrigger89
+- gprojectilespawn89
+- gcasingruntime89
+- gweaponsnapshot89
+
+Verified
+--------
+[OK] Each new vendor library compiles and runs its standalone C89 test with -pedantic -Wall -Wextra -Werror.
+[OK] Player physical projectile aim regression passes.
+[OK] Weapon launch invariant regression passes.
+[OK] Automatic-fire frame-lock regression passes before the full syntax pass.
+[OK] Weapon modules, bolt/slingshot, casing physics, input stack and movement-base-verbs regressions pass in the integration batch.
+[OK] Full engine syntax-check passes.
+[OK] Forced Win32 input syntax-check passes.
+[OK] Active integration allocation audit passes.
+[OK] New vendor cores contain no malloc/calloc/realloc/free calls.
+[OK] New vendor cores contain no float/double tokens.
+[OK] Local-player camera aim is explicitly gated by actor_id == B3D_PLAYER_ACTOR_ID.
+[OK] Logical shoot owns trigger state; no VK_SPACE remains in src/.
+
+Intentional host/provider boundaries
+------------------------------------
+- Blank3D still supplies the concrete collision world, render, audio and physics services.
+- gcasingruntime89 invokes a physics provider; Blank3D currently supplies VPhysics.
+- gprojectilespawn89 orchestrates providers; Blank3D currently supplies the fixed bullet pool and presentation hooks.
+- gweaponsnapshot89 stores per-actor/per-frame snapshots; Blank3D currently publishes the player snapshot after final movement/attachment sync.
+- gplayerprojectileaim89 is only for the local/view-controlled player path. NPCs/turrets keep their own actor/muzzle aim path.
+
+Known next extraction candidates
+--------------------------------
+Some Gatling/Shotgun weapon-id-specific recovery/pellet policy remains in monika_blank3d.c/process_weapon_events(). This release does not claim to vendorize those policies.

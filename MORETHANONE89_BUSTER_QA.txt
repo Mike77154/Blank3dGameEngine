@@ -1,0 +1,38 @@
+morethanone89 + Buster QA
+=========================
+
+Standalone vendor
+-----------------
+morethanone89 strict C89 test: PASS
+gtrigger89 strict C89 test: PASS
+heap-call audit in morethanone89 include/src/tests: PASS
+float/double audit in morethanone89 include/src/tests: PASS
+
+Buster path
+-----------
+weapon manifest recognizes 15 profiles: PASS
+Buster INI parses PRESS_CHARGE_RELEASE: PASS
+morethanone activation=250ms, stages=3: PASS
+100ms tap -> base projectile only: PASS
+300ms -> base + tier1: PASS
+700ms -> base + tier2: PASS
+1200ms -> base + tier3: PASS
+charged shot -> cooldown -> normal tap re-arms: PASS
+stage mesh/damage/speed/radius/scale/lifetime overrides: PASS
+Buster player physical-projectile capability: PASS
+
+Regression
+----------
+Shango + Homing reload: PASS
+Gatling bullet geometry stack: PASS
+Flamethrower expandiblefire stack: PASS
+Weapon modules: PASS
+Vehicle INI yard: PASS
+Vehicle providers: PASS
+Mount89/gvehpos89/gvehicle89 stack: PASS
+full source syntax-check with platform stubs: PASS
+
+Notes
+-----
+No Win32 executable was produced in this Linux QA environment. Rebuild the
+full runner with the project's MinGW32 toolchain on Windows/MSYS2.

@@ -142,6 +142,7 @@ typedef struct GWP89_WeaponProfileTag {
     int fire_mode;
     int clip_size;
     int ammo_per_shot;
+    int infinite_ammo;
     int pellet_count;
     int burst_count;
     int allow_dry_fire_event;
@@ -402,7 +403,8 @@ enum GWP89_FlagKeyTag {
     GWP89_FLAG_EMIT_CASING = 9,
     GWP89_FLAG_EMIT_TRAIL = 10,
     GWP89_FLAG_EMIT_VISUALS = 11,
-    GWP89_FLAG_APPLY_RECOIL = 12
+    GWP89_FLAG_APPLY_RECOIL = 12,
+    GWP89_FLAG_INFINITE_AMMO = 13
 };
 
 enum GWP89_SocketKindTag {

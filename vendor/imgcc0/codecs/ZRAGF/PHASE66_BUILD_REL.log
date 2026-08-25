@@ -1,0 +1,198 @@
+[  1%] Building C object CMakeFiles/zragflib.dir/zragflib_internal.c.o
+[  1%] Building C object CMakeFiles/zragflib.dir/zragf_bitio.c.o
+[  1%] Building C object CMakeFiles/zragflib.dir/zragf_decompress.c.o
+[  2%] Building C object CMakeFiles/zragflib.dir/zragf_compress.c.o
+[  3%] Building C object CMakeFiles/zragflib.dir/zragf_frame.c.o
+[  3%] Building C object CMakeFiles/zragflib.dir/zragf_deflate_rfc1951.c.o
+[  3%] Building C object CMakeFiles/zragflib.dir/zragf_huff.c.o
+[  4%] Building C object CMakeFiles/zragflib.dir/zragf_lz.c.o
+[  4%] Building C object CMakeFiles/zragflib.dir/zragf_stream.c.o
+[  4%] Building C object CMakeFiles/zragflib.dir/zragf_api.c.o
+[  5%] Building C object CMakeFiles/zragflib.dir/zragf_workspace.c.o
+[  5%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_blocks.c.o
+[  6%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_core.c.o
+[  6%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_cost.c.o
+[  6%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_emit.c.o
+[  7%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_fixed.c.o
+[  7%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_hash.c.o
+[  8%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_huffman.c.o
+[  8%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_huffman_shared.c.o
+[  8%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_lazy.c.o
+[  9%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_matcher.c.o
+[  9%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_plan.c.o
+[  9%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_stream.c.o
+[ 10%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_rle.c.o
+[ 11%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_core.c.o
+[ 11%] Building C object CMakeFiles/zragflib.dir/zragf_deflate/deflate_tokens.c.o
+[ 11%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_huffman.c.o
+[ 12%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_shared.c.o
+[ 12%] Building C object CMakeFiles/zragflib.dir/zragf_inflate/inflate_stream.c.o
+[ 13%] Linking C static library libzragflib.a
+[ 13%] Built target zragflib
+[ 14%] Building C object CMakeFiles/zragf_test_native.dir/tests/test_native_roundtrip.c.o
+[ 14%] Building C object CMakeFiles/zragf_test_wrappers.dir/tests/test_wrapper_roundtrip.c.o
+[ 15%] Linking C executable zragf_test_wrappers
+[ 15%] Linking C executable zragf_test_native
+[ 15%] Built target zragf_test_native
+[ 15%] Built target zragf_test_wrappers
+[ 16%] Building C object CMakeFiles/zragf_test_corruption.dir/tests/test_corruption.c.o
+[ 16%] Building C object CMakeFiles/zragf_test_phase2.dir/tests/test_phase2_deflate.c.o
+[ 16%] Linking C executable zragf_test_corruption
+[ 17%] Linking C executable zragf_test_phase2
+[ 17%] Built target zragf_test_corruption
+[ 17%] Built target zragf_test_phase2
+[ 17%] Building C object CMakeFiles/zragf_test_external_vectors.dir/tests/test_external_vectors.c.o
+[ 17%] Building C object CMakeFiles/zragf_test_phase64_alloc_workspace.dir/tests/test_phase64_alloc_workspace.c.o
+[ 18%] Linking C executable zragf_test_external_vectors
+[ 19%] Linking C executable zragf_test_phase64_alloc_workspace
+[ 19%] Built target zragf_test_external_vectors
+[ 19%] Built target zragf_test_phase64_alloc_workspace
+[ 19%] Building C object CMakeFiles/zragf_test_phase65_wrapper_workspace.dir/tests/test_phase65_wrapper_workspace.c.o
+[ 20%] Building C object CMakeFiles/zragf_test_phase66_c89_smoke.dir/tests/test_phase66_c89_smoke.c.o
+[ 20%] Linking C executable zragf_test_phase65_wrapper_workspace
+[ 20%] Linking C executable zragf_test_phase66_c89_smoke
+[ 20%] Built target zragf_test_phase65_wrapper_workspace
+[ 20%] Built target zragf_test_phase66_c89_smoke
+[ 21%] Building C object CMakeFiles/zragf_phase3_emit_case.dir/tests/phase3_emit_case.c.o
+[ 21%] Building C object CMakeFiles/zragf_test_phase3_dynamic.dir/tests/test_phase3_dynamic.c.o
+[ 22%] Linking C executable zragf_test_phase3_dynamic
+[ 22%] Linking C executable zragf_phase3_emit_case
+[ 22%] Built target zragf_phase3_emit_case
+[ 22%] Built target zragf_test_phase3_dynamic
+[ 22%] Building C object CMakeFiles/zragf_test_phase4_tuning.dir/tests/test_phase4_tuning.c.o
+[ 22%] Building C object CMakeFiles/zragf_test_phase5_streaming.dir/tests/test_phase5_streaming.c.o
+[ 23%] Linking C executable zragf_test_phase4_tuning
+[ 24%] Linking C executable zragf_test_phase5_streaming
+[ 24%] Built target zragf_test_phase4_tuning
+[ 24%] Built target zragf_test_phase5_streaming
+[ 24%] Building C object CMakeFiles/zragf_test_phase5_incremental_inflate.dir/tests/test_phase5_incremental_inflate.c.o
+[ 25%] Building C object CMakeFiles/zragf_test_phase6_compat.dir/tests/test_phase6_compat.c.o
+[ 26%] Linking C executable zragf_test_phase5_incremental_inflate
+[ 26%] Linking C executable zragf_test_phase6_compat
+[ 26%] Built target zragf_test_phase5_incremental_inflate
+[ 26%] Built target zragf_test_phase6_compat
+[ 26%] Building C object CMakeFiles/zragf_test_phase7_headers_dict.dir/tests/test_phase7_headers_dict.c.o
+[ 26%] Building C object CMakeFiles/zragf_test_phase8_copy_prime_sync.dir/tests/test_phase8_copy_prime_sync.c.o
+[ 27%] Linking C executable zragf_test_phase7_headers_dict
+[ 28%] Linking C executable zragf_test_phase8_copy_prime_sync
+[ 28%] Built target zragf_test_phase7_headers_dict
+[ 28%] Built target zragf_test_phase8_copy_prime_sync
+[ 28%] Building C object CMakeFiles/zragf_test_phase9_params_validate.dir/tests/test_phase9_params_validate.c.o
+[ 28%] Building C object CMakeFiles/zragf_test_phase10_backend_running.dir/tests/test_phase10_backend_running.c.o
+[ 28%] Linking C executable zragf_test_phase9_params_validate
+[ 29%] Linking C executable zragf_test_phase10_backend_running
+[ 29%] Built target zragf_test_phase9_params_validate
+[ 29%] Built target zragf_test_phase10_backend_running
+[ 29%] Building C object CMakeFiles/zragf_test_phase11_splitter.dir/tests/test_phase11_splitter.c.o
+[ 30%] Building C object CMakeFiles/zragf_test_phase12_unified_tokenizer.dir/tests/test_phase12_unified_tokenizer.c.o
+[ 30%] Linking C executable zragf_test_phase11_splitter
+[ 30%] Linking C executable zragf_test_phase12_unified_tokenizer
+[ 30%] Built target zragf_test_phase11_splitter
+[ 30%] Built target zragf_test_phase12_unified_tokenizer
+[ 31%] Building C object CMakeFiles/zragf_test_phase13_unified_emitter.dir/tests/test_phase13_unified_emitter.c.o
+[ 31%] Building C object CMakeFiles/zragf_test_phase14_cost_model.dir/tests/test_phase14_cost_model.c.o
+[ 31%] Linking C executable zragf_test_phase13_unified_emitter
+[ 32%] Linking C executable zragf_test_phase14_cost_model
+[ 32%] Built target zragf_test_phase13_unified_emitter
+[ 32%] Building C object CMakeFiles/zragf_test_phase15_cost_legacy.dir/tests/test_phase15_cost_legacy.c.o
+[ 32%] Built target zragf_test_phase14_cost_model
+[ 32%] Building C object CMakeFiles/zragf_test_phase16_backend_hardening.dir/tests/test_phase16_backend_hardening.c.o
+[ 33%] Linking C executable zragf_test_phase15_cost_legacy
+[ 33%] Linking C executable zragf_test_phase16_backend_hardening
+[ 33%] Built target zragf_test_phase15_cost_legacy
+[ 34%] Building C object CMakeFiles/zragf_test_phase17_inflate_hardening.dir/tests/test_phase17_inflate_hardening.c.o
+[ 34%] Built target zragf_test_phase16_backend_hardening
+[ 34%] Linking C executable zragf_test_phase17_inflate_hardening
+[ 35%] Building C object CMakeFiles/zragf_test_phase18_fuzz_regressions.dir/tests/test_phase18_fuzz_regressions.c.o
+[ 35%] Linking C executable zragf_test_phase18_fuzz_regressions
+[ 35%] Built target zragf_test_phase17_inflate_hardening
+[ 35%] Building C object CMakeFiles/zragf_test_phase19_differential.dir/tests/test_phase19_differential.c.o
+[ 35%] Built target zragf_test_phase18_fuzz_regressions
+[ 36%] Linking C executable zragf_test_phase19_differential
+[ 36%] Building C object CMakeFiles/zragf_test_phase20_advantage.dir/tests/test_phase20_advantage.c.o
+[ 36%] Linking C executable zragf_test_phase20_advantage
+[ 36%] Built target zragf_test_phase19_differential
+[ 37%] Building C object CMakeFiles/zragf_test_phase21_text_models.dir/tests/test_phase21_text_models.c.o
+[ 37%] Built target zragf_test_phase20_advantage
+[ 37%] Linking C executable zragf_test_phase21_text_models
+[ 38%] Building C object CMakeFiles/zragf_test_phase22_text_speed.dir/tests/test_phase22_text_speed.c.o
+[ 38%] Linking C executable zragf_test_phase22_text_speed
+[ 38%] Built target zragf_test_phase21_text_models
+[ 39%] Building C object CMakeFiles/zragf_test_phase23_fastpath.dir/tests/test_phase23_fastpath.c.o
+[ 39%] Built target zragf_test_phase22_text_speed
+[ 39%] Linking C executable zragf_test_phase23_fastpath
+[ 39%] Building C object CMakeFiles/zragf_test_phase29_step29.dir/tests/test_phase29_step29.c.o
+[ 40%] Linking C executable zragf_test_phase29_step29
+[ 40%] Built target zragf_test_phase23_fastpath
+[ 40%] Building C object CMakeFiles/zragf_test_phase30_wholebuf.dir/tests/test_phase30_wholebuf.c.o
+[ 40%] Built target zragf_test_phase29_step29
+[ 41%] Linking C executable zragf_test_phase30_wholebuf
+[ 41%] Building C object CMakeFiles/zragf_test_phase31_emit_stats.dir/tests/test_phase31_emit_stats.c.o
+[ 41%] Linking C executable zragf_test_phase31_emit_stats
+[ 41%] Built target zragf_test_phase30_wholebuf
+[ 42%] Building C object CMakeFiles/zragf_test_phase32_matcher_tokens.dir/tests/test_phase32_matcher_tokens.c.o
+[ 42%] Built target zragf_test_phase31_emit_stats
+[ 42%] Linking C executable zragf_test_phase32_matcher_tokens
+[ 43%] Building C object CMakeFiles/zragf_test_phase33_split_model.dir/tests/test_phase33_split_model.c.o
+[ 43%] Linking C executable zragf_test_phase33_split_model
+[ 43%] Built target zragf_test_phase32_matcher_tokens
+[ 43%] Building C object CMakeFiles/zragf_test_phase35_partition_budget.dir/tests/test_phase35_partition_budget.c.o
+[ 43%] Built target zragf_test_phase33_split_model
+[ 44%] Linking C executable zragf_test_phase35_partition_budget
+[ 44%] Building C object CMakeFiles/zragf_test_phase36_estimate_cache.dir/tests/test_phase36_estimate_cache.c.o
+[ 45%] Linking C executable zragf_test_phase36_estimate_cache
+[ 45%] Built target zragf_test_phase35_partition_budget
+[ 45%] Building C object CMakeFiles/zragf_test_phase37_winner_emit.dir/tests/test_phase37_winner_emit.c.o
+[ 45%] Built target zragf_test_phase36_estimate_cache
+[ 45%] Linking C executable zragf_test_phase37_winner_emit
+[ 46%] Building C object CMakeFiles/zragf_test_phase38_prepared_cache.dir/tests/test_phase38_prepared_cache.c.o
+[ 46%] Linking C executable zragf_test_phase38_prepared_cache
+[ 46%] Built target zragf_test_phase37_winner_emit
+[ 47%] Building C object CMakeFiles/zragf_test_phase39_partition_state.dir/tests/test_phase39_partition_state.c.o
+[ 47%] Built target zragf_test_phase38_prepared_cache
+[ 47%] Linking C executable zragf_test_phase39_partition_state
+[ 47%] Building C object CMakeFiles/zragf_test_phase40_dual_cache.dir/tests/test_phase40_dual_cache.c.o
+[ 47%] Built target zragf_test_phase39_partition_state
+[ 48%] Linking C executable zragf_test_phase40_dual_cache
+[ 48%] Building C object CMakeFiles/zragf_test_phase41_winner_dynamic.dir/tests/test_phase41_winner_dynamic.c.o
+[ 48%] Built target zragf_test_phase40_dual_cache
+[ 48%] Linking C executable zragf_test_phase41_winner_dynamic
+[ 49%] Building C object CMakeFiles/zragf_test_phase42_public_emit_cache.dir/tests/test_phase42_public_emit_cache.c.o
+[ 49%] Built target zragf_test_phase41_winner_dynamic
+[ 49%] Linking C executable zragf_test_phase42_public_emit_cache
+[ 50%] Building C object CMakeFiles/zragf_test_phase43_suffix_tail_cache.dir/tests/test_phase43_suffix_tail_cache.c.o
+[ 50%] Built target zragf_test_phase42_public_emit_cache
+[ 50%] Linking C executable zragf_test_phase43_suffix_tail_cache
+[ 51%] Building C object CMakeFiles/zragf_test_phase44_tail_bounds.dir/tests/test_phase44_tail_bounds.c.o
+[ 51%] Built target zragf_test_phase43_suffix_tail_cache
+[ 51%] Linking C executable zragf_test_phase44_tail_bounds
+[ 51%] Building C object CMakeFiles/zragf_test_phase45_tail_lower_bound.dir/tests/test_phase45_tail_lower_bound.c.o
+[ 51%] Built target zragf_test_phase44_tail_bounds
+[ 52%] Linking C executable zragf_test_phase45_tail_lower_bound
+[ 52%] Building C object CMakeFiles/zragf_test_phase46_candidate_order.dir/tests/test_phase46_candidate_order.c.o
+[ 52%] Built target zragf_test_phase45_tail_lower_bound
+[ 53%] Linking C executable zragf_test_phase46_candidate_order
+[ 53%] Building C object CMakeFiles/zragf_test_phase47_tail_seed.dir/tests/test_phase47_tail_seed.c.o
+[ 53%] Built target zragf_test_phase46_candidate_order
+[ 53%] Linking C executable zragf_test_phase47_tail_seed
+[ 54%] Building C object CMakeFiles/zragf_test_phase48_tail_lb_query.dir/tests/test_phase48_tail_lb_query.c.o
+[ 54%] Built target zragf_test_phase47_tail_seed
+[ 54%] Linking C executable zragf_test_phase48_tail_lb_query
+[ 55%] Building C object CMakeFiles/zragf_test_phase49_suffix_memo.dir/tests/test_phase49_suffix_memo.c.o
+[ 55%] Built target zragf_test_phase48_tail_lb_query
+[ 55%] Linking C executable zragf_test_phase49_suffix_memo
+[ 55%] Building C object CMakeFiles/zragf_test_phase50_tail_priority.dir/tests/test_phase50_tail_priority.c.o
+[ 55%] Built target zragf_test_phase49_suffix_memo
+[ 56%] Linking C executable zragf_test_phase50_tail_priority
+[ 56%] Building C object CMakeFiles/zragf_test_phase51_lb_prune.dir/tests/test_phase51_lb_prune.c.o
+[ 56%] Built target zragf_test_phase50_tail_priority
+[ 56%] Linking C executable zragf_test_phase51_lb_prune
+[ 57%] Building C object CMakeFiles/zragf_test_phase52_exact_tail_cache.dir/tests/test_phase52_exact_tail_cache.c.o
+[ 57%] Built target zragf_test_phase51_lb_prune
+[ 57%] Linking C executable zragf_test_phase52_exact_tail_cache
+[ 58%] Building C object CMakeFiles/zragf_test_phase53_exact_tail_query.dir/tests/test_phase53_exact_tail_query.c.o
+[ 58%] Built target zragf_test_phase52_exact_tail_cache
+[ 58%] Linking C executable zragf_test_phase53_exact_tail_query
+gmake[1]: *** [CMakeFiles/Makefile2:2203: CMakeFiles/zragf_test_phase54_lb_query_cache.dir/all] Terminated
+gmake[2]: *** [CMakeFiles/zragf_test_phase53_exact_tail_query.dir/build.make:103: zragf_test_phase53_exact_tail_query] Terminated
+gmake: *** [Makefile:146: all] Terminated

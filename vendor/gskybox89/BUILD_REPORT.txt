@@ -1,0 +1,49 @@
+gskybox89 v1.2 asset convention update
+======================================
+
+Compiler:
+  cc -std=c89 -Wall -Wextra -pedantic -Werror -O2
+
+Build:
+  make clean
+  make all
+  OK
+
+Core checks:
+  ./test_build
+  OK
+
+Geometry:
+  cube fast path: 8 shared cube corners
+  cube triangles: 6 faces * 2 triangles = 12 tris
+  hybrid preview: screen=1 cube=12 dome=112 total=125
+
+New asset layer:
+  include/gskybox89_assets.h
+  src/gskybox89_assets.c
+
+Supported mapping conventions:
+  Source6: FT/BK/LF/RT/UP/DN
+  Axis6:   px/nx/py/ny/pz/nz
+  Word6:   front/back/right/left/up/down/top/bottom
+
+Source helpers:
+  VMF skyname extraction
+  VMT $basetexture extraction
+
+Demo decoders:
+  BMP 24/32 uncompressed
+  TGA 24/32 uncompressed
+  PPM P6
+
+Tested with uploaded cases:
+  sky_night01 Source-style VMT/VMF/TGA/BMP
+  sky_105 axis-style px/nx/py/ny/pz/nz PNG converted to PPM for demo preview
+
+Generated previews:
+  preview_asset_sky_night01_bmp.png
+  preview_asset_sky_night01_tga.png
+  preview_asset_sky_105_axis_ppm.png
+
+Note:
+  Original uploaded texture files are not bundled into this package.

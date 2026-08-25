@@ -1,0 +1,32 @@
+Blank3D progressive JPEG SOF2 QA
+================================
+
+c89jpeg v1.2.0 strict C89:
+  -std=c89 -pedantic-errors -Wall -Wextra -Werror : PASS
+  baseline/resume test suite                         : PASS
+  matched progressive 4:2:0 vs baseline RGB         : BYTE-IDENTICAL PASS
+
+imgcc0 protocol audit:
+  no dynamic-allocation calls                        : PASS
+  no floating types                                  : PASS
+  no explicit 64-bit integer types                   : PASS
+  no C99 line comments                               : PASS
+
+Blank3D integration:
+  native 512x512 progressive JPEG pistol muzzle      : PASS
+  decoded pixel sanity (dark corner / white center)  : PASS
+  additive core + enlarged glow                      : PASS
+  image registry -> SpritePlane89 regression         : PASS
+  generic muzzle image regression                    : PASS
+  SpriteAsset89/SpriteVerbs89/AssetRoute89 regression: PASS
+  whole-engine syntax check                          : PASS
+  Win32 sprite runtime syntax check                  : PASS
+
+Muzzle source:
+  config/weapons/assets/pistol_muzzle_flash.jpg
+  runtime TGA compatibility copy                     : REMOVED
+
+Intentional boundary:
+  SOF2 complete-memory and memory-to-sink decode     : SUPPORTED
+  progressive source/resume streaming decode         : NOT YET
+  progressive JPEG encode                            : NOT YET

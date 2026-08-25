@@ -1,0 +1,30 @@
+name: differential-libpng
+
+on:
+  pull_request:
+    paths:
+      - '**.c'
+      - '**.h'
+      - 'differential/**'
+      - 'ci/**'
+      - '.github/workflows/differential_libpng.yml'
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  differential:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install libpng headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
+      - name: Run upgrade suite + libpng differential suite
+        run: |
+          ./ci/run_all_local.sh

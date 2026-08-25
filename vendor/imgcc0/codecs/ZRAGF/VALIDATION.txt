@@ -1,0 +1,29 @@
+Phase 3 validation summary
+==========================
+
+Version:
+- CMake project: 0.3.1
+- Public compat string: zragf/compat-0.3.1
+
+Strict build:
+- cmake .. -DZRAGF_ENABLE_STRICT=ON -DCMAKE_C_FLAGS=-Werror : PASS
+- static library generated: libzragflib.a
+
+CTest (build_strict):
+- zragf_test_native: PASS
+- zragf_test_wrappers: PASS
+- zragf_test_corruption: PASS
+- zragf_test_phase2: PASS
+- zragf_test_external_vectors: PASS
+- zragf_test_phase3_dynamic: PASS
+- zragf_test_phase3_external_python: PASS
+
+External Python/zlib checks:
+- dynamic case: BTYPE=2, roundtrip PASS, in=3000, out=28
+- fixed case:   BTYPE=1, roundtrip PASS, in=1024, out=281
+- stored case:  BTYPE=0, roundtrip PASS, in=8192, out=8197
+
+Notes:
+- Public RFC1951 encoder now emits externally valid DYNAMIC headers.
+- Public selector can choose STORED / FIXED / DYNAMIC.
+- Wrapper finish path now uses a scratch buffer fallback, so small caller buffers can succeed when the actual encoded stream fits.

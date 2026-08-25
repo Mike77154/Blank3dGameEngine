@@ -1,0 +1,33 @@
+Blank3D CT89 + PBB + Weapon bridge QA
+=====================================
+
+Portable bridge target:
+  make test-item-contact-weapon
+
+Expected:
+  pbb_contact_weapon_bridge89: PASS
+
+Blank3D host regression:
+  make test-item-contact-blank3d
+
+Expected:
+  blank3d item/contact/weapon integration: PASS
+
+Original vendor regressions:
+  make -C vendor/pbb_item_system_c89 test
+  make -C vendor/3D_contact_trigger89 test
+
+Strict rules used by bridge target:
+  -std=c89 -Wall -Wextra -Werror -pedantic
+
+Integration source compilation:
+  make test-core
+
+Note: in this snapshot test-core reaches and runs tests/test_systems but its
+legacy weapon-cycle assertion returns code 42. Current player_weapons.ini owns
+all weapon IDs, so cycling after weapon 2 can select weapon 3 while the older
+test expects weapon 4. The new item/contact bridge sources compile and link in
+that target before this unrelated runtime assertion.
+
+The full blank3d.exe target is Win32/MinGW specific (-mwindows, opengl32,
+winmm, gdi32, user32). A native Linux gcc invocation cannot link that target.

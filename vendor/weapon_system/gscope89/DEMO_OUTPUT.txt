@@ -1,0 +1,11 @@
+provider_bundle_smoke:
+preset=svd_pso1_dragunov shapes=22 primitive_provider_seen=22 paint_provider_seen=107 sink=107 zoom_mode=1 fov=5483
+
+all_presets:
+presets=192 commands=5388 painter_glyphs=0 sprites=0 failures=0
+
+verify:
+verified 192 INI presets; IDs, names, vector geometry and selector are valid
+
+parity:
+presets=192 shapes=3953 hash=15957882094601755844

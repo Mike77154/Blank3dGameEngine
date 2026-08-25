@@ -1,0 +1,39 @@
+Phase 66 validation summary
+===========================
+
+What changed
+------------
+- Added opt-in C89/C90 mode in CMake with ZRAGF_ENABLE_C89=ON.
+- Removed remaining library-side uses of C99-only `inline` and `stdint.h`.
+- Added C89 smoke test and C89 example.
+- Updated build-config string and roadmap/docs for the new mode.
+
+What was validated
+------------------
+1) Default build regression
+   - Configure/build with tests enabled: OK
+   - ctest subset passed:
+     * zragf_test_native
+     * zragf_test_wrappers
+     * zragf_test_phase64_alloc_workspace
+     * zragf_test_phase65_wrapper_workspace
+     * zragf_test_phase66_c89_smoke
+
+2) Strict C89/C90 library build
+   - Configure with ZRAGF_ENABLE_C89=ON and -Werror -pedantic: OK
+   - Full library target built successfully.
+
+3) Strict C89/C90 smoke targets
+   - Configure with ZRAGF_ENABLE_C89=ON, tests enabled, -Werror -pedantic: OK
+   - Built targets:
+     * zragflib
+     * zragf_test_phase66_c89_smoke
+     * zragf_example_c89_simple
+   - Ran smoke test: OK
+   - Ran example: OK
+
+Honest status
+-------------
+- Library sources now build clean in the opt-in C89/C90 mode used in this phase.
+- Example and dedicated smoke test are also clean in that mode.
+- This is not yet a claim that every test, benchmark, and fuzz target is fully portable to every strict non-GNU C89 compiler. The strongest guarantee from this phase is the library + example + smoke path.

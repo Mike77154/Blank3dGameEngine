@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(pcx_consumer LANGUAGES C)
+find_package(pcx CONFIG REQUIRED)
+add_executable(pcx_consumer main.c)
+target_link_libraries(pcx_consumer PRIVATE pcx::pcx)
+set_target_properties(pcx_consumer PROPERTIES C_STANDARD 90 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)

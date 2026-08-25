@@ -1,0 +1,62 @@
+3DKin-GF / gameverbs89 Blank3D QA
+================================
+
+Critical regression battery: PASS (27/27)
+
+PASS test-gameverbs89
+PASS test-3dkin-gf
+PASS test-3dkin-gameverb-bridge
+PASS test-languages
+PASS test-movementbaseverbs-vendor
+PASS test-gloco-vendor
+PASS test-gloco-provider-stack
+PASS test-gloco-ground-sweep
+PASS test-gautomotion-vendor
+PASS test-automotion
+PASS test-motion-attacks
+PASS test-vertical-motion
+PASS test-vertical-vendors
+PASS test-vphysics-vendor
+PASS test-vphysics-provider
+PASS test-collision
+PASS test-perception-stack
+PASS test-attachment-stack
+PASS test-mechanical-weapon
+PASS test-actor-equipment
+PASS test-faction-bridge
+PASS test-runtime-spine
+PASS test-runtime-object-spine
+PASS test-gfo-var-authoring
+PASS syntax-check
+PASS syntax-check-input-win32
+PASS audit
+
+Strict standalone objects:
+- gk3d.c: C89/pedantic-errors/Wall/Wextra/Werror PASS
+- gameverbs89.c: C89/pedantic-errors/Wall/Wextra/Werror PASS
+- blank3d_kinverbs.c: C89/pedantic-errors/Wall/Wextra/Werror PASS
+- forbidden allocator/libm undefined symbols: NONE
+
+64-bit QA host fixed-state footprint:
+- sizeof(gk3d_world) = 22616 bytes
+- sizeof(gverb89_registry) = 10248 bytes
+- sizeof(Blank3DKinVerbs) = 36672 bytes
+
+Object text sizes on QA host:
+- gk3d.o: 12623 bytes .text
+- gameverbs89.o: 2505 bytes .text
+- blank3d_kinverbs.o: 5090 bytes .text (+240 data)
+
+Vendor preservation baseline:
+- pre-existing vendor files: 3295
+- missing pre-existing vendor files: 0
+- changed pre-existing vendor files: 0
+
+Final packaging must be performed after make clean and timestamp normalization.
+
+Final executable link note:
+- native Linux GCC reached final Win32 link step
+- final link cannot be performed on this QA host because native GCC does not
+  support the MinGW `-mwindows` option
+- no i686/x86_64 MinGW cross compiler is installed in the QA container
+- `syntax-check` and `syntax-check-input-win32` both PASS after the attempted link

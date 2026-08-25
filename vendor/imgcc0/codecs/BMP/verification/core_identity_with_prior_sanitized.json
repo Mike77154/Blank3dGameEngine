@@ -1,0 +1,53 @@
+{
+  "files": [
+    {
+      "file": "bmp_chunks.c",
+      "full_sha256": "993f90bedfb851730211ba9a19a1c25d2d41e602a8fafc4489c575974600f50a",
+      "prior_sanitized_sha256": "993f90bedfb851730211ba9a19a1c25d2d41e602a8fafc4489c575974600f50a",
+      "identical": true
+    },
+    {
+      "file": "bmp_decoder.c",
+      "full_sha256": "4917767fce0b3b9364c878a0fee50ee7b179748fbe67c75cfdd504128335e104",
+      "prior_sanitized_sha256": "4917767fce0b3b9364c878a0fee50ee7b179748fbe67c75cfdd504128335e104",
+      "identical": true
+    },
+    {
+      "file": "bmp_encoder.c",
+      "full_sha256": "1e7a4df48f1fca44bee7ccfee9b268adfbd8bde0c550f74ba0a454d7466d78e7",
+      "prior_sanitized_sha256": "1e7a4df48f1fca44bee7ccfee9b268adfbd8bde0c550f74ba0a454d7466d78e7",
+      "identical": true
+    },
+    {
+      "file": "bmp_filters.c",
+      "full_sha256": "29ae6d83026fff7265fd4647862ebb27f31363b817346a69fc38e338c7bef335",
+      "prior_sanitized_sha256": "29ae6d83026fff7265fd4647862ebb27f31363b817346a69fc38e338c7bef335",
+      "identical": true
+    },
+    {
+      "file": "bmp_metadata.c",
+      "full_sha256": "4887236a334ed18e99920053a904988bf1e4dbe83058627871d5b2dcafdfae92",
+      "prior_sanitized_sha256": "4887236a334ed18e99920053a904988bf1e4dbe83058627871d5b2dcafdfae92",
+      "identical": true
+    },
+    {
+      "file": "bmp_parser.c",
+      "full_sha256": "51c035da18c2f45a93783a5c128d9dedd0d1e938a155bb5521ef5c311b7f3730",
+      "prior_sanitized_sha256": "51c035da18c2f45a93783a5c128d9dedd0d1e938a155bb5521ef5c311b7f3730",
+      "identical": true
+    },
+    {
+      "file": "bmp_render.c",
+      "full_sha256": "8e0c00757da196ab25837c6d48b140d9bab2136a1492f26421d50ee4123be57f",
+      "prior_sanitized_sha256": "8e0c00757da196ab25837c6d48b140d9bab2136a1492f26421d50ee4123be57f",
+      "identical": true
+    },
+    {
+      "file": "bmp_report.c",
+      "full_sha256": "3e39048685b4734949c941bbb2d5bea501f5e1330ebcb39eff6a7333020e3198",
+      "prior_sanitized_sha256": "3e39048685b4734949c941bbb2d5bea501f5e1330ebcb39eff6a7333020e3198",
+      "identical": true
+    }
+  ],
+  "all_identical": true
+}

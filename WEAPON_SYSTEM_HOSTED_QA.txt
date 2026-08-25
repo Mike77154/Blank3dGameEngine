@@ -1,0 +1,37 @@
+Weapon System hosted/provider refactor QA
+========================================
+
+Validated on the container host with strict C89 build flags.
+
+PASS:
+- make test-weapon-system-hosted-vendors
+- make syntax-check
+- make syntax-check-input-win32
+- make audit
+- make test-weapon-runtime-vendors
+- make test-weapon-modules
+- make test-bolt-slingshot
+- make test-sniper-stack
+- make test-player-camera-fire-ray
+- make test-automatic-fire-frame-lock
+- make test-player-physical-projectile-aim
+- make test-aim-convergence
+- make test-universal-weapon-aim
+- make test-shotgun-runtime
+- make test-crosshair-runtime
+- make test-weapon-ini
+- make test-mechanical-weapon
+- make test-actor-equipment
+- make test-actor-weapon-isolation
+- make test-npc-weapon-inventory
+- make test-audio-host
+- make test-input-stack
+- make test-invariants-vendor
+- make test-movementbaseverbs-vendor
+
+Boundary checks:
+- Newly extracted Weapon-System modules include their own public headers, not blank3d_* headers.
+- Weapon profile/loadout/presentation readers route text through GWP89_SERVICE_IO.
+- Host filesystem access lives in src/blank3d_weapon_host_io.c.
+- Active integration allocation audit reports no allocator calls.
+- Player fire ray / projectile aim remain player-view-specific host adapters; NPCs do not inherit player camera authority.

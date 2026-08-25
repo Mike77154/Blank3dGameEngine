@@ -1,0 +1,162 @@
+{
+  "passed": 39,
+  "total": 39,
+  "results": [
+    {
+      "case": "0ae61f9c28d9179a4c33c2b3ece0af1cdd17af95",
+      "returncode": 0
+    },
+    {
+      "case": "160922d76d1cdc2c6624e45fa680fcf8ba95609c",
+      "returncode": 0
+    },
+    {
+      "case": "1a5083d204bb2b9250a9982b736bc4733244555c",
+      "returncode": 0
+    },
+    {
+      "case": "1b8fc5d1ad1f3108d2ee788e2429c3f17faa7284",
+      "returncode": 0
+    },
+    {
+      "case": "1c3479a63dfe2c6d2b2462ef22d30d332406f040",
+      "returncode": 0
+    },
+    {
+      "case": "1e64c819eab7588361929e520d15281e87561908",
+      "returncode": 0
+    },
+    {
+      "case": "24e37f3dd7f046bf35634de20367b9d8fa848191",
+      "returncode": 0
+    },
+    {
+      "case": "3044b54db165c80f1b3320d59af7173300d119b0",
+      "returncode": 0
+    },
+    {
+      "case": "42aef9330e9ad38bf72bc2f9b4447d5d25449989",
+      "returncode": 0
+    },
+    {
+      "case": "5634bd7e5a565fcd0fc9119e47ab9ee0538bc8cf",
+      "returncode": 0
+    },
+    {
+      "case": "5fffeef3b929ab3e1110760860c0853b84233f77",
+      "returncode": 0
+    },
+    {
+      "case": "661217302234cf29ce8d201c491a28a81264501f",
+      "returncode": 0
+    },
+    {
+      "case": "757dcb2600128382fc6bc57154e32c06c61d88af",
+      "returncode": 0
+    },
+    {
+      "case": "891666068620adcb24aa72130826658a275cd721",
+      "returncode": 0
+    },
+    {
+      "case": "9c9931ac129379d3f1ade66b610072c783c5262d",
+      "returncode": 0
+    },
+    {
+      "case": "9d755d67e9ab8ea8d03a51d778d4bc5b4c0091e5",
+      "returncode": 0
+    },
+    {
+      "case": "9d830ba062828fa065792c927deae6b35d493c82",
+      "returncode": 0
+    },
+    {
+      "case": "9ef5e316c164c2b2645c1b7f967e31276433383a",
+      "returncode": 0
+    },
+    {
+      "case": "a3441c62cc3dfcd217936252fcbe0157c1658d6e",
+      "returncode": 0
+    },
+    {
+      "case": "b08d65373d373d618e7d569002d981b42fc93e5c",
+      "returncode": 0
+    },
+    {
+      "case": "b7ddb1e1c3a730177f3cf7f7a186c0dc3e6ba339",
+      "returncode": 0
+    },
+    {
+      "case": "bcba1459736d7c9c2f4a7c4619c9f914cd3830e2",
+      "returncode": 0
+    },
+    {
+      "case": "c5144682bfd1465c182dbaca553ad84fcbdb2d3c",
+      "returncode": 0
+    },
+    {
+      "case": "ce24bdc08520a1bf8084c5c3c2f66b81712b8fb2",
+      "returncode": 0
+    },
+    {
+      "case": "cea12637938b9c2a471614cf728190235358817f",
+      "returncode": 0
+    },
+    {
+      "case": "d6901afc687fab306251e52a017d4c92be144a74",
+      "returncode": 0
+    },
+    {
+      "case": "dc0442a156b621160ca3fa6f4fcd796447d873e6",
+      "returncode": 0
+    },
+    {
+      "case": "e6a6fa9f14284e2c73bd282a4342312b5ce989fc",
+      "returncode": 0
+    },
+    {
+      "case": "e70e28c67eb5edfa9811a5cfdc90d69eaf3c2b19",
+      "returncode": 0
+    },
+    {
+      "case": "eaf4694b06e172fecd3b1ac7ef7485bdb32929f5",
+      "returncode": 0
+    },
+    {
+      "case": "eedb851d9544085acc2236682be16cf5486d08d4",
+      "returncode": 0
+    },
+    {
+      "case": "f30030cb15662f0d6bed6c85a9fc234a73255f0d",
+      "returncode": 0
+    },
+    {
+      "case": "f92cb944e1ef229a53afab25c05092989e10ba4b",
+      "returncode": 0
+    },
+    {
+      "case": "invalid_payload_png_bpp_round3.bmp",
+      "returncode": 0
+    },
+    {
+      "case": "invalid_reserved_round3.bmp",
+      "returncode": 0
+    },
+    {
+      "case": "invalid_topdown_rle8.bmp",
+      "returncode": 0
+    },
+    {
+      "case": "payload_jpeg_round3.bmp",
+      "returncode": 0
+    },
+    {
+      "case": "payload_png.bmp",
+      "returncode": 0
+    },
+    {
+      "case": "valid_rgb24.bmp",
+      "returncode": 0
+    }
+  ]
+}

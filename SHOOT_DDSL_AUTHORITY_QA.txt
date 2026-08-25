@@ -1,0 +1,45 @@
+Blank3D shoot DDSL authority QA
+================================
+
+Finding
+-------
+The Gatling path had a legacy physical trigger:
+  g.mouse_left || g.keys[VK_SPACE]
+plus physical pressed/released edges for MouseLeft and VK_SPACE.
+
+A second bug made DDSL-held shoot unusable for spin-up weapons:
+`g.systems.last_trigger_down` was used to synthesize a fresh press. Gatling
+intentionally holds accepted trigger_down at zero during spin-up, so DDSL
+shoot became a new press every frame and reset gatling_spin_ms continuously.
+
+Fix
+---
+The weapon system now consumes only the logical DDSL2 `shoot` request.
+Independent host state `fire_requested_prev` derives logical edges:
+  down     = current
+  pressed  = current && !previous
+  released = !current && previous
+
+The previous logical state is saved before the per-frame request is cleared.
+No VK_SPACE occurrence remains in src/.
+
+Expected
+--------
+If key_hold MouseLeft then shoot
+  first held frame : pressed=1 down=1
+  subsequent frames: pressed=0 down=1
+  release frame    : released=1 down=0
+
+Gatling spin-up therefore accumulates normally and automatic fire begins.
+Space does nothing unless explicitly mapped to shoot in DDSL2.
+
+Checks
+------
+make syntax-check                    PASS
+make test-automatic-fire-frame-lock PASS
+make test-weapon-modules            PASS
+make test-bolt-slingshot            PASS
+make test-input-stack               PASS
+make test-invariants-vendor         PASS
+make test-movementbaseverbs-vendor  PASS
+source VK_SPACE fire authority      ABSENT

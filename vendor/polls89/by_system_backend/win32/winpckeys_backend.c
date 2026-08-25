@@ -1,8 +1,7 @@
 #include <windows.h>
 
-#include <stdlib.h>
-
 #include "winpckeys_backend.h"
+#include "polls_input_keys89.h"
 
 /* ============================================================
    key_pc_code -> Windows VK_XXX
@@ -114,12 +113,18 @@ static int key_pc_to_vk(key_pc_code key)
     case KEY_PC_HELP:    return VK_HELP;
     case KEY_PC_MENU:    return VK_APPS;
     case KEY_PC_SELECT:  return VK_SELECT;
-    case KEY_PC_STOP:    return VK_STOP;
-    case KEY_PC_UNDO:    return VK_UNDO;
-    case KEY_PC_CUT:     return VK_CUT;
-    case KEY_PC_COPY:    return VK_COPY;
-    case KEY_PC_PASTE:   return VK_PASTE;
-    case KEY_PC_FIND:    return VK_FIND;
+
+    /* USB HID Keyboard usages 0x78, 0x7A..0x7E (Stop, Undo, Cut,
+       Copy, Paste, Find) do not have standard Win32 VK_* identities.
+       Do not alias them to consumer/media keys or Ctrl chords here: this
+       GetAsyncKeyState backend can only query one real virtual key. */
+    case KEY_PC_STOP:
+    case KEY_PC_UNDO:
+    case KEY_PC_CUT:
+    case KEY_PC_COPY:
+    case KEY_PC_PASTE:
+    case KEY_PC_FIND:
+        return 0;
 
     /* Audio */
     case KEY_PC_MUTE:        return VK_VOLUME_MUTE;
@@ -161,39 +166,9 @@ static int key_pc_to_vk(key_pc_code key)
 
 static int ensure_capacity(winpckeys_backend *kb, int required)
 {
-    key_pc_code *new_ptr;
-    int new_cap;
-    int i;
-
     if (!kb) return -1;
-    if (required <= 0) return 0;
-
-    if (kb->button_keys && kb->button_capacity >= required) {
-        return 0;
-    }
-
-    new_cap = kb->button_capacity;
-    if (new_cap < 8) new_cap = 8;
-    while (new_cap < required) {
-        /* crecer exponencial */
-        new_cap *= 2;
-        if (new_cap < 0) {
-            return -1;
-        }
-    }
-
-    new_ptr = (key_pc_code*)realloc(kb->button_keys, (size_t)new_cap * sizeof(key_pc_code));
-    if (!new_ptr) {
-        return -1;
-    }
-
-    /* init nuevos elementos */
-    for (i = kb->button_capacity; i < new_cap; ++i) {
-        new_ptr[i] = KEY_PC_NONE;
-    }
-
-    kb->button_keys = new_ptr;
-    kb->button_capacity = new_cap;
+    if (required < 0 || required > WINPCKEYS_MAX_BUTTONS) return -1;
+    kb->button_capacity = WINPCKEYS_MAX_BUTTONS;
     return 0;
 }
 
@@ -209,8 +184,6 @@ static int winpckeys_button_state(void *user_data, int button_index)
 
     if (!kb) return 0;
     if (button_index < 0 || button_index >= kb->button_capacity) return 0;
-    if (!kb->button_keys) return 0;
-
     key = kb->button_keys[button_index];
     if (key == KEY_PC_NONE) return 0;
 
@@ -230,8 +203,12 @@ void winpckeys_backend_init(winpckeys_backend *kb)
 
     key_pc_init(&kb->key_ctx);
 
-    kb->button_keys = NULL;
-    kb->button_capacity = 0;
+    {
+        int i;
+        for (i = 0; i < WINPCKEYS_MAX_BUTTONS; ++i)
+            kb->button_keys[i] = KEY_PC_NONE;
+    }
+    kb->button_capacity = WINPCKEYS_MAX_BUTTONS;
 
     kb->scanner.scanner = NULL;
     kb->scanner.max_buttons = 0;
@@ -247,11 +224,7 @@ void winpckeys_backend_shutdown(winpckeys_backend *kb)
 {
     if (!kb) return;
 
-    if (kb->button_keys) {
-        free(kb->button_keys);
-        kb->button_keys = NULL;
-    }
-    kb->button_capacity = 0;
+    kb->button_capacity = WINPCKEYS_MAX_BUTTONS;
 
     kb->scanner_attached = 0;
 }
@@ -330,4 +303,26 @@ int winpckeys_button_released(const winpckeys_backend *kb, int button_index)
     if (!kb->scanner_attached) return 0;
     if (!kb->scanner.released) return 0;
     return kb->scanner.released(kb->scanner.scanner, button_index);
+}
+
+int winpckeys_input_key_down(const winpckeys_backend *kb, input_key89 key)
+{
+    key_pc_code legacy;
+    int vk;
+    (void)kb;
+    legacy = polls_key_pc_from_input_key89(key);
+    if (legacy == KEY_PC_NONE) return 0;
+    vk = key_pc_to_vk(legacy);
+    if (vk == 0) return 0;
+    return ((GetAsyncKeyState(vk) & 0x8000) != 0) ? 1 : 0;
+}
+
+int winpckeys_bind_input_key89(winpckeys_backend *kb,
+                               int button_index,
+                               input_key89 key)
+{
+    key_pc_code legacy;
+    legacy = polls_key_pc_from_input_key89(key);
+    if (key != INPUT_KEY89_NONE && legacy == KEY_PC_NONE) return -1;
+    return winpckeys_bind_button(kb, button_index, legacy);
 }

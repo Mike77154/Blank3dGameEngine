@@ -1,0 +1,71 @@
+CONDOR EVACT89 INTEGRATION QA
+============================
+
+Vendor
+------
+- condor_evact89 v0.2 context-based: PASS
+- fixed configurable capacities: PASS
+- generational handles: PASS
+- dispatch mutation safety: PASS
+- no global singleton rule tables: PASS
+
+Blank3D bridge
+--------------
+- input event -> GameVerb condition -> GameVerb action: PASS
+- event -> VarRuntime condition -> VarRuntime bool action: PASS
+- input scanner event emission: PASS
+- separate owner(Actor/GameVerb) and instance(Thing/Vars): PASS
+
+Regression battery
+------------------
+26/26 targets passed:
+- test-condor-evact89
+- test-condor-bridge
+- test-gameverbs89
+- test-3dkin-gf
+- test-3dkin-gameverb-bridge
+- test-gloco-vendor
+- test-gloco-provider-stack
+- test-gloco-ground-sweep
+- test-movementbaseverbs-vendor
+- test-gautomotion-vendor
+- test-motion-attacks
+- test-vphysics-provider
+- test-collision
+- test-perception-stack
+- test-attachment-stack
+- test-mechanical-weapon
+- test-actor-equipment
+- test-faction-bridge
+- test-runtime-spine
+- test-runtime-object-spine
+- test-class-object-spine
+- test-gfo-var-authoring
+- test-languages
+- syntax-check
+- syntax-check-input-win32
+- audit
+
+Host QA (64-bit Linux compiler)
+-------------------------------
+sizeof(cea89_event)    = 40 bytes
+sizeof(cea89_context)  = 18,456 bytes
+sizeof(Blank3DCondor)  = 51,464 bytes
+
+Optimized object text sizes:
+condor_evact89.o       = 4,144 bytes text
+blank3d_condor.o       = 7,907 bytes text
+
+Undefined-symbol audit on the two new objects:
+- malloc/calloc/realloc/free: NONE
+- HeapAlloc/HeapFree/VirtualAlloc/VirtualFree: NONE
+- common libm functions: NONE
+
+Vendor preservation
+-------------------
+Baseline pre-Condor vendor files: 3316
+Missing pre-existing files:       0
+Modified pre-existing files:      0
+
+Final package is cleaned before archive creation. Build/test artifacts are not
+part of the release ZIP.

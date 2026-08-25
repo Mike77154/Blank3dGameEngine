@@ -1,0 +1,61 @@
+PNG sanitation integrity recheck
+================================
+
+Reason
+------
+The sanitized ZIP was smaller than the uploaded original, so the runtime tree, exports, tests, and byte-level behavior were re-audited.
+
+Package-size finding
+--------------------
+Original ZIP: 185 KiB-class archive.
+Sanitized ZIP: 125 KiB-class archive before this recheck.
+The original package contains non-runtime development material that was intentionally not copied: fuzz harness/corpus infrastructure, CI scripts, differential-libpng harness, legacy reports, and a 118 KiB test_upgrade.c.
+
+For the 14 common runtime C/H files:
+  original bytes: 512784
+  sanitized common-file bytes: 520379
+Sanitized-only png_mem89/png_fixed89 support adds 17232 bytes.
+Therefore sanitized runtime source is 24827 bytes LARGER than the original runtime source set.
+
+Export audit
+------------
+Original global symbols: 143
+Sanitized global symbols: 161
+Missing original symbols in sanitized build: 0
+New symbols: 18 (png_mem89 + png_fixed89 helpers)
+
+Decoder before/after regression
+-------------------------------
+PNG comparisons: 76 total
+  matching successful outputs: 66
+  matching malformed/error results: 10
+  mismatches: 0
+
+APNG comparisons: 7 total
+  matching successful frame dumps: 3
+  matching malformed/error results: 4
+  mismatches: 0
+
+Original functional-suite migration
+-----------------------------------
+The original test_upgrade.c contains 38 functional tests. Its floating-point metadata literals/output variables were mechanically migrated to png_fixed89 values so it could exercise the sanitized public ABI without mixing old/new struct layouts.
+Result: ALL_TESTS_OK (38/38).
+
+Sanitizer recheck
+-----------------
+The first sanitation pass had a real allocator alignment bug: blocks were rounded only to four bytes. UBSan detected misaligned png_decoder access on a 64-bit validation host.
+Fix: arena base alignment is forced with a C89 union and block/header boundaries are rounded to the maximum target data-pointer/function-pointer/unsigned-int size.
+After fix: migrated 38-test suite -> ALL_TESTS_OK under AddressSanitizer + UndefinedBehaviorSanitizer.
+
+Protocol audit after fix
+------------------------
+No runtime calls to malloc/calloc/realloc/free.
+No float/double runtime types.
+No long long/int64_t/uint64_t runtime types.
+No LP64-sensitive long/size_t declarations in codec-owned runtime sources.
+zlib allocator callbacks remain arena-backed.
+
+Encoder byte-equivalence caveat
+--------------------------------
+Representative encoder output without real-valued metadata is byte-identical between original and sanitized builds, including Adam7.
+When authoring gAMA/cHRM through Q16.16, whole-file bytes can differ slightly because Q16.16 cannot exactly represent every five-decimal metadata value. This does not affect the verified byte-identical decoded pixel/frame outputs, but exact metadata-file roundtrip is not claimed.

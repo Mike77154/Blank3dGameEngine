@@ -1,0 +1,80 @@
+Blank3D Time Stack89 QA
+Date: 2026-08-21
+
+AUDITED/INTEGRATED COMPONENTS
+  vendor/rt_time89
+  vendor/timeclocker89
+  vendor/tickoclock89
+  vendor/timeverbs89
+  src/blank3d_time89.c/.h
+  src/blank3d_timeverbs89.c/.h
+
+PROTOCOL89 VENDOR GATE
+  C89 -pedantic-errors -Wall -Wextra -Werror     PASS
+  malloc/calloc/realloc/free calls               0
+  float/double                                   0
+  long long                                      0
+  int64_t/uint64_t                               0
+  stdint.h                                       0
+  make audit-time-stack89                        PASS
+
+FUNCTIONAL GATES
+  make test-rt-time89-vendor                     PASS
+  make test-timeclocker89-vendor                 PASS
+  make test-tickoclock89-vendor                  PASS
+  make test-timeverbs89-vendor                   PASS
+  make test-time-stack89                         PASS
+
+TIME STACK BEHAVIOR COVERED
+  raw delta vs simulation delta                  PASS
+  max-step clamp                                 PASS
+  Q16 time scale                                 PASS
+  pause/resume                                   PASS
+  configurable tick rate                         PASS
+  H:M:S clock representation                     PASS
+  named one-shot timer                           PASS
+  TimeClocker alarm -> GameVerbs action          PASS
+  alarm integer payload                          PASS
+  alarm one-shot consumption                     PASS
+
+SELECTED ENGINE REGRESSIONS
+  make test-gloco-provider-stack                 PASS
+  make test-gautomotion-vendor                   PASS
+  make test-weapon-ini                           PASS
+  make test-projectilevisual2d89-vendor          PASS
+  make test-projectilevisual2d89-bridge          PASS
+  make test-casing-physics                       PASS
+  make test-languages                            PASS
+  make syntax-check                              PASS
+  make audit                                     PASS
+
+KNOWN PRE-EXISTING REPOSITORY FAILURE
+  make test-core                                 FAIL (Error 42)
+  previous skybox-recipe baseline test-core      FAIL (same Error 42)
+  classification                                 PRE-EXISTING / NOT TIME REGRESSION
+
+DSL NOTE
+  GameVerbs registration exposes TimeVerbs89 to the common DSL host bus.
+  DDSL2's current condition importer does not carry arguments, so argumented
+  time conditions require a future DDSL2 bridge extension. Zero-argument time
+  conditions and time actions are not blocked by this limitation.
+
+UNIVERSAL DELTATIME DECISION
+  No separate UniversalDeltaTime89 was added. Sanitized rt_time89 owns raw
+  delta, simulation delta, pause, scale, clamp and fixed-step authority.
+
+STANDALONE VENDOR RELEASE GATES
+  vendor/rt_time89: make clean test audit          PASS
+  vendor/timeclocker89: make clean test audit      PASS
+  vendor/tickoclock89: make clean test audit       PASS
+  vendor/timeverbs89: make clean test audit         PASS
+
+PRESERVATION AUDIT VS PREVIOUS BLANK3D RELEASE
+  baseline files                                   6726
+  missing baseline files                           0
+  intended new files                               35
+  pre-existing common files changed                2
+    Makefile
+    src/monika_blank3d.c
+  gskybox89 / skybox recipes removed               0
+  prior sprite/weapon vendors removed              0

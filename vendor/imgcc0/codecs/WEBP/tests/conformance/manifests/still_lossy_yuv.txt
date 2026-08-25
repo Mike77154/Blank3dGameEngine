@@ -1,0 +1,24 @@
+# relpath	mode	tags
+small_1x1.webp	yuv420p	odd,small,lossy
+small_13x1.webp	yuv420p	odd,small,lossy
+small_1x13.webp	yuv420p	odd,small,lossy
+small_31x13.webp	yuv420p	odd,small,lossy
+test.webp	yuv420p	baseline,lossy
+test-nostrong.webp	yuv420p	loopfilter,lossy
+lossy_q0_f100.webp	yuv420p	quality,lossy
+lossy_extreme_probabilities.webp	yuv420p	probabilities,lossy
+segment01.webp	yuv420p	segmentation,lossy
+segment02.webp	yuv420p	segmentation,lossy
+segment03.webp	yuv420p	segmentation,lossy
+vp80-01-intra-1400.webp	yuv420p	intra,lossy
+vp80-01-intra-1411.webp	yuv420p	intra,lossy
+vp80-01-intra-1416.webp	yuv420p	intra,lossy
+vp80-01-intra-1417.webp	yuv420p	intra,lossy
+vp80-03-segmentation-1401.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1403.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1407.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1408.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1409.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1410.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1413.webp	yuv420p	segmentation,lossy
+vp80-03-segmentation-1414.webp	yuv420p	segmentation,lossy

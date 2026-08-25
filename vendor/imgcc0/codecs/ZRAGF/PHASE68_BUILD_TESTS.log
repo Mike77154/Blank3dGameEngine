@@ -1,0 +1,22 @@
+[ 92%] Built target zragflib
+[ 92%] Building C object CMakeFiles/zragf_test_native.dir/tests/test_native_roundtrip.c.o
+[100%] Linking C executable zragf_test_native
+[100%] Built target zragf_test_native
+[ 92%] Built target zragflib
+[ 92%] Building C object CMakeFiles/zragf_test_wrappers.dir/tests/test_wrapper_roundtrip.c.o
+[100%] Linking C executable zragf_test_wrappers
+[100%] Built target zragf_test_wrappers
+[ 92%] Built target zragflib
+[100%] Building C object CMakeFiles/zragf_test_phase64_alloc_workspace.dir/tests/test_phase64_alloc_workspace.c.o
+[100%] Linking C executable zragf_test_phase64_alloc_workspace
+[100%] Built target zragf_test_phase64_alloc_workspace
+[ 92%] Built target zragflib
+[ 92%] Building C object CMakeFiles/zragf_test_phase65_wrapper_workspace.dir/tests/test_phase65_wrapper_workspace.c.o
+[100%] Linking C executable zragf_test_phase65_wrapper_workspace
+[100%] Built target zragf_test_phase65_wrapper_workspace
+[ 92%] Built target zragflib
+[ 92%] Building C object CMakeFiles/zragf_test_phase66_c89_smoke.dir/tests/test_phase66_c89_smoke.c.o
+[100%] Linking C executable zragf_test_phase66_c89_smoke
+[100%] Built target zragf_test_phase66_c89_smoke
+[ 92%] Built target zragflib
+[100%] Built target zragf_bench_phase68_public
